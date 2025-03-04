@@ -22,6 +22,7 @@ int get_nonzero_position(StateVector& statevector_list)
 class Result
 {
 public:
+    int n_qubits;
     std::vector<StateVector> sample;
     json counts;
     double total_time;
@@ -40,7 +41,9 @@ public:
         }
 
         for (const auto& [key, value] : counts_map) {
-            std::string bit_key = std::bitset<16>(key).to_string();
+            std::cout << key << "\n";
+            std::string bit_key = std::bitset<32>(key).to_string();
+            bit_key = bit_key.substr(bit_key.size() - this->n_qubits);
             result.counts[bit_key] = value;
         }
 

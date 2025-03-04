@@ -20,17 +20,18 @@ meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits, int&
     bool zero;
     double prob_0 = 0;
     double prob_1 = 0;
-    std::vector<int> index_0[(int)statevector.size()/2];
-    std::vector<int> index_1[(int)statevector.size()/2];
+    std::vector<int> index_0((int)statevector.size()/2);
+    std::vector<int> index_1((int)statevector.size()/2);
+    
 
 
     for (int i = 0; i < statevector.size(); i++) {
         zero = is_zero(i, n_qubits - 1 - qubits[0]);
         if (zero) {
-            index_0->push_back(i);
+            index_0.push_back(i);
             prob_0 = prob_0 + std::norm(statevector[i]);
         } else {
-            index_1->push_back(i);
+            index_1.push_back(i);
             prob_1 = prob_1 + std::norm(statevector[i]);
         }
     }
@@ -40,20 +41,20 @@ meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits, int&
     std::discrete_distribution<int> dist({prob_0, prob_1});
     int sample = dist(gen);
     output.measure = sample;
-    auto it0 = index_0->begin();
-    auto it1 = index_1->begin();
+    auto it0 = index_0.begin();
+    auto it1 = index_1.begin();
 
     //TODO: The following is parallelizable
     switch (sample)
     {
         case 0:
-            for (; it0 != index_0->end() && it1 != index_1->end(); it0++, it1++) {
+            for (; it0 != index_0.end() && it1 != index_1.end(); it0++, it1++) {
                 statevector[*it0] = (1.0/std::sqrt((1 - prob_1))) * statevector[*it0];
                 statevector[*it1] = 0.0;
             }
             break;
         case 1:
-        for (; it0 != index_0->end() && it1 != index_1->end(); it0++, it1++) {
+        for (; it0 != index_0.end() && it1 != index_1.end(); it0++, it1++) {
             statevector[*it0] = 0.0;
             statevector[*it1] = (1.0/std::sqrt((1 - prob_0))) * statevector[*it1];
         }

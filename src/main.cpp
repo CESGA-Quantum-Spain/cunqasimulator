@@ -43,7 +43,7 @@ int main() {
     };
 
 
-    QPU qpu(2);
+    QPU qpu(5);
 
 /*     StateVector sv = qpu.apply("h", {0});
     sv = qpu.apply("measure", {0});
@@ -55,12 +55,11 @@ int main() {
 
     Result result = qpu.run(qc);
     std::cout << "Total time: " << result.total_time << " [ms] \n";
-    std::cout << "Mean time per shot: " << result.mean_time_per_shot<< " [ms] \n";
+    std::cout << "Mean time per shot: " << result.mean_time_per_shot << " [ms] \n";
 
     Counts counts = result.get_counts();
-    std::cout << counts.counts.dump(2) << "\n";
-    /* std::cout << "Size: " << result.sample.size() << "\n";
-    printvector(result.sample[65]); */
+    std::cout << counts.counts.dump(2) << "\n"; 
+
 
 
 

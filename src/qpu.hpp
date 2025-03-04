@@ -58,14 +58,14 @@ Result QPU::run(QuantumCircuit& quantumcircuit, int shots)
     std::array<int, 3> qubits;
     double param;
 
+    result.n_qubits = this->n_qubits;
+
     auto start_time = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < shots; i++) {
 
         for (auto& instruction : quantumcircuit) {
-
             instruction_name = instruction.at("name");
             qubits = instruction.at("qubits");
-
             switch (instructions_map[instruction_name])
             {
                 case measure:
