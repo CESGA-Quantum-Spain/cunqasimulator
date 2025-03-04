@@ -27,32 +27,42 @@ int main() {
     QuantumCircuit qc = {
         {
             {"name","h"},
-            {"qubits", {0,-1}}
+            {"qubits", {0,-1,-1}}
         },
         {
             {"name", "cx"},
-            {"qubits", {0,1}}
+            {"qubits", {0,1,-1}}
         },
         {
             {"name","measure"},
-            {"qubits", {0,-1}}
+            {"qubits", {0,-1,-1}}
         },
         {
             {"name", "measure"},
-            {"qubits", {1,-1}}
+            {"qubits", {1,-1,-1}}
         }
     };
 
 
     QPU qpu(2);
 
-    //StateVector sv = qpu.run(qc);
-    StateVector sv = qpu.apply("h", {0});
+/*     StateVector sv = qpu.apply("h", {0});
     sv = qpu.apply("measure", {0});
     printvector(sv);
 
     sv = qpu.apply("c_if_x", {1,0});
-    printvector(sv);
+    printvector(sv); */
+
+
+    Result result = qpu.run(qc);
+    std::cout << "Size: " << result.sample.size() << "\n";
+    printvector(result.sample[65]);
+
+
+
+
+
+
 
 
 
