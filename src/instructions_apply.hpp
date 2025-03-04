@@ -6,7 +6,6 @@
 #include <cmath>
 #include <random>
 
-
 #include "../utils/utils.hpp"
 #include "../utils/constants.hpp"
 #include "../utils/types.hpp"

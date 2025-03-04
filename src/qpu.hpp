@@ -4,7 +4,6 @@
 #include <vector>
 #include <complex>
 #include <array>
-#include <nlohmann/json.hpp>
 
 #include "instructions.hpp"
 #include "result.hpp"

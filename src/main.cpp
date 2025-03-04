@@ -2,7 +2,6 @@
 #include <vector>
 #include <complex>
 #include <array>
-#include <nlohmann/json.hpp>
 
 #include "qpu.hpp"
 #include "../utils/utils.hpp"
@@ -55,8 +54,11 @@ int main() {
 
 
     Result result = qpu.run(qc);
-    std::cout << "Size: " << result.sample.size() << "\n";
-    printvector(result.sample[65]);
+    Counts counts = result.get_counts();
+
+    std::cout << counts.counts.dump(4) << std::endl;
+    /* std::cout << "Size: " << result.sample.size() << "\n";
+    printvector(result.sample[65]); */
 
 
 

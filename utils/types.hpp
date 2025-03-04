@@ -11,3 +11,8 @@ struct meas_out {
     StateVector statevector;
     int measure;
 };
+
+struct Counts {
+    std::vector<int> counts_list;
+    json counts;
+};

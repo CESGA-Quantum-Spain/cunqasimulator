@@ -43,6 +43,7 @@
         "typeinfo": "cpp",
         "optional": "cpp",
         "string_view": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "bitset": "cpp"
     }
 }
