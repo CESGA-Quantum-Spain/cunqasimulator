@@ -4,6 +4,7 @@
 #include <vector>
 #include <complex>
 #include <array>
+#include <chrono>
 
 #include "instructions.hpp"
 #include "result.hpp"
@@ -57,6 +58,7 @@ Result QPU::run(QuantumCircuit& quantumcircuit, int shots)
     std::array<int, 3> qubits;
     double param;
 
+    auto start_time = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < shots; i++) {
 
         for (auto& instruction : quantumcircuit) {
@@ -103,6 +105,15 @@ Result QPU::run(QuantumCircuit& quantumcircuit, int shots)
         restart_statevector();
 
     }
+
+    auto stop_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop_time - start_time);
+
+    double total_time = duration.count();
+    double mean_time_per_shot = total_time / (double)shots;
+
+    result.total_time = total_time;
+    result.mean_time_per_shot = mean_time_per_shot;
 
     return result;
 }

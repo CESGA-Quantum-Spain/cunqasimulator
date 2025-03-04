@@ -23,25 +23,28 @@ class Result
 {
 public:
     std::vector<StateVector> sample;
+    json counts;
+    double total_time;
+    double mean_time_per_shot;
 
     Counts get_counts()
     {
-        Counts result_counts;
+        Counts result;
         int position = -1;
         std::unordered_map<int, int> counts_map;
 
-        for (auto& result : this->sample) {
-            position = get_nonzero_position(result);
+        for (auto& one_result : this->sample) {
+            position = get_nonzero_position(one_result);
             counts_map[position]++;
-            result_counts.counts_list.push_back(position);
+            result.counts_list.push_back(position);
         }
 
         for (const auto& [key, value] : counts_map) {
             std::string bit_key = std::bitset<16>(key).to_string();
-            result_counts.counts[bit_key] = value;
+            result.counts[bit_key] = value;
         }
 
-        return result_counts;
+        return result;
     }
 
 };
