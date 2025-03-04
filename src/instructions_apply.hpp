@@ -14,7 +14,7 @@
 //TODO: Classical conditional two-qubit gates
 
 //Measure
-meas_out apply_measure(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     meas_out output;
@@ -67,7 +67,7 @@ meas_out apply_measure(StateVector& statevector, std::array<int, 2> qubits, int&
 }
 
 // One-Qubit Gates
-StateVector apply_h(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_h(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -87,7 +87,7 @@ StateVector apply_h(StateVector& statevector, std::array<int, 2> qubits, int& n_
 }
 
 
-StateVector apply_x(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_x(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -100,7 +100,7 @@ StateVector apply_x(StateVector& statevector, std::array<int, 2> qubits, int& n_
 }
 
 
-StateVector apply_y(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_y(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -119,7 +119,7 @@ StateVector apply_y(StateVector& statevector, std::array<int, 2> qubits, int& n_
 }
 
 
-StateVector apply_z(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_z(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     bool zero; 
@@ -135,7 +135,7 @@ StateVector apply_z(StateVector& statevector, std::array<int, 2> qubits, int& n_
 }
 
 
-StateVector apply_rx(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_rx(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -156,7 +156,7 @@ StateVector apply_rx(StateVector& statevector, double& param, std::array<int, 2>
 }
 
 
-StateVector apply_ry(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_ry(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -177,7 +177,7 @@ StateVector apply_ry(StateVector& statevector, double& param, std::array<int, 2>
 }
 
 
-StateVector apply_rz(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_rz(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     bool zero;
@@ -199,7 +199,7 @@ StateVector apply_rz(StateVector& statevector, double& param, std::array<int, 2>
 
 // Two-Qubit Gates
 
-StateVector apply_cx(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_cx(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -216,7 +216,7 @@ StateVector apply_cx(StateVector& statevector, std::array<int, 2> qubits, int& n
     return statevector;
 }
 
-StateVector apply_cy(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_cy(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -238,7 +238,7 @@ StateVector apply_cy(StateVector& statevector, std::array<int, 2> qubits, int& n
     return statevector;
 }
 
-StateVector apply_cz(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_cz(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -258,7 +258,7 @@ StateVector apply_cz(StateVector& statevector, std::array<int, 2> qubits, int& n
     return statevector;
 }
 
-StateVector apply_ecr(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_ecr(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -283,72 +283,113 @@ StateVector apply_ecr(StateVector& statevector, std::array<int, 2> qubits, int& 
     return statevector;
 }
 
-//Classical conditional gates
-StateVector apply_cifh(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
-{
-    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
-    if (meas.measure == 1) {
-        statevector = apply_h(statevector, {qubits[0], -1}, n_qubits);
-    }
-
-    return statevector;
-}
-
-StateVector apply_cifx(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
-{
-    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
-    if (meas.measure == 1) {
-        statevector = apply_x(statevector, {qubits[0], -1}, n_qubits);
-    }
-
-    return statevector;
-}
-
-StateVector apply_cify(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+//Classical conditional one-qubit gates
+StateVector apply_cifh(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
     meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
     if (meas.measure == 1) {
-        statevector = apply_y(statevector, {qubits[0], -1}, n_qubits);
+        statevector = apply_h(statevector, {qubits[0]}, n_qubits);
     }
 
     return statevector;
 }
 
-StateVector apply_cifz(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_cifx(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
     if (meas.measure == 1) {
-        statevector = apply_z(statevector, {qubits[0], -1}, n_qubits);
+        statevector = apply_x(statevector, {qubits[0]}, n_qubits);
     }
 
     return statevector;
 }
 
-StateVector apply_cifrx(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_cify(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
     if (meas.measure == 1) {
-        statevector = apply_rx(statevector, param, {qubits[0], -1}, n_qubits);
+        statevector = apply_y(statevector, {qubits[0]}, n_qubits);
     }
 
     return statevector;
 }
 
-StateVector apply_cifry(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_cifz(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
     if (meas.measure == 1) {
-        statevector = apply_ry(statevector, param, {qubits[0], -1}, n_qubits);
+        statevector = apply_z(statevector, {qubits[0]}, n_qubits);
     }
 
     return statevector;
 }
 
-StateVector apply_cifrz(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
+StateVector apply_cifrx(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
     if (meas.measure == 1) {
-        statevector = apply_rz(statevector, param, {qubits[0], -1}, n_qubits);
+        statevector = apply_rx(statevector, param, {qubits[0]}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cifry(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_ry(statevector, param, {qubits[0]}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cifrz(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_rz(statevector, param, {qubits[0]}, n_qubits);
+    }
+
+    return statevector;
+}
+
+//Classical conditional two-qubits gates
+StateVector apply_cifcx(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[2]}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_cx(statevector, {qubits[0], qubits[1]}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cifcy(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[2]}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_cy(statevector, {qubits[0], qubits[1]}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cifcz(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[2]}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_cz(statevector, {qubits[0], qubits[1]}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cifecr(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[2]}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_ecr(statevector, {qubits[0], qubits[1]}, n_qubits);
     }
 
     return statevector;

@@ -47,8 +47,8 @@ int main() {
     QPU qpu(2);
 
     //StateVector sv = qpu.run(qc);
-    StateVector sv = qpu.apply("h", {0,-1});
-    sv = qpu.apply("measure", {0,-1});
+    StateVector sv = qpu.apply("h", {0});
+    sv = qpu.apply("measure", {0});
     printvector(sv);
 
     sv = qpu.apply("c_if_x", {1,0});

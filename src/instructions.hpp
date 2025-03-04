@@ -18,7 +18,7 @@ public:
     std::string instruction_name;
 
     Instruction(std::string instruction_name);
-    StateVector apply_instruction(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits);
+    StateVector apply_instruction(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits);
 
 };
 
@@ -31,7 +31,7 @@ Instruction::Instruction(std::string instruction_name)
     }
 }
 
-StateVector Instruction::apply_instruction(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
+StateVector Instruction::apply_instruction(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
 {
     meas_out meas;
     switch (instructions_map[this->instruction_name])
@@ -100,7 +100,18 @@ StateVector Instruction::apply_instruction(StateVector& statevector, double& par
     case c_if_rz:
         statevector = apply_cifrz(statevector, param, qubits, n_qubits);
         break;
-    //TODO: Classical conditional two-qubits gates
+    case c_if_cx:
+        statevector = apply_cifcx(statevector, qubits, n_qubits);
+        break;
+    case c_if_cy:
+        statevector = apply_cifcy(statevector, qubits, n_qubits);
+        break;
+    case c_if_cz:
+        statevector = apply_cifcz(statevector, qubits, n_qubits);
+        break;
+    case c_if_ecr:
+        statevector = apply_cifecr(statevector, qubits, n_qubits);
+        break;
     
     default:
         std::cout << "Error. Invalid gate name" << "\n";

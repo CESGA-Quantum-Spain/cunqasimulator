@@ -19,7 +19,7 @@ public:
     QPU(int n_qubits);
     QPU(StateVector initial_state);
 
-    StateVector apply(std::string gate_name, std::array<int, 2> qubits, double param);
+    StateVector apply(std::string gate_name, std::array<int, 3> qubits, double param);
     StateVector run(QuantumCircuit& quantumcircuit);
 
 };
@@ -31,7 +31,7 @@ QPU::QPU(int n_qubits) : n_qubits{n_qubits}, statevector(1 << n_qubits)
 QPU::QPU(StateVector initial_state) : n_qubits(initial_state.size()), statevector(initial_state)
 {}
 
-StateVector QPU::apply(std::string instruction_name, std::array<int, 2> qubits, double param = 0.0)
+StateVector QPU::apply(std::string instruction_name, std::array<int, 3> qubits, double param = 0.0)
 {
     Instruction instruction(instruction_name);
     
@@ -46,7 +46,7 @@ StateVector QPU::run(QuantumCircuit& quantumcircuit)
 {
     StateVector statevector;
     std::string instruction_name;
-    std::array<int, 2> qubits;
+    std::array<int, 3> qubits;
     double param;
 
     for (auto& instruction : quantumcircuit) {
