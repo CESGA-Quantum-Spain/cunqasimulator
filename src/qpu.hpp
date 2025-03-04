@@ -7,11 +7,8 @@
 #include <nlohmann/json.hpp>
 
 #include "instructions.hpp"
+#include "../utils/types.hpp"
 
-using json = nlohmann::json;
-using complex = std::complex<double>;
-using StateVector = std::vector<complex>;
-using QuantumCircuit = std::vector<json>; 
 
 class QPU 
 {
@@ -69,11 +66,20 @@ StateVector QPU::run(QuantumCircuit& quantumcircuit)
             case cy:
             case cz:
             case ecr:
+            case c_if_x:
+            case c_if_y:
+            case c_if_z:
+            case c_if_cx:
+            case c_if_cy:
+            case c_if_cz:
                 statevector = this->apply(instruction_name, qubits);
                 break;
             case rx:
             case ry:
             case rz:
+            case c_if_rx:
+            case c_if_ry:
+            case c_if_rz:
                 param = instruction.at("params");
                 statevector = this->apply(instruction_name, qubits, param);
                 break;

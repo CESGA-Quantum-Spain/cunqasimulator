@@ -7,17 +7,17 @@
 #include <random>
 
 
-#include "utils.hpp"
-#include "constants.hpp"
+#include "../utils/utils.hpp"
+#include "../utils/constants.hpp"
+#include "../utils/types.hpp"
 
-using complex = std::complex<double>;
-using StateVector = std::vector<complex>;
-
+//TODO: Classical conditional two-qubit gates
 
 //Measure
-StateVector apply_measure(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+meas_out apply_measure(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
+    meas_out output;
     bool zero;
     double prob_0 = 0;
     double prob_1 = 0;
@@ -40,6 +40,7 @@ StateVector apply_measure(StateVector& statevector, std::array<int, 2> qubits, i
     std::mt19937 gen(rd()); // Mersenne Twister RNG
     std::discrete_distribution<int> dist({prob_0, prob_1});
     int sample = dist(gen);
+    output.measure = sample;
     auto it0 = index_0->begin();
     auto it1 = index_1->begin();
 
@@ -60,11 +61,32 @@ StateVector apply_measure(StateVector& statevector, std::array<int, 2> qubits, i
             break;
     }
 
+    output.statevector = statevector;
+
+    return output;
+}
+
+// One-Qubit Gates
+StateVector apply_h(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+{
+    //int n_qubits = statevector.size();
+    StateVector aux_statevector = statevector;
+    bool zero;
+    double ampl = 1.0 / std::sqrt(2.0);
+
+    for (int i = 0; i < statevector.size(); i++) {
+        zero = is_zero(i, n_qubits - 1 - qubits[0]);
+        if (zero == true) { 
+            statevector[i] = ampl * aux_statevector[i] + ampl * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+        } else {
+            statevector[i] = -ampl * aux_statevector[i] + ampl * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+        }
+    }
+
     return statevector;
 }
 
 
-// One-Qubit Gates
 StateVector apply_x(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
@@ -106,26 +128,6 @@ StateVector apply_z(StateVector& statevector, std::array<int, 2> qubits, int& n_
         zero = is_zero(i, n_qubits - 1 - qubits[0]);
         if (zero == false) { 
             statevector[i] = -statevector[i]; 
-        }
-    }
-
-    return statevector;
-}
-
-
-StateVector apply_h(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
-{
-    //int n_qubits = statevector.size();
-    StateVector aux_statevector = statevector;
-    bool zero;
-    double ampl = 1.0 / std::sqrt(2.0);
-
-    for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, n_qubits - 1 - qubits[0]);
-        if (zero == true) { 
-            statevector[i] = ampl * aux_statevector[i] + ampl * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
-        } else {
-            statevector[i] = -ampl * aux_statevector[i] + ampl * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
         }
     }
 
@@ -280,3 +282,75 @@ StateVector apply_ecr(StateVector& statevector, std::array<int, 2> qubits, int& 
 
     return statevector;
 }
+
+//Classical conditional gates
+StateVector apply_cifh(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_h(statevector, {qubits[0], -1}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cifx(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_x(statevector, {qubits[0], -1}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cify(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_y(statevector, {qubits[0], -1}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cifz(StateVector& statevector, std::array<int, 2> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_z(statevector, {qubits[0], -1}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cifrx(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_rx(statevector, param, {qubits[0], -1}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cifry(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_ry(statevector, param, {qubits[0], -1}, n_qubits);
+    }
+
+    return statevector;
+}
+
+StateVector apply_cifrz(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1], -1}, n_qubits);
+    if (meas.measure == 1) {
+        statevector = apply_rz(statevector, param, {qubits[0], -1}, n_qubits);
+    }
+
+    return statevector;
+}
+

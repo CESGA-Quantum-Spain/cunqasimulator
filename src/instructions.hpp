@@ -7,13 +7,10 @@
 #include <array>
 #include <algorithm>
 
-#include "constants.hpp"
 #include "instructions_apply.hpp"
+#include "../utils/constants.hpp"
+#include "../utils/types.hpp"
 
-using complex = std::complex<double>;
-using StateVector = std::vector<complex>;
-
-const std::vector<std::string> instructions = {"measure", "id", "h", "x", "y", "z", "cx", "cy", "cz"};
 
 class Instruction
 {
@@ -36,14 +33,19 @@ Instruction::Instruction(std::string instruction_name)
 
 StateVector Instruction::apply_instruction(StateVector& statevector, double& param, std::array<int, 2> qubits, int& n_qubits)
 {
+    meas_out meas;
     switch (instructions_map[this->instruction_name])
     {
     //Measure
     case measure:
-        statevector = apply_measure(statevector, qubits, n_qubits);
+        meas = apply_measure(statevector, qubits, n_qubits);
+        statevector = meas.statevector;
         break;
     //One-qubit gates
     case id:
+        break;
+    case h:
+        statevector = apply_h(statevector, qubits, n_qubits);
         break;
     case x:
         statevector = apply_x(statevector, qubits, n_qubits);
@@ -53,9 +55,6 @@ StateVector Instruction::apply_instruction(StateVector& statevector, double& par
         break;
     case z:
         statevector = apply_z(statevector, qubits, n_qubits);
-        break;
-    case h:
-        statevector = apply_h(statevector, qubits, n_qubits);
         break;
     //Parametric
     case rx:
@@ -80,6 +79,28 @@ StateVector Instruction::apply_instruction(StateVector& statevector, double& par
     case ecr:
         statevector = apply_cz(statevector, qubits, n_qubits);
         break;
+    case c_if_h:
+        statevector = apply_cifh(statevector, qubits, n_qubits);
+        break;
+    case c_if_x:
+        statevector = apply_cifx(statevector, qubits, n_qubits);
+        break;
+    case c_if_y:
+        statevector = apply_cify(statevector, qubits, n_qubits);
+        break;
+    case c_if_z:
+        statevector = apply_cifz(statevector, qubits, n_qubits);
+        break;
+    case c_if_rx:
+        statevector = apply_cifrx(statevector, param, qubits, n_qubits);
+        break;
+    case c_if_ry:
+        statevector = apply_cifry(statevector, param, qubits, n_qubits);
+        break;
+    case c_if_rz:
+        statevector = apply_cifrz(statevector, param, qubits, n_qubits);
+        break;
+    //TODO: Classical conditional two-qubits gates
     
     default:
         std::cout << "Error. Invalid gate name" << "\n";

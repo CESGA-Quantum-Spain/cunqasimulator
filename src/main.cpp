@@ -5,12 +5,20 @@
 #include <nlohmann/json.hpp>
 
 #include "qpu.hpp"
-#include "utils.hpp"
+#include "../utils/utils.hpp"
+#include "../utils/types.hpp"
 
-using json = nlohmann::json;
-using QuantumCircuit = std::vector<json>; 
-using complex = std::complex<double>;
-using StateVector = std::vector<complex>;
+void printvector (StateVector& sv)
+{
+    std::cout << "( ";
+    for (int i = 0; i < sv.size(); i++) {
+        std::cout << sv[i];
+        if (i != sv.size() - 1) {
+            std::cout << ", ";
+        }
+    } 
+    std::cout << " ) \n";
+}
 
 
 int main() {
@@ -41,11 +49,11 @@ int main() {
     //StateVector sv = qpu.run(qc);
     StateVector sv = qpu.apply("h", {0,-1});
     sv = qpu.apply("measure", {0,-1});
+    printvector(sv);
 
-    
-    for (int i = 0; i < sv.size(); i++) {
-        std::cout << sv[i] << "\n";
-    } 
+    sv = qpu.apply("c_if_x", {1,0});
+    printvector(sv);
+
 
 
     
