@@ -8,8 +8,8 @@
 #include <algorithm>
 
 #include "instructions_apply.hpp"
-#include "../utils/constants_cunqasim.hpp"
-#include "../utils/types_cunqasim.hpp"
+#include "utils/constants_cunqasim.hpp"
+#include "utils/types_cunqasim.hpp"
 
 
 class Instruction

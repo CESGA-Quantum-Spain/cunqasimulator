@@ -8,7 +8,7 @@
 
 #include "instructions.hpp"
 #include "result_cunqasim.hpp"
-#include "../utils/types_cunqasim.hpp"
+#include "utils/types_cunqasim.hpp"
 
 
 class Executor 

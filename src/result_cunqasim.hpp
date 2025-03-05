@@ -5,7 +5,7 @@
 #include <bitset>
 
 
-#include "../utils/types_cunqasim.hpp"
+#include "utils/types_cunqasim.hpp"
 
 int get_nonzero_position(StateVector& statevector_list)
 {
@@ -43,7 +43,7 @@ json Result::to_json()
         {"total_time", this->total_time},
         {"mean_time_per_shot", this->mean_time_per_shot}
 
-    }
+    };
 
     return attributes;
 }
