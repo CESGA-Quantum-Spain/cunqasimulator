@@ -22,7 +22,7 @@ public:
 
     void restart_statevector();
     StateVector apply(std::string instruction_name, std::array<int, 3> qubits, double param = 0.0);
-    Result run(QuantumCircuit& quantumcircuit, int shots = 99);
+    ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 99);
 
 };
 
@@ -52,9 +52,9 @@ StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qub
 
 
 //TODO: Classical Registers
-Result Executor::run(QuantumCircuit& quantumcircuit, int shots)
+ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
 {
-    Result result;
+    ResultCunqa result;
     std::string instruction_name;
     std::array<int, 3> qubits;
     double param;

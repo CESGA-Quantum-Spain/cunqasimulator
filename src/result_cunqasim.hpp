@@ -19,7 +19,7 @@ int get_nonzero_position(StateVector& statevector_list)
     return position;
 }
 
-class Result
+class ResultCunqa
 {
 public:
     int n_qubits;
@@ -34,7 +34,7 @@ public:
 
 };
 
-json Result::to_json()
+json ResultCunqa::to_json()
 {
     json attributes;
     attributes = {
@@ -48,7 +48,7 @@ json Result::to_json()
     return attributes;
 }
 
-Counts Result::get_counts() 
+Counts ResultCunqa::get_counts() 
 {
     Counts result;
     int position = -1;
