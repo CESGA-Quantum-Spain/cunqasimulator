@@ -2,6 +2,7 @@
 #include <vector>
 #include <complex>
 #include <array>
+#include <mpi.h>
 
 #include "qpu.hpp"
 #include "../utils/utils.hpp"
@@ -20,7 +21,12 @@ void printvector (StateVector& sv)
 }
 
 
-int main() {
+int main(int argc, char** argv) {
+
+    MPI_Init(&argc, &argv);
+
+
+    MPI_Finalize();
 
     //The qubits hardcoded to -1 are not used but they have to have a value.
     QuantumCircuit qc = {
@@ -42,6 +48,22 @@ int main() {
         }
     };
 
+
+    //Not working. Only a visual structure.
+    DistributedQuantumCircuit distributed_qc = {
+        {
+            {"qpu_id", 0},
+            {"circuit", qc}
+        },
+        {
+            {"qpu_id", 1},
+            {"circuit", qc}
+        }
+
+    };
+
+
+    
 
     QPU qpu(5);
 

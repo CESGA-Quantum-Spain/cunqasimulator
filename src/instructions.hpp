@@ -18,12 +18,13 @@ public:
     std::string instruction_name;
 
     Instruction(std::string instruction_name);
-    StateVector apply_instruction(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits);
+    StateVector apply_instruction(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2> qpus = {-1, -1});
 
 };
 
 Instruction::Instruction(std::string instruction_name) 
 {
+    //TODO: I think this previous check is not needed.
     if (std::find(instructions.begin(), instructions.end(), instruction_name) == instructions.end()) {
         std::cout << "Error. Invalid instruction name" <<"\n";
     } else {
@@ -31,7 +32,7 @@ Instruction::Instruction(std::string instruction_name)
     }
 }
 
-StateVector Instruction::apply_instruction(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
+StateVector Instruction::apply_instruction(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2> qpus)
 {
     meas_out meas;
     switch (instructions_map[this->instruction_name])
@@ -79,6 +80,7 @@ StateVector Instruction::apply_instruction(StateVector& statevector, double& par
     case ecr:
         statevector = apply_cz(statevector, qubits, n_qubits);
         break;
+    //Classical conditional one-qubit gates
     case c_if_h:
         statevector = apply_cifh(statevector, qubits, n_qubits);
         break;
@@ -100,6 +102,7 @@ StateVector Instruction::apply_instruction(StateVector& statevector, double& par
     case c_if_rz:
         statevector = apply_cifrz(statevector, param, qubits, n_qubits);
         break;
+    //Classical conditional two-qubit gates
     case c_if_cx:
         statevector = apply_cifcx(statevector, qubits, n_qubits);
         break;
@@ -111,6 +114,41 @@ StateVector Instruction::apply_instruction(StateVector& statevector, double& par
         break;
     case c_if_ecr:
         statevector = apply_cifecr(statevector, qubits, n_qubits);
+        break;
+    //Distributed classical conditional one-qubit gates
+    case d_c_if_h:
+        statevector = apply_dcifh(statevector, qubits, n_qubits, qpus);
+        break;
+    case d_c_if_x:
+        statevector = apply_dcifx(statevector, qubits, n_qubits, qpus);
+        break;
+    case d_c_if_y:
+        statevector = apply_dcify(statevector, qubits, n_qubits, qpus);
+        break;
+    case d_c_if_z:
+        statevector = apply_dcifz(statevector, qubits, n_qubits, qpus);
+        break;
+    case d_c_if_rx:
+        statevector = apply_dcifrx(statevector, param, qubits, n_qubits,qpus);
+        break;
+    case d_c_if_ry:
+        statevector = apply_dcifry(statevector, param, qubits, n_qubits, qpus);
+        break;
+    case d_c_if_rz:
+        statevector = apply_dcifrz(statevector, param, qubits, n_qubits, qpus);
+        break;
+    //Distributed classical conditional two-qubit gates
+    case d_c_if_cx:
+        statevector = apply_dcifcx(statevector, qubits, n_qubits, qpus);
+        break;
+    case d_c_if_cy:
+        statevector = apply_dcifcy(statevector, qubits, n_qubits, qpus);
+        break;
+    case d_c_if_cz:
+        statevector = apply_dcifcz(statevector, qubits, n_qubits, qpus);
+        break;
+    case d_c_if_ecr:
+        statevector = apply_dcifecr(statevector, qubits, n_qubits, qpus);
         break;
     
     default:

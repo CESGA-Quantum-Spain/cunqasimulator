@@ -21,7 +21,7 @@ public:
     QPU(StateVector initial_state);
 
     void restart_statevector();
-    StateVector apply(std::string gate_name, std::array<int, 3> qubits, double param);
+    StateVector apply(std::string instruction_name, std::array<int, 3> qubits, double param = 0.0);
     Result run(QuantumCircuit& quantumcircuit, int shots = 99);
 
 };
@@ -40,7 +40,7 @@ void QPU::restart_statevector()
     this->statevector[0] = 1.0;
 }
 
-StateVector QPU::apply(std::string instruction_name, std::array<int, 3> qubits, double param = 0.0)
+StateVector QPU::apply(std::string instruction_name, std::array<int, 3> qubits, double param)
 {
     Instruction instruction(instruction_name);
     
@@ -49,7 +49,8 @@ StateVector QPU::apply(std::string instruction_name, std::array<int, 3> qubits, 
     return this->statevector;
 }
 
-//TODO: Shots
+
+
 //TODO: Classical Registers
 Result QPU::run(QuantumCircuit& quantumcircuit, int shots)
 {
@@ -117,3 +118,5 @@ Result QPU::run(QuantumCircuit& quantumcircuit, int shots)
 
     return result;
 }
+
+

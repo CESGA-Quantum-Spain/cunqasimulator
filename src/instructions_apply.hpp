@@ -5,12 +5,20 @@
 #include <array>
 #include <cmath>
 #include <random>
+#include <mpi.h>
 
 #include "../utils/utils.hpp"
 #include "../utils/constants.hpp"
 #include "../utils/types.hpp"
 
-//TODO: Classical conditional two-qubit gates
+
+int get_mpi_rank()
+{
+    int mpi_rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+
+    return mpi_rank;
+}
 
 //Measure
 meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
@@ -395,3 +403,291 @@ StateVector apply_cifecr(StateVector& statevector, std::array<int, 3> qubits, in
     return statevector;
 }
 
+//DISTRIBUTED GATES (qpus[0]->send, qpus[1]->recv)
+//Distributed classical conditional one-qubit gates
+StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_h(statevector, {qubits[1], -1, -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
+
+StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_x(statevector, {qubits[1], -1, -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
+
+StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_y(statevector, {qubits[1], -1, -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
+
+StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_z(statevector, {qubits[1], -1, -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
+
+StateVector apply_dcifrx(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_rx(statevector, param, {qubits[1], -1, -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
+
+StateVector apply_dcifry(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_ry(statevector, param, {qubits[1], -1, -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
+
+StateVector apply_dcifrz(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_rz(statevector, param, {qubits[1], -1, -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
+
+//Distributed classical conditional two-qubit gates
+StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_cx(statevector, {qubits[1], qubits[2], -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
+
+StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_cy(statevector, {qubits[1], qubits[2], -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
+
+StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_cz(statevector, {qubits[1], qubits[2], -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
+
+StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+{
+    int mpi_rank = get_mpi_rank();
+    
+    if (mpi_rank == qpus[0]) {
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        int measurement = meas.measure;
+
+        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+
+    } else if (mpi_rank == qpus[1]) {
+        int measurement;
+        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (measurement == 1) {
+            statevector = apply_ecr(statevector, {qubits[1], qubits[2], -1}, n_qubits);
+        }
+
+    } else {
+        //TODO: Logger
+        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+    }
+
+    return statevector;
+}
