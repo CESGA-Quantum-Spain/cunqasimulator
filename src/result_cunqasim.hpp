@@ -36,12 +36,13 @@ public:
 
 json ResultCunqa::to_json()
 {
+    this->counts = this->get_counts().counts;
     json attributes;
     attributes = {
         {"n_qubits", this->n_qubits},
         {"counts", this->counts},
-        {"total_time", this->total_time},
-        {"mean_time_per_shot", this->mean_time_per_shot}
+        {"total_time[ms]", this->total_time},
+        {"mean_time_per_shot[ms]", this->mean_time_per_shot}
 
     };
 
