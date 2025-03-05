@@ -7,9 +7,9 @@
 #include <random>
 #include <mpi.h>
 
-#include "../utils/utils.hpp"
-#include "../utils/constants.hpp"
-#include "../utils/types.hpp"
+#include "../utils/utils_cunqasim.hpp"
+#include "../utils/constants_cunqasim.hpp"
+#include "../utils/types_cunqasim.hpp"
 
 
 int get_mpi_rank()

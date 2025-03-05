@@ -7,18 +7,18 @@
 #include <chrono>
 
 #include "instructions.hpp"
-#include "result.hpp"
-#include "../utils/types.hpp"
+#include "result_cunqasim.hpp"
+#include "../utils/types_cunqasim.hpp"
 
 
-class QPU 
+class Executor 
 {
 public:
     int n_qubits;
     StateVector statevector;
 
-    QPU(int n_qubits);
-    QPU(StateVector initial_state);
+    Executor(int n_qubits);
+    Executor(StateVector initial_state);
 
     void restart_statevector();
     StateVector apply(std::string instruction_name, std::array<int, 3> qubits, double param = 0.0);
@@ -26,21 +26,21 @@ public:
 
 };
 
-QPU::QPU(int n_qubits) : n_qubits{n_qubits}, statevector(1 << this->n_qubits)
+Executor::Executor(int n_qubits) : n_qubits{n_qubits}, statevector(1 << this->n_qubits)
 {
     statevector[0] = 1.0;
 }
 
-QPU::QPU(StateVector initial_state) : n_qubits(initial_state.size()), statevector(initial_state)
+Executor::Executor(StateVector initial_state) : n_qubits(initial_state.size()), statevector(initial_state)
 {}
 
-void QPU::restart_statevector()
+void Executor::restart_statevector()
 {
     this->statevector.assign(this->statevector.size(), {0.0, 0.0});
     this->statevector[0] = 1.0;
 }
 
-StateVector QPU::apply(std::string instruction_name, std::array<int, 3> qubits, double param)
+StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qubits, double param)
 {
     Instruction instruction(instruction_name);
     
@@ -52,7 +52,7 @@ StateVector QPU::apply(std::string instruction_name, std::array<int, 3> qubits, 
 
 
 //TODO: Classical Registers
-Result QPU::run(QuantumCircuit& quantumcircuit, int shots)
+Result Executor::run(QuantumCircuit& quantumcircuit, int shots)
 {
     Result result;
     std::string instruction_name;

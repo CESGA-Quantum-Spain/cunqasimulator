@@ -5,7 +5,7 @@
 #include <bitset>
 
 
-#include "../utils/types.hpp"
+#include "../utils/types_cunqasim.hpp"
 
 int get_nonzero_position(StateVector& statevector_list)
 {
