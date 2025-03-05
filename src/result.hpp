@@ -28,26 +28,44 @@ public:
     double total_time;
     double mean_time_per_shot;
 
-    Counts get_counts()
-    {
-        Counts result;
-        int position = -1;
-        std::unordered_map<int, int> counts_map;
-
-        for (auto& one_result : this->sample) {
-            position = get_nonzero_position(one_result);
-            counts_map[position]++;
-            result.counts_list.push_back(position);
-        }
-
-        for (const auto& [key, value] : counts_map) {
-            std::cout << key << "\n";
-            std::string bit_key = std::bitset<32>(key).to_string();
-            bit_key = bit_key.substr(bit_key.size() - this->n_qubits);
-            result.counts[bit_key] = value;
-        }
-
-        return result;
-    }
+    json to_json(); 
+    Counts get_counts();
+    
 
 };
+
+json Result::to_json()
+{
+    json attributes;
+    attributes = {
+        {"n_qubits", this->n_qubits},
+        {"counts", this->counts},
+        {"total_time", this->total_time},
+        {"mean_time_per_shot", this->mean_time_per_shot}
+
+    }
+
+    return attributes;
+}
+
+Counts Result::get_counts() 
+{
+    Counts result;
+    int position = -1;
+    std::unordered_map<int, int> counts_map;
+
+    for (auto& one_result : this->sample) {
+        position = get_nonzero_position(one_result);
+        counts_map[position]++;
+        result.counts_list.push_back(position);
+    }
+
+    for (const auto& [key, value] : counts_map) {
+        std::cout << key << "\n";
+        std::string bit_key = std::bitset<32>(key).to_string();
+        bit_key = bit_key.substr(bit_key.size() - this->n_qubits);
+        result.counts[bit_key] = value;
+    }
+
+    return result;
+}
