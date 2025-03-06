@@ -12,17 +12,6 @@
 #include "utils/types_cunqasim.hpp"
 
 
-void printvector_aux (StateVector& sv)
-{
-    std::cout << "( ";
-    for (int i = 0; i < sv.size(); i++) {
-        std::cout << sv[i];
-        if (i != sv.size() - 1) {
-            std::cout << ", ";
-        }
-    } 
-    std::cout << " ) \n";
-}
 
 int get_mpi_rank()
 {
