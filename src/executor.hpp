@@ -93,7 +93,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case c_if_rx:
                 case c_if_ry:
                 case c_if_rz:
-                    param = instruction.at("params");
+                    param = instruction.at("params").get<Params>();;
                     this->statevector = this->apply(instruction_name, qubits, param);
                     break;
                 default:

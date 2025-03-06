@@ -148,8 +148,8 @@ StateVector apply_rx(StateVector& statevector, Params& param, std::array<int, 3>
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero;
-    double sin = std::sin(param/2.0);
-    double cos = std::cos(param/2.0);
+    double sin = std::sin(param[0]/2.0);
+    double cos = std::cos(param[0]/2.0);
 
     for (int i = 0; i < statevector.size(); i++) {
         zero = is_zero(i, n_qubits - 1 - qubits[0]);
@@ -169,8 +169,8 @@ StateVector apply_ry(StateVector& statevector, Params& param, std::array<int, 3>
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero;
-    double sin = std::sin(param/2.0);
-    double cos = std::cos(param/2.0);
+    double sin = std::sin(param[0]/2.0);
+    double cos = std::cos(param[0]/2.0);
 
     for (int i = 0; i < statevector.size(); i++) {
         zero = is_zero(i, n_qubits - 1 - qubits[0]);
@@ -189,8 +189,8 @@ StateVector apply_rz(StateVector& statevector, Params& param, std::array<int, 3>
 {
     //int n_qubits = statevector.size();
     bool zero;
-    double sin = std::sin(param/2.0);
-    double cos = std::cos(param/2.0);
+    double sin = std::sin(param[0]/2.0);
+    double cos = std::cos(param[0]/2.0);
 
     for (int i = 0; i < statevector.size(); i++) {
         zero = is_zero(i, n_qubits - 1 - qubits[0]);

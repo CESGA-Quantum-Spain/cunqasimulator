@@ -7,7 +7,7 @@ using QuantumCircuit = std::vector<json>;
 using DistributedQuantumCircuit = std::vector<json>;
 using complex = std::complex<double>;
 using StateVector = std::vector<complex>;
-using Params = double;
+using Params = std::vector<double>;
 
 struct meas_out {
     StateVector statevector;
