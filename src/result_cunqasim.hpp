@@ -60,7 +60,6 @@ Counts ResultCunqa::get_counts()
     }
 
     for (const auto& [key, value] : counts_map) {
-        std::cout << key << "\n";
         std::string bit_key = std::bitset<32>(key).to_string();
         bit_key = bit_key.substr(bit_key.size() - this->n_qubits);
         result.counts[bit_key] = value;

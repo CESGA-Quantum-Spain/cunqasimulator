@@ -28,8 +28,9 @@ meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits, int&
     bool zero;
     double prob_0 = 0;
     double prob_1 = 0;
-    std::vector<int> index_0((int)statevector.size()/2);
-    std::vector<int> index_1((int)statevector.size()/2);
+    std::vector<int> index_0;
+    std::vector<int> index_1;
+
     
 
 
@@ -44,6 +45,7 @@ meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits, int&
         }
     }
 
+
     std::random_device rd;  // Seed source
     std::mt19937 gen(rd()); // Mersenne Twister RNG
     std::discrete_distribution<int> dist({prob_0, prob_1});
@@ -51,6 +53,7 @@ meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits, int&
     output.measure = sample;
     auto it0 = index_0.begin();
     auto it1 = index_1.begin();
+
 
     //TODO: The following is parallelizable
     switch (sample)
@@ -68,6 +71,7 @@ meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits, int&
         }
             break;
     }
+
 
     output.statevector = statevector;
 
