@@ -12,6 +12,18 @@
 #include "utils/types_cunqasim.hpp"
 
 
+void printvector_aux (StateVector& sv)
+{
+    std::cout << "( ";
+    for (int i = 0; i < sv.size(); i++) {
+        std::cout << sv[i];
+        if (i != sv.size() - 1) {
+            std::cout << ", ";
+        }
+    } 
+    std::cout << " ) \n";
+}
+
 int get_mpi_rank()
 {
     int mpi_rank;
@@ -105,7 +117,7 @@ StateVector apply_x(StateVector& statevector, std::array<int, 3> qubits, int& n_
     StateVector aux_statevector = statevector;
 
     for (int i = 0; i < statevector.size(); i++) {
-        statevector[i] = aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+        statevector[i] = aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
     }
 
     return statevector;
@@ -121,9 +133,9 @@ StateVector apply_y(StateVector& statevector, std::array<int, 3> qubits, int& n_
     for (int i = 0; i < statevector.size(); i++) {
         zero = is_zero(i, n_qubits - 1 - qubits[0]);
         if (zero == true) { 
-            statevector[i] = imag * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+            statevector[i] = imag * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
         } else {
-            statevector[i] = -imag * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+            statevector[i] = -imag * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
         }
     }
 
@@ -158,11 +170,12 @@ StateVector apply_rx(StateVector& statevector, Params& param, std::array<int, 3>
     for (int i = 0; i < statevector.size(); i++) {
         zero = is_zero(i, n_qubits - 1 - qubits[0]);
         if (zero == true) { 
-            statevector[i] = cos * aux_statevector[i] - imag * sin * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+            statevector[i] = cos * aux_statevector[i] - imag * sin * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
         } else {
-            statevector[i] = cos * aux_statevector[i]  - imag * sin * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+            statevector[i] = cos * aux_statevector[i]  - imag * sin * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
         }
     }
+
 
     return statevector;
 }
@@ -179,9 +192,9 @@ StateVector apply_ry(StateVector& statevector, Params& param, std::array<int, 3>
     for (int i = 0; i < statevector.size(); i++) {
         zero = is_zero(i, n_qubits - 1 - qubits[0]);
         if (zero == true) { 
-            statevector[i] = cos * aux_statevector[i] + sin * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+            statevector[i] = cos * aux_statevector[i] + sin * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
         } else {
-            statevector[i] = cos * aux_statevector[i]  +  sin * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+            statevector[i] = cos * aux_statevector[i]  +  sin * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
         }
     }
 

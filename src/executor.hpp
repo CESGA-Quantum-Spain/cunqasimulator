@@ -22,7 +22,7 @@ public:
 
     void restart_statevector();
     StateVector apply(std::string instruction_name, std::array<int, 3> qubits, Params param = {0.0});
-    ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 20);
+    ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
 
 };
 
