@@ -21,7 +21,7 @@ public:
     Executor(StateVector initial_state);
 
     void restart_statevector();
-    StateVector apply(std::string instruction_name, std::array<int, 3> qubits, double param = 0.0);
+    StateVector apply(std::string instruction_name, std::array<int, 3> qubits, Params param = {0.0});
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 99);
 
 };
@@ -40,7 +40,7 @@ void Executor::restart_statevector()
     this->statevector[0] = 1.0;
 }
 
-StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qubits, double param)
+StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qubits, Params param)
 {
     Instruction instruction(instruction_name);
     
@@ -57,7 +57,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
     ResultCunqa result;
     std::string instruction_name;
     std::array<int, 3> qubits;
-    double param;
+    Params param;
 
     result.n_qubits = this->n_qubits;
 

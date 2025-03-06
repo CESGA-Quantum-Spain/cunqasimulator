@@ -18,7 +18,7 @@ public:
     std::string instruction_name;
 
     Instruction(std::string instruction_name);
-    StateVector apply_instruction(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2> qpus = {-1, -1});
+    StateVector apply_instruction(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2> qpus = {-1, -1});
 
 };
 
@@ -32,7 +32,7 @@ Instruction::Instruction(std::string instruction_name)
     }
 }
 
-StateVector Instruction::apply_instruction(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2> qpus)
+StateVector Instruction::apply_instruction(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2> qpus)
 {
     meas_out meas;
     switch (instructions_map[this->instruction_name])

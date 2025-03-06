@@ -143,7 +143,7 @@ StateVector apply_z(StateVector& statevector, std::array<int, 3> qubits, int& n_
 }
 
 
-StateVector apply_rx(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
+StateVector apply_rx(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -164,7 +164,7 @@ StateVector apply_rx(StateVector& statevector, double& param, std::array<int, 3>
 }
 
 
-StateVector apply_ry(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
+StateVector apply_ry(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
@@ -185,7 +185,7 @@ StateVector apply_ry(StateVector& statevector, double& param, std::array<int, 3>
 }
 
 
-StateVector apply_rz(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
+StateVector apply_rz(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
 {
     //int n_qubits = statevector.size();
     bool zero;
@@ -332,7 +332,7 @@ StateVector apply_cifz(StateVector& statevector, std::array<int, 3> qubits, int&
     return statevector;
 }
 
-StateVector apply_cifrx(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
+StateVector apply_cifrx(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
 {
     meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
     if (meas.measure == 1) {
@@ -342,7 +342,7 @@ StateVector apply_cifrx(StateVector& statevector, double& param, std::array<int,
     return statevector;
 }
 
-StateVector apply_cifry(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
+StateVector apply_cifry(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
 {
     meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
     if (meas.measure == 1) {
@@ -352,7 +352,7 @@ StateVector apply_cifry(StateVector& statevector, double& param, std::array<int,
     return statevector;
 }
 
-StateVector apply_cifrz(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits)
+StateVector apply_cifrz(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
 {
     meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
     if (meas.measure == 1) {
@@ -509,7 +509,7 @@ StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubits, int
     return statevector;
 }
 
-StateVector apply_dcifrx(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+StateVector apply_dcifrx(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
@@ -535,7 +535,7 @@ StateVector apply_dcifrx(StateVector& statevector, double& param, std::array<int
     return statevector;
 }
 
-StateVector apply_dcifry(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+StateVector apply_dcifry(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
@@ -561,7 +561,7 @@ StateVector apply_dcifry(StateVector& statevector, double& param, std::array<int
     return statevector;
 }
 
-StateVector apply_dcifrz(StateVector& statevector, double& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+StateVector apply_dcifrz(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
