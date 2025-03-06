@@ -21,7 +21,7 @@ public:
     Executor(StateVector initial_state);
 
     void restart_statevector();
-    StateVector apply(std::string instruction_name, std::array<int, 3> qubits, Params param = {0.0});
+    StateVector apply(std::string instruction_name, std::array<int, 3> qubits, Params param = {0.0}, std::array<int, 2> qpus = {-1,-1});
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
 
 };
@@ -40,15 +40,14 @@ void Executor::restart_statevector()
     this->statevector[0] = 1.0;
 }
 
-StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qubits, Params param)
+StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qubits, Params param, std::array<int, 2> qpus)
 {
     Instruction instruction(instruction_name);
     
-    this->statevector = instruction.apply_instruction(this->statevector, param, qubits, this->n_qubits);
+    this->statevector = instruction.apply_instruction(this->statevector, param, qubits, qpus, this->n_qubits);
 
     return this->statevector;
 }
-
 
 
 //TODO: Classical Registers
@@ -58,6 +57,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
     std::string instruction_name;
     std::array<int, 3> qubits;
     Params param;
+    std::array<int, 2> qpus;
 
     result.n_qubits = this->n_qubits;
 
@@ -79,12 +79,14 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case cy:
                 case cz:
                 case ecr:
+                case c_if_h:
                 case c_if_x:
                 case c_if_y:
                 case c_if_z:
                 case c_if_cx:
                 case c_if_cy:
                 case c_if_cz:
+                case c_if_ecr:
                     this->statevector = this->apply(instruction_name, qubits);
                     break;
                 case rx:
@@ -95,6 +97,25 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case c_if_rz:
                     param = instruction.at("params").get<Params>();
                     this->statevector = this->apply(instruction_name, qubits, param);
+                    break;
+                case d_c_if_h:
+                case d_c_if_x:
+                case d_c_if_y:
+                case d_c_if_z:
+                case d_c_if_cx:
+                case d_c_if_cy:
+                case d_c_if_cz:
+                case d_c_if_ecr:
+                    qpus = instruction.at("qpus").get<std::array<int, 2>>();
+                    param = {0};
+                    this->statevector = this->apply(instruction_name, qubits, param, qpus);
+                    break;
+                case d_c_if_rx:
+                case d_c_if_ry:
+                case d_c_if_rz:
+                    param = instruction.at("params").get<Params>();
+                    qpus = instruction.at("qpus").get<std::array<int, 2>>();
+                    this->statevector = this->apply(instruction_name, qubits, param, qpus);
                     break;
                 default:
                     std::cout << "Error. Invalid gate name" << "\n";
