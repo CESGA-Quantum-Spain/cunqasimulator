@@ -26,7 +26,6 @@ public:
     std::vector<StateVector> sample;
     json counts;
     double total_time;
-    double mean_time_per_shot;
 
     json to_json(); 
     Counts get_counts();
@@ -41,8 +40,7 @@ json ResultCunqa::to_json()
     attributes = {
         {"n_qubits", this->n_qubits},
         {"counts", this->counts},
-        {"total_time[ms]", this->total_time},
-        {"mean_time_per_shot[ms]", this->mean_time_per_shot}
+        {"total_time[ms]", this->total_time}
 
     };
 

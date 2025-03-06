@@ -111,10 +111,8 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop_time - start_time);
 
     double total_time = duration.count();
-    double mean_time_per_shot = total_time / (double)shots;
 
     result.total_time = total_time;
-    result.mean_time_per_shot = mean_time_per_shot;
 
     return result;
 }
