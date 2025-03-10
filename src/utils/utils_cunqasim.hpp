@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mpi.h>
+
 #include "types_cunqasim.hpp"
 
 int flipbit(int N, int p) {
@@ -21,4 +23,12 @@ inline int get_nonzero_position(StateVector& statevector)
     position = std::distance(statevector.begin(), it);
 
     return position;
+}
+
+inline int get_mpi_rank()
+{
+    int mpi_rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+
+    return mpi_rank;
 }

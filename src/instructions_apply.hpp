@@ -6,26 +6,15 @@
 #include <cmath>
 #include <random>
 #include <chrono>
-#include <mpi.h>
 
 #include "utils/utils_cunqasim.hpp"
 #include "utils/constants_cunqasim.hpp"
 #include "utils/types_cunqasim.hpp"
 
 
-
-int get_mpi_rank()
-{
-    int mpi_rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-
-    return mpi_rank;
-}
-
 //Measure
 inline meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
 {
-    //int n_qubits = statevector.size();
     meas_out output;
     bool zero;
     double prob_0 = 0;
@@ -33,11 +22,8 @@ inline meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubit
     std::vector<int> index_0;
     std::vector<int> index_1;
 
-    
-
-
     for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, n_qubits - 1 - qubits[0]);
+        zero = is_zero(i, qubits[0]);
         if (zero) {
             index_0.push_back(i);
             prob_0 = prob_0 + std::norm(statevector[i]);
@@ -46,7 +32,6 @@ inline meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubit
             prob_1 = prob_1 + std::norm(statevector[i]);
         }
     }
-
 
     std::random_device rd;  // Seed source
     std::mt19937 gen(rd() ^ std::chrono::steady_clock::now().time_since_epoch().count()); // Mersenne Twister RNG
@@ -67,13 +52,12 @@ inline meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubit
             }
             break;
         case 1:
-        for (; it0 != index_0.end() && it1 != index_1.end(); it0++, it1++) {
-            statevector[*it0] = 0.0;
-            statevector[*it1] = (1.0/std::sqrt((1 - prob_0))) * statevector[*it1];
-        }
+            for (; it0 != index_0.end() && it1 != index_1.end(); it0++, it1++) {
+                statevector[*it0] = 0.0;
+                statevector[*it1] = (1.0/std::sqrt((1 - prob_0))) * statevector[*it1];
+            }
             break;
     }
-
 
     output.statevector = statevector;
 
@@ -86,14 +70,13 @@ inline StateVector apply_h(StateVector& statevector, std::array<int, 3> qubits, 
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero;
-    double ampl = 1.0 / std::sqrt(2.0);
 
     for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, n_qubits - 1 - qubits[0]);
+        zero = is_zero(i, qubits[0]);
         if (zero == true) { 
-            statevector[i] = ampl * aux_statevector[i] + ampl * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+            statevector[i] = inverse_sqrt_2 * aux_statevector[i] + inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])];
         } else {
-            statevector[i] = -ampl * aux_statevector[i] + ampl * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+            statevector[i] = -inverse_sqrt_2 * aux_statevector[i] + inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])];
         }
     }
 
@@ -107,7 +90,7 @@ inline StateVector apply_x(StateVector& statevector, std::array<int, 3> qubits, 
     StateVector aux_statevector = statevector;
 
     for (int i = 0; i < statevector.size(); i++) {
-        statevector[i] = aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+        statevector[i] = aux_statevector[flipbit(i, qubits[0])];
     }
 
     return statevector;
@@ -121,11 +104,11 @@ inline StateVector apply_y(StateVector& statevector, std::array<int, 3> qubits, 
     bool zero; 
 
     for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, n_qubits - 1 - qubits[0]);
+        zero = is_zero(i, qubits[0]);
         if (zero == true) { 
-            statevector[i] = imag * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+            statevector[i] = imag * aux_statevector[flipbit(i, qubits[0])];
         } else {
-            statevector[i] = -imag * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+            statevector[i] = -imag * aux_statevector[flipbit(i, qubits[0])];
         }
     }
 
@@ -139,7 +122,7 @@ inline StateVector apply_z(StateVector& statevector, std::array<int, 3> qubits, 
     bool zero; 
 
     for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, n_qubits - 1 - qubits[0]);
+        zero = is_zero(i, qubits[0]);
         if (zero == false) { 
             statevector[i] = -statevector[i]; 
         }
@@ -158,11 +141,11 @@ inline StateVector apply_rx(StateVector& statevector, Params& param, std::array<
     double cos = std::cos(param[0]/2.0);
 
     for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, n_qubits - 1 - qubits[0]);
+        zero = is_zero(i, qubits[0]);
         if (zero == true) { 
-            statevector[i] = cos * aux_statevector[i] - imag * sin * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+            statevector[i] = cos * aux_statevector[i] - imag * sin * aux_statevector[flipbit(i, qubits[0])];
         } else {
-            statevector[i] = cos * aux_statevector[i]  - imag * sin * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+            statevector[i] = cos * aux_statevector[i]  - imag * sin * aux_statevector[flipbit(i, qubits[0])];
         }
     }
 
@@ -180,11 +163,11 @@ inline StateVector apply_ry(StateVector& statevector, Params& param, std::array<
     double cos = std::cos(param[0]/2.0);
 
     for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, n_qubits - 1 - qubits[0]);
+        zero = is_zero(i, qubits[0]);
         if (zero == true) { 
-            statevector[i] = cos * aux_statevector[i] + sin * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+            statevector[i] = cos * aux_statevector[i] + sin * aux_statevector[flipbit(i, qubits[0])];
         } else {
-            statevector[i] = cos * aux_statevector[i]  +  sin * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])];
+            statevector[i] = cos * aux_statevector[i]  +  sin * aux_statevector[flipbit(i, qubits[0])];
         }
     }
 
@@ -200,7 +183,7 @@ inline StateVector apply_rz(StateVector& statevector, Params& param, std::array<
     double cos = std::cos(param[0]/2.0);
 
     for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, n_qubits - 1 - qubits[0]);
+        zero = is_zero(i, qubits[0]);
         if (zero) { 
             statevector[i] = (cos - imag * sin) * statevector[i];
         } else {
@@ -221,9 +204,9 @@ inline StateVector apply_cx(StateVector& statevector, std::array<int, 3> qubits,
     bool zero;
 
     for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, n_qubits - 1 - qubits[0]);
+        zero = is_zero(i, qubits[0]);
         if (!zero) {
-            statevector[i] = aux_statevector[flipbit(i, n_qubits - 1 - qubits[1])];
+            statevector[i] = aux_statevector[flipbit(i, qubits[1])];
         }
     }
 
@@ -239,13 +222,13 @@ inline StateVector apply_cy(StateVector& statevector, std::array<int, 3> qubits,
     bool zero_1;
 
     for (int i = 0; i < statevector.size(); i++) {
-        zero_0 = is_zero(i, n_qubits - 1 - qubits[0]);
+        zero_0 = is_zero(i, qubits[0]);
         if (!zero_0) {
-            zero_1 = is_zero(i, n_qubits - 1 - qubits[1]);
+            zero_1 = is_zero(i, qubits[1]);
             if (zero_1) { 
-                statevector[i] = imag * aux_statevector[flipbit(i, n_qubits - 1 - qubits[1])];
+                statevector[i] = imag * aux_statevector[flipbit(i, qubits[1])];
             } else {
-                statevector[i] = -imag * aux_statevector[flipbit(i, n_qubits - 1 - qubits[1])];
+                statevector[i] = -imag * aux_statevector[flipbit(i, qubits[1])];
             }
         }
     }
@@ -261,9 +244,9 @@ inline StateVector apply_cz(StateVector& statevector, std::array<int, 3> qubits,
     bool zero_1;
 
     for (int i = 0; i < statevector.size(); i++) {
-        zero_0 = is_zero(i, n_qubits - 1 - qubits[0]);
+        zero_0 = is_zero(i, qubits[0]);
         if (!zero_0) {
-            zero_1 = is_zero(i, n_qubits - 1 - qubits[1]);
+            zero_1 = is_zero(i, qubits[1]);
             if (!zero_1) { 
                 statevector[i] = -statevector[i]; 
             }
@@ -277,21 +260,20 @@ inline StateVector apply_ecr(StateVector& statevector, std::array<int, 3> qubits
 {
     //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
-    double ampl = 1.0 / std::sqrt(2.0);
     bool zero_0;
     bool zero_1;
 
     for (int i = 0; i < statevector.size(); i++) {
-        zero_0 = is_zero(i, n_qubits - 1 - qubits[0]);
-        zero_1 = is_zero(i, n_qubits - 1 - qubits[1]);
+        zero_0 = is_zero(i, qubits[0]);
+        zero_1 = is_zero(i, qubits[1]);
         if (zero_0  && zero_1) {
-            statevector[i] = ampl * aux_statevector[flipbit(i, n_qubits - 1 - qubits[0])] + imag * ampl * aux_statevector[flipbit(flipbit(i, n_qubits - 1 - qubits[0]), n_qubits - 1 - qubits[1])];
+            statevector[i] = inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])] + imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
         } else if (zero_0 && !zero_1) {
-            statevector[i] = imag * ampl * aux_statevector[flipbit(flipbit(i, n_qubits - 1 - qubits[0]), n_qubits - 1 - qubits[1])] + ampl * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+            statevector[i] = imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] + inverse_sqrt_2 * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
         } else if (!zero_0 && zero_1) {
-            statevector[i] = ampl * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])] - imag * ampl * aux_statevector[flipbit(flipbit(i, n_qubits - 1 - qubits[0]), n_qubits - 1 - qubits[1])];
+            statevector[i] = inverse_sqrt_2 * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])] - imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
         } else if (!zero_0 && !zero_1) {
-            statevector[i] = -imag * ampl * aux_statevector[flipbit(flipbit(i, n_qubits - 1 - qubits[0]), n_qubits - 1 - qubits[1])] + ampl * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+            statevector[i] = -imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] + inverse_sqrt_2 * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
         }
     }
 
@@ -446,7 +428,7 @@ inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubi
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
         int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
     } else if (mpi_rank == qpus[1]) {
         int measurement;
@@ -470,9 +452,8 @@ inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubi
     
     if (mpi_rank == qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
-        int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
     } else if (mpi_rank == qpus[1]) {
         int measurement;
@@ -496,9 +477,8 @@ inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubi
     
     if (mpi_rank == qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
-        int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
     } else if (mpi_rank == qpus[1]) {
         int measurement;
@@ -522,9 +502,8 @@ inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::ar
     
     if (mpi_rank == qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
-        int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
     } else if (mpi_rank == qpus[1]) {
         int measurement;
@@ -548,9 +527,8 @@ inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::ar
     
     if (mpi_rank == qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
-        int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
     } else if (mpi_rank == qpus[1]) {
         int measurement;
@@ -574,9 +552,8 @@ inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::ar
     
     if (mpi_rank == qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
-        int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
     } else if (mpi_rank == qpus[1]) {
         int measurement;
@@ -601,9 +578,8 @@ inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qub
     
     if (mpi_rank == qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
-        int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
     } else if (mpi_rank == qpus[1]) {
         int measurement;
@@ -627,9 +603,8 @@ inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qub
     
     if (mpi_rank == qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
-        int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
     } else if (mpi_rank == qpus[1]) {
         int measurement;
@@ -653,9 +628,8 @@ inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qub
     
     if (mpi_rank == qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
-        int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
     } else if (mpi_rank == qpus[1]) {
         int measurement;
@@ -679,9 +653,8 @@ inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qu
     
     if (mpi_rank == qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
-        int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
     } else if (mpi_rank == qpus[1]) {
         int measurement;
