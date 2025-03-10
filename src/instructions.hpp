@@ -15,22 +15,10 @@
 class Instruction
 {
 public:
-    //std::string instruction_name;
-
-    //Instruction(std::string instruction_name);
     static inline StateVector apply_instruction(std::string instruction_name, StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus, int& n_qubits);
 
 };
 
-/* Instruction::Instruction(std::string instruction_name) 
-{
-    //TODO: I think this previous check is not needed.
-    if (std::find(instructions.begin(), instructions.end(), instruction_name) == instructions.end()) {
-        std::cout << "Error. Invalid instruction name" <<"\n";
-    } else {
-        this->instruction_name = instruction_name;
-    }
-} */
 
 inline StateVector Instruction::apply_instruction(std::string instruction_name,StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus, int& n_qubits)
 {
