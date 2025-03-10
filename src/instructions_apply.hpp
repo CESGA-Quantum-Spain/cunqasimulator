@@ -13,7 +13,7 @@
 
 
 //Measure
-inline meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits)
 {
     meas_out output;
     bool zero;
@@ -65,9 +65,8 @@ inline meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubit
 }
 
 // One-Qubit Gates
-inline StateVector apply_h(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_h(StateVector& statevector, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero;
 
@@ -84,9 +83,8 @@ inline StateVector apply_h(StateVector& statevector, std::array<int, 3> qubits, 
 }
 
 
-inline StateVector apply_x(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_x(StateVector& statevector, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
 
     for (int i = 0; i < statevector.size(); i++) {
@@ -97,9 +95,8 @@ inline StateVector apply_x(StateVector& statevector, std::array<int, 3> qubits, 
 }
 
 
-inline StateVector apply_y(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_y(StateVector& statevector, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero; 
 
@@ -116,9 +113,8 @@ inline StateVector apply_y(StateVector& statevector, std::array<int, 3> qubits, 
 }
 
 
-inline StateVector apply_z(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_z(StateVector& statevector, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     bool zero; 
 
     for (int i = 0; i < statevector.size(); i++) {
@@ -132,9 +128,8 @@ inline StateVector apply_z(StateVector& statevector, std::array<int, 3> qubits, 
 }
 
 
-inline StateVector apply_rx(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_rx(StateVector& statevector, Params& param, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero;
     double sin = std::sin(param[0]/2.0);
@@ -154,9 +149,8 @@ inline StateVector apply_rx(StateVector& statevector, Params& param, std::array<
 }
 
 
-inline StateVector apply_ry(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_ry(StateVector& statevector, Params& param, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero;
     double sin = std::sin(param[0]/2.0);
@@ -175,9 +169,8 @@ inline StateVector apply_ry(StateVector& statevector, Params& param, std::array<
 }
 
 
-inline StateVector apply_rz(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_rz(StateVector& statevector, Params& param, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     bool zero;
     double sin = std::sin(param[0]/2.0);
     double cos = std::cos(param[0]/2.0);
@@ -197,9 +190,8 @@ inline StateVector apply_rz(StateVector& statevector, Params& param, std::array<
 
 // Two-Qubit Gates
 
-inline StateVector apply_cx(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cx(StateVector& statevector, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero;
 
@@ -214,9 +206,8 @@ inline StateVector apply_cx(StateVector& statevector, std::array<int, 3> qubits,
     return statevector;
 }
 
-inline StateVector apply_cy(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cy(StateVector& statevector, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero_0;
     bool zero_1;
@@ -236,9 +227,8 @@ inline StateVector apply_cy(StateVector& statevector, std::array<int, 3> qubits,
     return statevector;
 }
 
-inline StateVector apply_cz(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cz(StateVector& statevector, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero_0;
     bool zero_1;
@@ -256,9 +246,8 @@ inline StateVector apply_cz(StateVector& statevector, std::array<int, 3> qubits,
     return statevector;
 }
 
-inline StateVector apply_ecr(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_ecr(StateVector& statevector, std::array<int, 3> qubits)
 {
-    //int n_qubits = statevector.size();
     StateVector aux_statevector = statevector;
     bool zero_0;
     bool zero_1;
@@ -281,112 +270,112 @@ inline StateVector apply_ecr(StateVector& statevector, std::array<int, 3> qubits
 }
 
 //Classical conditional one-qubit gates
-inline StateVector apply_cifh(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cifh(StateVector& statevector, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
-        statevector = apply_h(statevector, {qubits[0]}, n_qubits);
+        statevector = apply_h(statevector, {qubits[0]});
     }
 
     return statevector;
 }
 
-inline StateVector apply_cifx(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cifx(StateVector& statevector, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
-        statevector = apply_x(statevector, {qubits[0]}, n_qubits);
+        statevector = apply_x(statevector, {qubits[0]});
     }
 
     return statevector;
 }
 
-inline StateVector apply_cify(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cify(StateVector& statevector, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
-        statevector = apply_y(statevector, {qubits[0]}, n_qubits);
+        statevector = apply_y(statevector, {qubits[0]});
     }
 
     return statevector;
 }
 
-inline StateVector apply_cifz(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cifz(StateVector& statevector, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
-        statevector = apply_z(statevector, {qubits[0]}, n_qubits);
+        statevector = apply_z(statevector, {qubits[0]});
     }
 
     return statevector;
 }
 
-inline StateVector apply_cifrx(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cifrx(StateVector& statevector, Params& param, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
-        statevector = apply_rx(statevector, param, {qubits[0]}, n_qubits);
+        statevector = apply_rx(statevector, param, {qubits[0]});
     }
 
     return statevector;
 }
 
-inline StateVector apply_cifry(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cifry(StateVector& statevector, Params& param, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
-        statevector = apply_ry(statevector, param, {qubits[0]}, n_qubits);
+        statevector = apply_ry(statevector, param, {qubits[0]});
     }
 
     return statevector;
 }
 
-inline StateVector apply_cifrz(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cifrz(StateVector& statevector, Params& param, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[1]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
-        statevector = apply_rz(statevector, param, {qubits[0]}, n_qubits);
+        statevector = apply_rz(statevector, param, {qubits[0]});
     }
 
     return statevector;
 }
 
 //Classical conditional two-qubits gates
-inline StateVector apply_cifcx(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cifcx(StateVector& statevector, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[2]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[2]});
     if (meas.measure == 1) {
-        statevector = apply_cx(statevector, {qubits[0], qubits[1]}, n_qubits);
+        statevector = apply_cx(statevector, {qubits[0], qubits[1]});
     }
 
     return statevector;
 }
 
-inline StateVector apply_cifcy(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cifcy(StateVector& statevector, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[2]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[2]});
     if (meas.measure == 1) {
-        statevector = apply_cy(statevector, {qubits[0], qubits[1]}, n_qubits);
+        statevector = apply_cy(statevector, {qubits[0], qubits[1]});
     }
 
     return statevector;
 }
 
-inline StateVector apply_cifcz(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cifcz(StateVector& statevector, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[2]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[2]});
     if (meas.measure == 1) {
-        statevector = apply_cz(statevector, {qubits[0], qubits[1]}, n_qubits);
+        statevector = apply_cz(statevector, {qubits[0], qubits[1]});
     }
 
     return statevector;
 }
 
-inline StateVector apply_cifecr(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits)
+inline StateVector apply_cifecr(StateVector& statevector, std::array<int, 3> qubits)
 {
-    meas_out meas = apply_measure(statevector, {qubits[2]}, n_qubits);
+    meas_out meas = apply_measure(statevector, {qubits[2]});
     if (meas.measure == 1) {
-        statevector = apply_ecr(statevector, {qubits[0], qubits[1]}, n_qubits);
+        statevector = apply_ecr(statevector, {qubits[0], qubits[1]});
     }
 
     return statevector;
@@ -394,12 +383,12 @@ inline StateVector apply_cifecr(StateVector& statevector, std::array<int, 3> qub
 
 //DISTRIBUTED GATES (qpus[0]->send, qpus[1]->recv)
 //Distributed classical conditional one-qubit gates
-inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
         MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
@@ -409,7 +398,7 @@ inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubi
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_h(statevector, {qubits[1], -1, -1}, n_qubits);
+            statevector = apply_h(statevector, {qubits[1], -1, -1});
         }
 
     } else {
@@ -420,12 +409,12 @@ inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubi
     return statevector;
 }
 
-inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
         MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
@@ -435,7 +424,7 @@ inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubi
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_x(statevector, {qubits[1], -1, -1}, n_qubits);
+            statevector = apply_x(statevector, {qubits[1], -1, -1});
         }
 
     } else {
@@ -446,12 +435,12 @@ inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubi
     return statevector;
 }
 
-inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
         MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
@@ -460,7 +449,7 @@ inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubi
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_y(statevector, {qubits[1], -1, -1}, n_qubits);
+            statevector = apply_y(statevector, {qubits[1], -1, -1});
         }
 
     } else {
@@ -471,12 +460,12 @@ inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubi
     return statevector;
 }
 
-inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
         MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
@@ -485,7 +474,7 @@ inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubi
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_z(statevector, {qubits[1], -1, -1}, n_qubits);
+            statevector = apply_z(statevector, {qubits[1], -1, -1});
         }
 
     } else {
@@ -496,12 +485,12 @@ inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubi
     return statevector;
 }
 
-inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
         MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
@@ -510,7 +499,7 @@ inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::ar
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_rx(statevector, param, {qubits[1], -1, -1}, n_qubits);
+            statevector = apply_rx(statevector, param, {qubits[1], -1, -1});
         }
 
     } else {
@@ -521,12 +510,12 @@ inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::ar
     return statevector;
 }
 
-inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
         MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
@@ -535,7 +524,7 @@ inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::ar
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_ry(statevector, param, {qubits[1], -1, -1}, n_qubits);
+            statevector = apply_ry(statevector, param, {qubits[1], -1, -1});
         }
 
     } else {
@@ -546,12 +535,12 @@ inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::ar
     return statevector;
 }
 
-inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
         MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
@@ -560,7 +549,7 @@ inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::ar
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_rz(statevector, param, {qubits[1], -1, -1}, n_qubits);
+            statevector = apply_rz(statevector, param, {qubits[1], -1, -1});
         }
 
     } else {
@@ -572,12 +561,12 @@ inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::ar
 }
 
 //Distributed classical conditional two-qubit gates
-inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
         MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
@@ -586,7 +575,7 @@ inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qub
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_cx(statevector, {qubits[1], qubits[2], -1}, n_qubits);
+            statevector = apply_cx(statevector, {qubits[1], qubits[2], -1});
         }
 
     } else {
@@ -597,12 +586,12 @@ inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qub
     return statevector;
 }
 
-inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
         MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
@@ -611,7 +600,7 @@ inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qub
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_cy(statevector, {qubits[1], qubits[2], -1}, n_qubits);
+            statevector = apply_cy(statevector, {qubits[1], qubits[2], -1});
         }
 
     } else {
@@ -622,12 +611,12 @@ inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qub
     return statevector;
 }
 
-inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
         MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
@@ -636,7 +625,7 @@ inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qub
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_cz(statevector, {qubits[1], qubits[2], -1}, n_qubits);
+            statevector = apply_cz(statevector, {qubits[1], qubits[2], -1});
         }
 
     } else {
@@ -647,12 +636,12 @@ inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qub
     return statevector;
 }
 
-inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qubits, int& n_qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
-        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1}, n_qubits);
+        meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
         MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
 
@@ -661,7 +650,7 @@ inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qu
         MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_ecr(statevector, {qubits[1], qubits[2], -1}, n_qubits);
+            statevector = apply_ecr(statevector, {qubits[1], qubits[2], -1});
         }
 
     } else {

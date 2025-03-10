@@ -45,7 +45,7 @@ inline StateVector Executor::apply(std::string instruction_name, std::array<int,
 {
     //Instruction instruction(instruction_name);
     
-    this->statevector = Instruction::apply_instruction(instruction_name, this->statevector, param, qubits, qpus, this->n_qubits);
+    this->statevector = Instruction::apply_instruction(instruction_name, this->statevector, param, qubits, qpus);
 
     return this->statevector;
 }
@@ -55,7 +55,6 @@ inline StateVector Executor::apply(std::string instruction_name, std::array<int,
 ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
 {
     ResultCunqa result;
-    std::unordered_map<int, int> counts_map;
     std::string instruction_name;
     std::array<int, 3> qubits;
     Params param;
@@ -126,13 +125,11 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
         }
         
         int position_result = get_nonzero_position(statevector);
-        counts_map[position_result]++;
+        result.counts[position_result]++;
         
         restart_statevector();
 
     }
-
-    result.counts = counts_map;
 
     auto stop_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop_time - start_time);

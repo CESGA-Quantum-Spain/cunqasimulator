@@ -4,13 +4,22 @@
 
 #include "types_cunqasim.hpp"
 
-int flipbit(int N, int p) {
+inline int flipbit(int N, int p) {
     return N ^ (1 << p);  
 }
 
-bool is_zero(int N, int p) {
+inline bool is_zero(int N, int p) {
     bool bit = (N & (1 << p)) == 0;
     return bit;
+}
+
+//Flips the first M bits of the integer M
+int formatbits(int N, int M) {
+    // Create a mask with M leading bits set to 1
+    int mask = (1 << M) - 1;
+    
+    // XOR with N to flip the first M bits
+    return N ^ mask;
 }
 
 inline int get_nonzero_position(StateVector& statevector)
