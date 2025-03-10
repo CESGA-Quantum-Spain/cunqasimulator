@@ -9,6 +9,7 @@
 #include "instructions.hpp"
 #include "result_cunqasim.hpp"
 #include "utils/types_cunqasim.hpp"
+#include "utils/utils_cunqasim.hpp"
 
 
 class Executor 
@@ -21,7 +22,7 @@ public:
     Executor(StateVector initial_state);
 
     void restart_statevector();
-    StateVector apply(std::string instruction_name, std::array<int, 3> qubits, Params param = {0.0}, std::array<int, 2> qpus = {-1,-1});
+    inline StateVector apply(std::string instruction_name, std::array<int, 3> qubits, Params param = {0.0}, std::array<int, 2> qpus = {-1,-1});
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
 
 };
@@ -40,11 +41,11 @@ void Executor::restart_statevector()
     this->statevector[0] = 1.0;
 }
 
-StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qubits, Params param, std::array<int, 2> qpus)
+inline StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qubits, Params param, std::array<int, 2> qpus)
 {
-    Instruction instruction(instruction_name);
+    //Instruction instruction(instruction_name);
     
-    this->statevector = instruction.apply_instruction(this->statevector, param, qubits, qpus, this->n_qubits);
+    this->statevector = Instruction::apply_instruction(instruction_name, this->statevector, param, qubits, qpus, this->n_qubits);
 
     return this->statevector;
 }
@@ -54,6 +55,7 @@ StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qub
 ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
 {
     ResultCunqa result;
+    std::unordered_map<int, int> counts_map;
     std::string instruction_name;
     std::array<int, 3> qubits;
     Params param;
@@ -122,11 +124,15 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                     break;
             }
         }
-
-        result.sample.push_back(this->statevector);
+        
+        int position_result = get_nonzero_position(statevector);
+        counts_map[position_result]++;
+        
         restart_statevector();
 
     }
+
+    result.counts = counts_map;
 
     auto stop_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop_time - start_time);

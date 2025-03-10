@@ -15,14 +15,14 @@
 class Instruction
 {
 public:
-    std::string instruction_name;
+    //std::string instruction_name;
 
-    Instruction(std::string instruction_name);
-    StateVector apply_instruction(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus, int& n_qubits);
+    //Instruction(std::string instruction_name);
+    static inline StateVector apply_instruction(std::string instruction_name, StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus, int& n_qubits);
 
 };
 
-Instruction::Instruction(std::string instruction_name) 
+/* Instruction::Instruction(std::string instruction_name) 
 {
     //TODO: I think this previous check is not needed.
     if (std::find(instructions.begin(), instructions.end(), instruction_name) == instructions.end()) {
@@ -30,12 +30,12 @@ Instruction::Instruction(std::string instruction_name)
     } else {
         this->instruction_name = instruction_name;
     }
-}
+} */
 
-StateVector Instruction::apply_instruction(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus, int& n_qubits)
+inline StateVector Instruction::apply_instruction(std::string instruction_name,StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus, int& n_qubits)
 {
     meas_out meas;
-    switch (instructions_map[this->instruction_name])
+    switch (instructions_map[instruction_name])
     {
     //Measure
     case measure:
