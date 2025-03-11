@@ -24,12 +24,13 @@ public:
 
 json ResultCunqa::get_ordered_counts()
 {
-    json count_js = {};
+    json counts_js = {};
 
     for (const auto& [key, value] : this->counts) {
-        int new_key = formatbits(key, this->n_qubits);
+        int new_key = reverse_bits(key, this->n_qubits);
+        std::cout << "New int: " << new_key << "\n";
         std::string new_key_str = std::to_string(new_key);
-        count_js.at(new_key_str) = value;
+        counts_js[new_key_str] = value;
     }
 
     return counts_js;
@@ -46,9 +47,9 @@ json ResultCunqa::to_json(bool flip_counts_order)
         counts_js = this->counts;
     }
 
-    attributes.at("n_qubits") = this->n_qubits;
-    attributes.at("counts") = counts_js;
-    attributes.at("total_time[ms]") = this->total_time; 
+    attributes["n_qubits"] = this->n_qubits;
+    attributes["counts"] = counts_js;
+    attributes["total_time[ms]"] = this->total_time; 
 
     return attributes;
 }

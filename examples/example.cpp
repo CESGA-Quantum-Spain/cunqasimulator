@@ -63,5 +63,12 @@ int main(int argc, char** argv) {
     std::cout << counts.dump(4) << "\n";
 
     json ordered_counts = result.get_ordered_counts();
-    td::cout << "Print using ordered counts json: " << "\n";
+    std::cout << "Print using ordered counts json: " << "\n";
     std::cout << ordered_counts.dump(4) << "\n";
+
+
+
+
+    
+    return 0;
+}
