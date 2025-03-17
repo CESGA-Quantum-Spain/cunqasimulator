@@ -18,7 +18,7 @@ public:
     double total_time;
 
     json get_ordered_counts();
-    json to_json(bool flip_counts_order = false); 
+    json to_json(); 
     
 };
 
