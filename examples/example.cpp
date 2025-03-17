@@ -23,6 +23,7 @@ void printvector (StateVector& sv)
 
 int main(int argc, char** argv) {
 
+    //#define QPU_MPI
     //MPI_Init(&argc, &argv);
     //MPI_Finalize();
 

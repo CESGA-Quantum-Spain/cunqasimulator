@@ -385,6 +385,7 @@ inline StateVector apply_cifecr(StateVector& statevector, std::array<int, 3> qub
 //Distributed classical conditional one-qubit gates
 inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -407,10 +408,13 @@ inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubi
     }
 
     return statevector;
+
+    #endif
 }
 
 inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -433,10 +437,12 @@ inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubi
     }
 
     return statevector;
+    #endif
 }
 
 inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -458,10 +464,12 @@ inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubi
     }
 
     return statevector;
+    #endif
 }
 
 inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -483,10 +491,12 @@ inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubi
     }
 
     return statevector;
+    #endif
 }
 
 inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -508,10 +518,12 @@ inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::ar
     }
 
     return statevector;
+    #endif
 }
 
 inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -533,10 +545,12 @@ inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::ar
     }
 
     return statevector;
+    #endif
 }
 
 inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -558,11 +572,13 @@ inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::ar
     }
 
     return statevector;
+    #endif
 }
 
 //Distributed classical conditional two-qubit gates
 inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -584,10 +600,12 @@ inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qub
     }
 
     return statevector;
+    #endif
 }
 
 inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -609,10 +627,12 @@ inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qub
     }
 
     return statevector;
+    #endif
 }
 
 inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -634,10 +654,12 @@ inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qub
     }
 
     return statevector;
+    #endif
 }
 
 inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
 {
+    #ifdef QPU_MPI
     int mpi_rank = get_mpi_rank();
     
     if (mpi_rank == qpus[0]) {
@@ -659,4 +681,5 @@ inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qu
     }
 
     return statevector;
+    #endif
 }
