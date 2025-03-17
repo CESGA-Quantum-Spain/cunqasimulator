@@ -36,16 +36,10 @@ json ResultCunqa::get_ordered_counts()
     return counts_js;
 }
 
-json ResultCunqa::to_json(bool flip_counts_order)
+json ResultCunqa::to_json()
 {
     json attributes;
-    json counts_js;
-
-    if (flip_counts_order) {
-        counts_js = this->get_ordered_counts();
-    } else {
-        counts_js = this->counts;
-    }
+    json counts_js = this->counts;
 
     attributes["n_qubits"] = this->n_qubits;
     attributes["counts"] = counts_js;
