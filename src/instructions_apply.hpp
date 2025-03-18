@@ -695,7 +695,7 @@ inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubi
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
@@ -731,7 +731,7 @@ inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubi
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
@@ -765,7 +765,7 @@ inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubi
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
@@ -799,7 +799,7 @@ inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubi
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
@@ -833,7 +833,7 @@ inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::ar
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
@@ -867,7 +867,7 @@ inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::ar
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
@@ -901,7 +901,7 @@ inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::ar
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
@@ -936,7 +936,7 @@ inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qub
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
@@ -970,7 +970,7 @@ inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qub
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
@@ -1004,7 +1004,7 @@ inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qub
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
@@ -1038,7 +1038,7 @@ inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qu
 
     } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
         zmq::message_t message;
-        server.recv(message);
+        zmq_sockets.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, request.data(), sizeof(int));
