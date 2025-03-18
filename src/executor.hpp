@@ -49,7 +49,7 @@ void Executor::restart_statevector()
 }
 
 
-#if defined(QPU_MPI) || defined(NO_COMM)
+
 inline StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qubits, Params param, std::array<int, 2> qpus)
 {
     //Instruction instruction(instruction_name);
@@ -59,7 +59,7 @@ inline StateVector Executor::apply(std::string instruction_name, std::array<int,
     return this->statevector;
 }
 
-
+#if defined(NO_COMM) || defined(QPU_MPI)
 //TODO: Classical Registers
 ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
 {
@@ -152,7 +152,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
 
 #elif defined(QPU_ZMQ)
 //TODO
-inline StateVector Executor::apply(std::string instruction_name, std::array<int, 3> qubits, std::array<std::string, 2> qpus, ZMQSockets& zmq_sockets, Params param)
+inline StateVector Executor::d_apply(std::string instruction_name, std::array<int, 3> qubits, std::array<std::string, 2> qpus, ZMQSockets& zmq_sockets, Params param)
 {
     //Instruction instruction(instruction_name);
     
@@ -218,14 +218,14 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, ZMQSockets& zmq_socket
                 case d_c_if_ecr:
                     qpus = instruction.at("qpus").get<std::array<std::string, 2>>();
                     param = {0};
-                    this->statevector = this->apply(instruction_name, qubits, param, qpus, zmq_sockets);
+                    this->statevector = this->d_apply(instruction_name, qubits, param, qpus, zmq_sockets);
                     break;
                 case d_c_if_rx:
                 case d_c_if_ry:
                 case d_c_if_rz:
                     param = instruction.at("params").get<Params>();
                     qpus = instruction.at("qpus").get<std::array<std::string, 2>>();
-                    this->statevector = this->apply(instruction_name, qubits, param, qpus, zmq_sockets);
+                    this->statevector = this->d_apply(instruction_name, qubits, param, qpus, zmq_sockets);
                     break;
                 default:
                     std::cout << "Error. Invalid gate name" << "\n";
