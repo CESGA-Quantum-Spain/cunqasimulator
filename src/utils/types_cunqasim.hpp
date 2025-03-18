@@ -26,5 +26,6 @@ struct ZMQSockets
 {
     zmq::socket_type::client client;
     zmq::socket_type::server server;
+    std::string zmq_endpoint;
 };
 #endif
