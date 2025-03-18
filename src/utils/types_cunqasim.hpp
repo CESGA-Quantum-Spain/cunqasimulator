@@ -18,3 +18,13 @@ struct Counts {
     std::vector<int> counts_list;
     json counts;
 };
+
+#ifdef QPU_ZMQ
+#include "zmq.hpp"
+
+struct ZMQSockets
+{
+    zmq::socket_type::client client;
+    zmq::socket_type::server server;
+};
+#endif
