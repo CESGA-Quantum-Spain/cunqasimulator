@@ -15,16 +15,17 @@
 class Instruction
 {
 public:
-    #if defined(QPU_MPI) || defined(NO_COMM)
-    static inline StateVector apply_instruction(std::string instruction_name, StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus);
-    #elif defined(QPU_ZMQ)
-    static inline StateVector apply_instruction(std::string instruction_name, StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets);
+    
+    static inline StateVector apply_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits);
+    static inline StateVector apply_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, double param);
+    
+    #if defined(QPU_MPI) || defined(QPU_ZMQ)
+    static inline StateVector appply_dist_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus);
+    static inline StateVector appply_dist_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus, double param);
     #endif
-
 };
 
-#if defined(QPU_MPI) || defined(NO_COMM)
-inline StateVector Instruction::apply_instruction(std::string instruction_name,StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector Instruction::apply_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits)
 {
     meas_out meas;
     switch (instructions_map[instruction_name])
@@ -49,16 +50,6 @@ inline StateVector Instruction::apply_instruction(std::string instruction_name,S
     case z:
         statevector = apply_z(statevector, qubits);
         break;
-    //Parametric
-    case rx:
-        statevector = apply_rx(statevector, param, qubits);
-        break;
-    case ry:
-        statevector = apply_ry(statevector, param, qubits);
-        break;
-    case rz:
-        statevector = apply_rz(statevector, param, qubits);
-        break;
     //Two-qubit Gates
     case cx:
         statevector = apply_cx(statevector, qubits);
@@ -70,7 +61,7 @@ inline StateVector Instruction::apply_instruction(std::string instruction_name,S
         statevector = apply_cz(statevector, qubits);
         break;
     case ecr:
-        statevector = apply_cz(statevector, qubits);
+        statevector = apply_ecr(statevector, qubits);
         break;
     //Classical conditional one-qubit gates
     case c_if_h:
@@ -85,16 +76,7 @@ inline StateVector Instruction::apply_instruction(std::string instruction_name,S
     case c_if_z:
         statevector = apply_cifz(statevector, qubits);
         break;
-    case c_if_rx:
-        statevector = apply_cifrx(statevector, param, qubits);
-        break;
-    case c_if_ry:
-        statevector = apply_cifry(statevector, param, qubits);
-        break;
-    case c_if_rz:
-        statevector = apply_cifrz(statevector, param, qubits);
-        break;
-    //Classical conditional two-qubit gates
+        //Classical conditional two-qubit gates
     case c_if_cx:
         statevector = apply_cifcx(statevector, qubits);
         break;
@@ -107,42 +89,6 @@ inline StateVector Instruction::apply_instruction(std::string instruction_name,S
     case c_if_ecr:
         statevector = apply_cifecr(statevector, qubits);
         break;
-    //Distributed classical conditional one-qubit gates
-    case d_c_if_h:
-        statevector = apply_dcifh(statevector, qubits, qpus);
-        break;
-    case d_c_if_x:
-        statevector = apply_dcifx(statevector, qubits, qpus);
-        break;
-    case d_c_if_y:
-        statevector = apply_dcify(statevector, qubits, qpus);
-        break;
-    case d_c_if_z:
-        statevector = apply_dcifz(statevector, qubits, qpus);
-        break;
-    case d_c_if_rx:
-        statevector = apply_dcifrx(statevector, param, qubits, qpus);
-        break;
-    case d_c_if_ry:
-        statevector = apply_dcifry(statevector, param, qubits, qpus);
-        break;
-    case d_c_if_rz:
-        statevector = apply_dcifrz(statevector, param, qubits, qpus);
-        break;
-    //Distributed classical conditional two-qubit gates
-    case d_c_if_cx:
-        statevector = apply_dcifcx(statevector, qubits, qpus);
-        break;
-    case d_c_if_cy:
-        statevector = apply_dcifcy(statevector, qubits, qpus);
-        break;
-    case d_c_if_cz:
-        statevector = apply_dcifcz(statevector, qubits, qpus);
-        break;
-    case d_c_if_ecr:
-        statevector = apply_dcifecr(statevector, qubits, qpus);
-        break;
-    
     default:
         std::cout << "Error. Invalid gate name" << "\n";
         break;
@@ -151,124 +97,67 @@ inline StateVector Instruction::apply_instruction(std::string instruction_name,S
     return statevector;
 }
 
-#elif defined(QPU_ZMQ)
-inline StateVector Instruction::apply_instruction(std::string instruction_name, StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+//Parametric
+inline StateVector apply_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, double param)
 {
-    meas_out meas;
     switch (instructions_map[instruction_name])
     {
-    //Measure
-    case measure:
-        meas = apply_measure(statevector, qubits);
-        statevector = meas.statevector;
-        break;
-    //One-qubit gates
-    case id:
-        break;
-    case h:
-        statevector = apply_h(statevector, qubits);
-        break;
-    case x:
-        statevector = apply_x(statevector, qubits);
-        break;
-    case y:
-        statevector = apply_y(statevector, qubits);
-        break;
-    case z:
-        statevector = apply_z(statevector, qubits);
-        break;
-    //Parametric
     case rx:
-        statevector = apply_rx(statevector, param, qubits);
+        statevector = apply_rx(statevector, qubits, param);
         break;
     case ry:
-        statevector = apply_ry(statevector, param, qubits);
+        statevector = apply_ry(statevector, qubits, param);
         break;
     case rz:
-        statevector = apply_rz(statevector, param, qubits);
-        break;
-    //Two-qubit Gates
-    case cx:
-        statevector = apply_cx(statevector, qubits);
-        break;
-    case cy:
-        statevector = apply_cy(statevector, qubits);
-        break;
-    case cz:
-        statevector = apply_cz(statevector, qubits);
-        break;
-    case ecr:
-        statevector = apply_cz(statevector, qubits);
-        break;
-    //Classical conditional one-qubit gates
-    case c_if_h:
-        statevector = apply_cifh(statevector, qubits);
-        break;
-    case c_if_x:
-        statevector = apply_cifx(statevector, qubits);
-        break;
-    case c_if_y:
-        statevector = apply_cify(statevector, qubits);
-        break;
-    case c_if_z:
-        statevector = apply_cifz(statevector, qubits);
+        statevector = apply_rz(statevector, qubits, param);
         break;
     case c_if_rx:
-        statevector = apply_cifrx(statevector, param, qubits);
+        statevector = apply_cifrx(statevector, qubits, param);
         break;
     case c_if_ry:
-        statevector = apply_cifry(statevector, param, qubits);
+        statevector = apply_cifry(statevector, qubits, param);
         break;
     case c_if_rz:
-        statevector = apply_cifrz(statevector, param, qubits);
+        statevector = apply_cifrz(statevector, qubits, param);
         break;
-    //Classical conditional two-qubit gates
-    case c_if_cx:
-        statevector = apply_cifcx(statevector, qubits);
+    default:
+        std::cout << "Error. Invalid gate name" << "\n";
         break;
-    case c_if_cy:
-        statevector = apply_cifcy(statevector, qubits);
-        break;
-    case c_if_cz:
-        statevector = apply_cifcz(statevector, qubits);
-        break;
-    case c_if_ecr:
-        statevector = apply_cifecr(statevector, qubits);
-        break;
-    //Distributed classical conditional one-qubit gates
+    }
+
+    return statevector;
+}
+
+#if defined(QPU_MPI) || defined(QPU_ZMQ)
+//Distributed classical conditional one-qubit gates
+static inline StateVector appply_dist_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus)
+{
+    switch (instructions_map[instruction_name])
+    {
     case d_c_if_h:
-        statevector = apply_dcifh(statevector, qubits, qpus, zmq_sockets);
+        statevector = apply_dcifh(statevector, qubits, comm_qpus);
         break;
     case d_c_if_x:
-        statevector = apply_dcifx(statevector, qubits, qpus, zmq_sockets);
+        statevector = apply_dcifx(statevector, qubits, comm_qpus);
         break;
     case d_c_if_y:
-        statevector = apply_dcify(statevector, qubits, qpus, zmq_sockets);
+        statevector = apply_dcify(statevector, qubits, comm_qpus);
         break;
     case d_c_if_z:
-        statevector = apply_dcifz(statevector, qubits, qpus, zmq_sockets);
-        break;
-    case d_c_if_rx:
-        statevector = apply_dcifrx(statevector, param, qubits,qpus, zmq_sockets);
-        break;
-    case d_c_if_ry:
-        statevector = apply_dcifry(statevector, param, qubits, qpus, zmq_sockets);
-        break;
-    case d_c_if_rz:
-        statevector = apply_dcifrz(statevector, param, qubits, qpus, zmq_sockets);
+        statevector = apply_dcifz(statevector, qubits, comm_qpus);
         break;
     //Distributed classical conditional two-qubit gates
     case d_c_if_cx:
-        statevector = apply_dcifcx(statevector, qubits, qpus, zmq_sockets);
+        statevector = apply_dcifcx(statevector, qubits, comm_qpus);
         break;
     case d_c_if_cy:
-        statevector = apply_dcifcy(statevector, qubits, qpus, zmq_sockets);
+        statevector = apply_dcifcy(statevector, qubits, comm_qpus);
         break;
     case d_c_if_cz:
-        statevector = apply_dcifcz(statevector, qubits, qpus, zmq_sockets);
+        statevector = apply_dcifcz(statevector, qubits, comm_qpus);
         break;
     case d_c_if_ecr:
-        statevector = apply_dcifecr(statevector, qubits, qpus, zmq_sockets);
+        statevector = apply_dcifecr(statevector, qubits, comm_qpus);
         break;
     
     default:
@@ -279,8 +168,25 @@ inline StateVector Instruction::apply_instruction(std::string instruction_name, 
     return statevector;
 }
 
-#else
+static inline StateVector appply_dist_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus, double param)
+{
+    switch (instructions_map[instruction_name])
+    {
+    case d_c_if_rx:
+        statevector = apply_dcifrx(statevector, qubits, comm_qpus, param);
+        break;
+    case d_c_if_ry:
+        statevector = apply_dcifry(statevector, qubits, comm_qpus, param);
+        break;
+    case d_c_if_rz:
+        statevector = apply_dcifrz(statevector, qubits, comm_qpus, param);
+        break;
+    default:
+        std::cout << "Error. Invalid gate name" << "\n";
+        break;
+    }
 
-    std::cout << "In CunqaSimulator: No QPU-communication MACRO defined." << "\n";
+    return statevector;
+}
 
 #endif

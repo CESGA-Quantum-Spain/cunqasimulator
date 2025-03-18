@@ -129,67 +129,6 @@ inline StateVector apply_z(StateVector& statevector, std::array<int, 3> qubits)
     return statevector;
 }
 
-
-inline StateVector apply_rx(StateVector& statevector, Params& param, std::array<int, 3> qubits)
-{
-    StateVector aux_statevector = statevector;
-    bool zero;
-    double sin = std::sin(param[0]/2.0);
-    double cos = std::cos(param[0]/2.0);
-
-    for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, qubits[0]);
-        if (zero == true) { 
-            statevector[i] = cos * aux_statevector[i] - imag * sin * aux_statevector[flipbit(i, qubits[0])];
-        } else {
-            statevector[i] = cos * aux_statevector[i]  - imag * sin * aux_statevector[flipbit(i, qubits[0])];
-        }
-    }
-
-
-    return statevector;
-}
-
-
-inline StateVector apply_ry(StateVector& statevector, Params& param, std::array<int, 3> qubits)
-{
-    StateVector aux_statevector = statevector;
-    bool zero;
-    double sin = std::sin(param[0]/2.0);
-    double cos = std::cos(param[0]/2.0);
-
-    for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, qubits[0]);
-        if (zero == true) { 
-            statevector[i] = cos * aux_statevector[i] + sin * aux_statevector[flipbit(i, qubits[0])];
-        } else {
-            statevector[i] = cos * aux_statevector[i]  +  sin * aux_statevector[flipbit(i, qubits[0])];
-        }
-    }
-
-    return statevector;
-}
-
-
-inline StateVector apply_rz(StateVector& statevector, Params& param, std::array<int, 3> qubits)
-{
-    bool zero;
-    double sin = std::sin(param[0]/2.0);
-    double cos = std::cos(param[0]/2.0);
-
-    for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, qubits[0]);
-        if (zero) { 
-            statevector[i] = (cos - imag * sin) * statevector[i];
-        } else {
-            statevector[i] = (cos + imag * sin) * statevector[i];
-        }
-    }
-
-    return statevector;
-}
-
-
 // Two-Qubit Gates
 
 inline StateVector apply_cx(StateVector& statevector, std::array<int, 3> qubits)
@@ -312,36 +251,6 @@ inline StateVector apply_cifz(StateVector& statevector, std::array<int, 3> qubit
     return statevector;
 }
 
-inline StateVector apply_cifrx(StateVector& statevector, Params& param, std::array<int, 3> qubits)
-{
-    meas_out meas = apply_measure(statevector, {qubits[1]});
-    if (meas.measure == 1) {
-        statevector = apply_rx(statevector, param, {qubits[0]});
-    }
-
-    return statevector;
-}
-
-inline StateVector apply_cifry(StateVector& statevector, Params& param, std::array<int, 3> qubits)
-{
-    meas_out meas = apply_measure(statevector, {qubits[1]});
-    if (meas.measure == 1) {
-        statevector = apply_ry(statevector, param, {qubits[0]});
-    }
-
-    return statevector;
-}
-
-inline StateVector apply_cifrz(StateVector& statevector, Params& param, std::array<int, 3> qubits)
-{
-    meas_out meas = apply_measure(statevector, {qubits[1]});
-    if (meas.measure == 1) {
-        statevector = apply_rz(statevector, param, {qubits[0]});
-    }
-
-    return statevector;
-}
-
 //Classical conditional two-qubits gates
 inline StateVector apply_cifcx(StateVector& statevector, std::array<int, 3> qubits)
 {
@@ -383,22 +292,116 @@ inline StateVector apply_cifecr(StateVector& statevector, std::array<int, 3> qub
     return statevector;
 }
 
-//DISTRIBUTED GATES (qpus[0]->send, qpus[1]->recv)
+
+inline StateVector apply_rx(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+{
+    StateVector aux_statevector = statevector;
+    bool zero;
+    double sin = std::sin(param[0]/2.0);
+    double cos = std::cos(param[0]/2.0);
+
+    for (int i = 0; i < statevector.size(); i++) {
+        zero = is_zero(i, qubits[0]);
+        if (zero == true) { 
+            statevector[i] = cos * aux_statevector[i] - imag * sin * aux_statevector[flipbit(i, qubits[0])];
+        } else {
+            statevector[i] = cos * aux_statevector[i]  - imag * sin * aux_statevector[flipbit(i, qubits[0])];
+        }
+    }
+
+
+    return statevector;
+}
+
+
+inline StateVector apply_ry(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+{
+    StateVector aux_statevector = statevector;
+    bool zero;
+    double sin = std::sin(param[0]/2.0);
+    double cos = std::cos(param[0]/2.0);
+
+    for (int i = 0; i < statevector.size(); i++) {
+        zero = is_zero(i, qubits[0]);
+        if (zero == true) { 
+            statevector[i] = cos * aux_statevector[i] + sin * aux_statevector[flipbit(i, qubits[0])];
+        } else {
+            statevector[i] = cos * aux_statevector[i]  +  sin * aux_statevector[flipbit(i, qubits[0])];
+        }
+    }
+
+    return statevector;
+}
+
+
+inline StateVector apply_rz(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+{
+    bool zero;
+    double sin = std::sin(param[0]/2.0);
+    double cos = std::cos(param[0]/2.0);
+
+    for (int i = 0; i < statevector.size(); i++) {
+        zero = is_zero(i, qubits[0]);
+        if (zero) { 
+            statevector[i] = (cos - imag * sin) * statevector[i];
+        } else {
+            statevector[i] = (cos + imag * sin) * statevector[i];
+        }
+    }
+
+    return statevector;
+}
+
+
+
+inline StateVector apply_cifrx(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1]});
+    if (meas.measure == 1) {
+        statevector = apply_rx(statevector, {qubits[0]}, param);
+    }
+
+    return statevector;
+}
+
+inline StateVector apply_cifry(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1]});
+    if (meas.measure == 1) {
+        statevector = apply_ry(statevector, {qubits[0]}, param);
+    }
+
+    return statevector;
+}
+
+inline StateVector apply_cifrz(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+{
+    meas_out meas = apply_measure(statevector, {qubits[1]});
+    if (meas.measure == 1) {
+        statevector = apply_rz(statevector, {qubits[0]}, param);
+    }
+
+    return statevector;
+}
+
+
+
+//DISTRIBUTED GATES (comm_qpus[0]->send, comm_qpus[1]->recv)
 //Distributed classical conditional one-qubit gates
-#if defined(QPU_MPI) || defined(NO_COMM)
-inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+#if defined(QPU_MPI) 
+inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        MPI_Send(&measurement, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&measurement, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
             statevector = apply_h(statevector, {qubits[1], -1, -1});
@@ -406,28 +409,26 @@ inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
-
-
 }
 
-inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
             statevector = apply_x(statevector, {qubits[1], -1, -1});
@@ -435,25 +436,25 @@ inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
-        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
             statevector = apply_y(statevector, {qubits[1], -1, -1});
@@ -461,25 +462,25 @@ inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
-        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
             statevector = apply_z(statevector, {qubits[1], -1, -1});
@@ -487,85 +488,85 @@ inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifrx(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus, Params& param)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
-        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_rx(statevector, param, {qubits[1], -1, -1});
+            statevector = apply_rx(statevector, {qubits[1], -1, -1}, param);
         }
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifry(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus, Params& param)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
-        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_ry(statevector, param, {qubits[1], -1, -1});
+            statevector = apply_ry(statevector, {qubits[1], -1, -1}, param);
         }
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifrz(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus, Params& param)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
-        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
-            statevector = apply_rz(statevector, param, {qubits[1], -1, -1});
+            statevector = apply_rz(statevector, {qubits[1], -1, -1}, param);
         }
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
@@ -573,18 +574,18 @@ inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::ar
 }
 
 //Distributed classical conditional two-qubit gates
-inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
-        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
             statevector = apply_cx(statevector, {qubits[1], qubits[2], -1});
@@ -592,25 +593,25 @@ inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
-        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
             statevector = apply_cy(statevector, {qubits[1], qubits[2], -1});
@@ -618,25 +619,25 @@ inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
-        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
             statevector = apply_cz(statevector, {qubits[1], qubits[2], -1});
@@ -644,25 +645,25 @@ inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qubits, std::array<int, 2>& qpus)
+inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
     int mpi_rank = get_mpi_rank();
     
-    if (mpi_rank == qpus[0]) {
+    if (mpi_rank == comm_qpus[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
 
-        MPI_Send(&meas.measure, 1, MPI_INT, qpus[1], 1, MPI_COMM_WORLD);
+        MPI_Send(&meas.measure, 1, MPI_INT, comm_qpus[1], 1, MPI_COMM_WORLD);
 
-    } else if (mpi_rank == qpus[1]) {
+    } else if (mpi_rank == comm_qpus[1]) {
         int measurement;
-        MPI_Recv(&measurement, 1, MPI_INT, qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&measurement, 1, MPI_INT, comm_qpus[0], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         if (measurement == 1) {
             statevector = apply_ecr(statevector, {qubits[1], qubits[2], -1});
@@ -670,32 +671,32 @@ inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qu
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-//DISTRIBUTED GATES (qpus[0]->send, qpus[1]->recv)
+//DISTRIBUTED GATES (comm_qpus[0]->send, comm_qpus[1]->recv)
 #elif defined(QPU_ZMQ)
-inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
@@ -706,32 +707,30 @@ inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
-
-
 }
 
-inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
@@ -742,30 +741,30 @@ inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
@@ -776,30 +775,30 @@ inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
@@ -810,109 +809,109 @@ inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcifrx(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus, Params& param)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
-            statevector = apply_rx(statevector, param, {qubits[1], -1, -1});
+            statevector = apply_rx(statevector, {qubits[1], -1, -1}, param);
         }
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcifry(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus, Params& param)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
-            statevector = apply_ry(statevector, param, {qubits[1], -1, -1});
+            statevector = apply_ry(statevector, {qubits[1], -1, -1}, param);
         }
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcifrz(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus, Params& param)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
-            statevector = apply_rz(statevector, param, {qubits[1], -1, -1});
+            statevector = apply_rz(statevector, {qubits[1], -1, -1}, param);
         }
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
@@ -920,23 +919,23 @@ inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::ar
 }
 
 //Distributed classical conditional two-qubit gates
-inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
@@ -947,30 +946,30 @@ inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
@@ -981,30 +980,30 @@ inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
@@ -1015,30 +1014,30 @@ inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
 
 }
 
-inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qubits, std::array<std::string, 2>& qpus, ZMQSockets& zmq_sockets)
+inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
-    if (zmq_sockets.zmq_endpoint == qpus[0]) {
+    if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
 
-        zmq_sockets.client.connect(qpus[1]);
+        comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
 
-        zmq_sockets.client.send(message);
+        comm_qpus.client.send(message);
 
 
-    } else if (zmq_sockets.zmq_endpoint == qpus[1]) {
+    } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
-        zmq_sockets.server.recv(message);
+        comm_qpus.server.recv(message);
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
@@ -1049,7 +1048,7 @@ inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qu
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << qpus[0] << " nor " << qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
     }
 
     return statevector;
