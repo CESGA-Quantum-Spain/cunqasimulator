@@ -23,13 +23,13 @@ public:
     Executor(StateVector initial_state);
 
     void restart_statevector();
+    inline StateVector apply(std::string instruction_name, std::array<int, 3> qubits, Params param = {0.0}, std::array<int, 2> qpus = {-1,-1});
 
     #if defined(QPU_MPI) || defined(NO_COMM)
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
-    inline StateVector apply(std::string instruction_name, std::array<int, 3> qubits, Params param = {0.0}, std::array<int, 2> qpus = {-1,-1});
     #elif defined(QPU_ZMQ)
     ResultCunqa run(QuantumCircuit& quantumcircuit, ZMQSockets& zmq_sockets, int shots = 10);
-    inline StateVector apply(std::string instruction_name, std::array<int, 3> qubits, std::array<std::string, 2> qpus, ZMQSockets& zmq_sockets, Params param = {0.0});
+    inline StateVector d_apply(std::string instruction_name, std::array<int, 3> qubits, std::array<std::string, 2> qpus, ZMQSockets& zmq_sockets, Params param = {0.0});
     #endif
 };
 
