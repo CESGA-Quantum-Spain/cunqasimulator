@@ -24,8 +24,8 @@ struct Counts {
 
 struct ZMQSockets
 {
-    zmq::socket_type::client client;
-    zmq::socket_type::server server;
+    zmq::socket_t client;
+    zmq::socket_t server;
     std::string zmq_endpoint;
 };
 #endif
