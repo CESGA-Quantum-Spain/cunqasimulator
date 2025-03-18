@@ -28,7 +28,7 @@ public:
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
     inline StateVector apply(std::string instruction_name, std::array<int, 3> qubits, Params param = {0.0}, std::array<int, 2> qpus = {-1,-1});
     #elif defined(QPU_ZMQ)
-    ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10, ZMQSockets& zmq_sockets);
+    ResultCunqa run(QuantumCircuit& quantumcircuit, ZMQSockets& zmq_sockets, int shots = 10);
     inline StateVector apply(std::string instruction_name, std::array<int, 3> qubits, std::array<std::string, 2> qpus, ZMQSockets& zmq_sockets, Params param = {0.0});
     #endif
 };
@@ -161,7 +161,7 @@ inline StateVector Executor::apply(std::string instruction_name, std::array<int,
     return this->statevector;
 }
 
-ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots, ZMQSockets& zmq_sockets)
+ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, ZMQSockets& zmq_sockets, int shots)
 {
     ResultCunqa result;
     std::string instruction_name;
