@@ -698,7 +698,7 @@ inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubi
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_h(statevector, {qubits[1], -1, -1});
@@ -734,7 +734,7 @@ inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubi
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_x(statevector, {qubits[1], -1, -1});
@@ -768,7 +768,7 @@ inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubi
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_y(statevector, {qubits[1], -1, -1});
@@ -802,7 +802,7 @@ inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubi
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_z(statevector, {qubits[1], -1, -1});
@@ -836,7 +836,7 @@ inline StateVector apply_dcifrx(StateVector& statevector, Params& param, std::ar
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_rx(statevector, param, {qubits[1], -1, -1});
@@ -870,7 +870,7 @@ inline StateVector apply_dcifry(StateVector& statevector, Params& param, std::ar
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_ry(statevector, param, {qubits[1], -1, -1});
@@ -904,7 +904,7 @@ inline StateVector apply_dcifrz(StateVector& statevector, Params& param, std::ar
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_rz(statevector, param, {qubits[1], -1, -1});
@@ -939,7 +939,7 @@ inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qub
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_cx(statevector, {qubits[1], qubits[2], -1});
@@ -973,7 +973,7 @@ inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qub
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_cy(statevector, {qubits[1], qubits[2], -1});
@@ -1007,7 +1007,7 @@ inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qub
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_cz(statevector, {qubits[1], qubits[2], -1});
@@ -1041,7 +1041,7 @@ inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qu
         zmq_sockets.server.recv(message);
 
         int measurement;
-        std::memcpy(&measurement, request.data(), sizeof(int));
+        std::memcpy(&measurement, message.data(), sizeof(int));
 
         if (measurement == 1) {
             statevector = apply_ecr(statevector, {qubits[1], qubits[2], -1});
