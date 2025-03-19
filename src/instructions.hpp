@@ -17,11 +17,11 @@ class Instruction
 public:
     
     static inline StateVector apply_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits);
-    static inline StateVector apply_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, double param);
+    static inline StateVector apply_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, Params& param);
     
     #if defined(QPU_MPI) || defined(QPU_ZMQ)
     static inline StateVector appply_dist_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus);
-    static inline StateVector appply_dist_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus, double param);
+    static inline StateVector appply_dist_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus, Params& param);
     #endif
 };
 
@@ -98,7 +98,7 @@ inline StateVector Instruction::apply_instruction(StateVector& statevector, std:
 }
 
 //Parametric
-inline StateVector apply_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, double param)
+inline StateVector apply_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, Params& param)
 {
     switch (instructions_map[instruction_name])
     {
@@ -168,7 +168,7 @@ static inline StateVector appply_dist_instruction(StateVector& statevector, std:
     return statevector;
 }
 
-static inline StateVector appply_dist_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus, double param)
+static inline StateVector appply_dist_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus, Params& param)
 {
     switch (instructions_map[instruction_name])
     {
