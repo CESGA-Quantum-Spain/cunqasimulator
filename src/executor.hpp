@@ -116,7 +116,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case c_if_cy:
                 case c_if_cz:
                 case c_if_ecr:
-                    this->statevector = this->apply_instruction(this->statevector, instruction_name, qubits);
+                    this->statevector = Instruction::apply_instruction(this->statevector, instruction_name, qubits);
                     break;
                 case rx:
                 case ry:
@@ -125,7 +125,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case c_if_ry:
                 case c_if_rz:
                     param = instruction.at("params").get<Params>();
-                    this->statevector = this->apply_param_instruction(this->statevector, instruction_name, qubits, param);
+                    this->statevector = Instruction::apply_param_instruction(this->statevector, instruction_name, qubits, param);
                     break;
                 #if defined(QPU_MPI)
                 case d_c_if_h:
@@ -137,14 +137,14 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case d_c_if_cz:
                 case d_c_if_ecr:
                     comm_qpus = instruction.at("qpus").get<qpu_comm_type>();
-                    this->statevector = this->apply_dist_instruction(this->statevector, instruction_name, qubits, comm_qpus);
+                    this->statevector = Instruction::apply_dist_instruction(this->statevector, instruction_name, qubits, comm_qpus);
                     break;
                 case d_c_if_rx:
                 case d_c_if_ry:
                 case d_c_if_rz:
                     param = instruction.at("params").get<Params>();
                     comm_qpus = instruction.at("qpus").get<qpu_comm_type>();
-                    this->statevector = this->apply_dist_param_instruction(this->statevector, instruction_name, qubits, comm_qpus, param);
+                    this->statevector = Instruction::apply_dist_param_instruction(this->statevector, instruction_name, qubits, comm_qpus, param);
                     break;
                 #elif defined(QPU_ZMQ)
                 case d_c_if_h:
@@ -161,7 +161,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                         comm_qpus.server = this->server.value();
                         comm_qpus.my_endpoint = this->endpoint.value();
 
-                        this->statevector = this->apply_dist_instruction(this->statevector, instruction_name, qubits, comm_qpus);
+                        this->statevector = Instruction::apply_dist_instruction(this->statevector, instruction_name, qubits, comm_qpus);
                     } else {
                         std::cout << "Client, Server or Endpoint of ZMQ were not given."
                     }
@@ -177,7 +177,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                         comm_qpus.server = this->server.value();
                         comm_qpus.my_endpoint = this->endpoint.value();
 
-                        this->statevector = this->apply_dist_param_instruction(this->statevector, instruction_name, qubits, comm_qpus, param);
+                        this->statevector = Instruction::apply_dist_param_instruction(this->statevector, instruction_name, qubits, comm_qpus, param);
                     } else {
                         std::cout << "Client, Server or Endpoint of ZMQ were not given."
                     }
