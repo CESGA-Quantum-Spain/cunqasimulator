@@ -98,7 +98,7 @@ inline StateVector Instruction::apply_instruction(StateVector& statevector, std:
 }
 
 //Parametric
-inline StateVector apply_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, Params& param)
+inline StateVector Instruction::apply_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, Params& param)
 {
     switch (instructions_map[instruction_name])
     {
@@ -130,7 +130,7 @@ inline StateVector apply_param_instruction(StateVector& statevector, std::string
 
 #if defined(QPU_MPI) || defined(QPU_ZMQ)
 //Distributed classical conditional one-qubit gates
-static inline StateVector appply_dist_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus)
+inline StateVector Instruction::appply_dist_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
     switch (instructions_map[instruction_name])
     {
@@ -168,7 +168,7 @@ static inline StateVector appply_dist_instruction(StateVector& statevector, std:
     return statevector;
 }
 
-static inline StateVector appply_dist_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus, Params& param)
+inline StateVector Instruction::appply_dist_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, type_comm& comm_qpus, Params& param)
 {
     switch (instructions_map[instruction_name])
     {
