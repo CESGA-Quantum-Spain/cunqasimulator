@@ -707,7 +707,7 @@ inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;
@@ -741,7 +741,7 @@ inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;
@@ -775,7 +775,7 @@ inline StateVector apply_dcify(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;
@@ -809,7 +809,7 @@ inline StateVector apply_dcifz(StateVector& statevector, std::array<int, 3> qubi
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;
@@ -843,7 +843,7 @@ inline StateVector apply_dcifrx(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;
@@ -877,7 +877,7 @@ inline StateVector apply_dcifry(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;
@@ -911,7 +911,7 @@ inline StateVector apply_dcifrz(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;
@@ -946,7 +946,7 @@ inline StateVector apply_dcifcx(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;
@@ -980,7 +980,7 @@ inline StateVector apply_dcifcy(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;
@@ -1014,7 +1014,7 @@ inline StateVector apply_dcifcz(StateVector& statevector, std::array<int, 3> qub
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;
@@ -1048,7 +1048,7 @@ inline StateVector apply_dcifecr(StateVector& statevector, std::array<int, 3> qu
 
     } else {
         //TODO: Logger
-        std::cout << "Error! This QPU has no Id " << comm_qpus[0] << " nor " << comm_qpus[1] << "\n"; 
+        std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 
     return statevector;

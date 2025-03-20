@@ -53,19 +53,19 @@ Executor::Executor(StateVector initial_state) : n_qubits(initial_state.size()), 
 {}
 
 #if defined(QPU_ZMQ)
-Executor(int n_qubits, 
+Executor::Executor(int n_qubits, 
     std::optional<zmq::socket_t> client, 
     std::optional<zmq::socket_t> server, 
     std::optional<std::string> endpoint) : 
-    n_qubits{n_qubits}, statevector(1 << this->n_qubits), client(client), server(server), endpoint(endpoint)
+    n_qubits{n_qubits}, statevector(1 << this->n_qubits), client(std::move(client)), server(std::move(server)), endpoint(endpoint)
 {}
 
 
-Executor(StateVector initial_state, 
+Executor::Executor(StateVector initial_state, 
     std::optional<zmq::socket_t> client, 
     std::optional<zmq::socket_t> server, 
     std::optional<std::string> endpoint) :
-    n_qubits(initial_state.size()), statevector(initial_state), client(client), server(server), endpoint(endpoint)
+    n_qubits(initial_state.size()), statevector(initial_state), client(std::move(client)), server(std::move(server)), endpoint(endpoint)
 {}
 #endif
 
@@ -157,13 +157,13 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case d_c_if_ecr:
                     if((this->client.has_value()) && (this->server.has_value()) && (this->endpoint.has_value())) {
                         comm_qpus.comm_endpoints = instruction.at("qpus").get<qpu_comm_type>();
-                        comm_qpus.client = this->client.value();
-                        comm_qpus.server = this->server.value();
+                        comm_qpus.client = std::move(this->client.value());
+                        comm_qpus.server = std::move(this->server.value());
                         comm_qpus.my_endpoint = this->endpoint.value();
 
                         this->statevector = Instruction::apply_dist_instruction(this->statevector, instruction_name, qubits, comm_qpus);
                     } else {
-                        std::cout << "Client, Server or Endpoint of ZMQ were not given."
+                        std::cout << "Client, Server or Endpoint of ZMQ were not given.";
                     }
                     break;
                 case d_c_if_rx:
@@ -173,13 +173,13 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                     comm_qpus.comm_endpoints = instruction.at("qpus").get<qpu_comm_type>();
                     if((this->client.has_value()) && (this->server.has_value()) && (this->endpoint.has_value())) {
                         comm_qpus.comm_endpoints = instruction.at("qpus").get<qpu_comm_type>();
-                        comm_qpus.client = this->client.value();
-                        comm_qpus.server = this->server.value();
+                        comm_qpus.client = std::move(this->client.value());
+                        comm_qpus.server = std::move(this->server.value());
                         comm_qpus.my_endpoint = this->endpoint.value();
 
                         this->statevector = Instruction::apply_dist_param_instruction(this->statevector, instruction_name, qubits, comm_qpus, param);
                     } else {
-                        std::cout << "Client, Server or Endpoint of ZMQ were not given."
+                        std::cout << "Client, Server or Endpoint of ZMQ were not given.";
                     }
                     break;
                 #endif
