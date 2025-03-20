@@ -13,6 +13,8 @@
 #include "utils/constants_cunqasim.hpp"
 #include "utils/types_cunqasim.hpp"
 
+#include "logger/logger.hpp"
+
 
 //Measure
 inline meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits)
@@ -716,31 +718,41 @@ inline StateVector apply_dcifh(StateVector& statevector, std::array<int, 3> qubi
 
 inline StateVector apply_dcifx(StateVector& statevector, std::array<int, 3> qubits, type_comm& comm_qpus)
 {
+    SPDLOG_LOGGER_DEBUG(logger, "apply_dcifx.");
+    SPDLOG_LOGGER_DEBUG(logger, "my_endpoint: {}", comm_qpus.my_endpoint);
     if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[0]) {
         meas_out meas = apply_measure(statevector, {qubits[0], -1, -1});
         int measurement = meas.measure;
+        SPDLOG_LOGGER_DEBUG(logger, "Measurement.");
 
         comm_qpus.client.connect(comm_qpus.comm_endpoints[1]);
+        SPDLOG_LOGGER_DEBUG(logger, "Client connected.");
 
         zmq::message_t message(sizeof(int));
         std::memcpy(message.data(), &measurement, sizeof(int));
+        SPDLOG_LOGGER_DEBUG(logger, "Message prepared.");
 
         comm_qpus.client.send(message);
+        SPDLOG_LOGGER_DEBUG(logger, "Message sent.");
 
 
     } else if (comm_qpus.my_endpoint == comm_qpus.comm_endpoints[1]) {
         zmq::message_t message;
         comm_qpus.server.recv(message);
+        SPDLOG_LOGGER_DEBUG(logger, "Message recieved.");
 
         int measurement;
         std::memcpy(&measurement, message.data(), sizeof(int));
+        SPDLOG_LOGGER_DEBUG(logger, "Measurement prepared.");
 
         if (measurement == 1) {
             statevector = apply_x(statevector, {qubits[1], -1, -1});
+            SPDLOG_LOGGER_DEBUG(logger, "apply_x.");
         }
 
     } else {
         //TODO: Logger
+        SPDLOG_LOGGER_ERROR(logger, "Error! This QPU has no Id {} nor {}", comm_qpus.comm_endpoints[0], comm_qpus.comm_endpoints[1]);
         std::cout << "Error! This QPU has no Id " << comm_qpus.comm_endpoints[0] << " nor " << comm_qpus.comm_endpoints[1] << "\n"; 
     }
 

@@ -13,20 +13,23 @@
 #include "utils/types_cunqasim.hpp"
 #include "utils/utils_cunqasim.hpp"
 
+#include "logger/logger.hpp"
+
 
 class Executor 
 {
 public:
     int n_qubits;
     StateVector statevector;
+    Instruction instruction_exec;
 
     Executor(int n_qubits);
     Executor(StateVector initial_state);
 
     #if defined(QPU_ZMQ)
-    std::optional<zmq::socket_t> client; 
+/*     std::optional<zmq::socket_t> client; 
     std::optional<zmq::socket_t> server;
-    std::optional<std::string> endpoint;
+    std::optional<std::string> endpoint; */
 
     Executor(int n_qubits, 
         std::optional<zmq::socket_t> client = std::nullopt, 
@@ -44,12 +47,12 @@ public:
     
 };
 
-Executor::Executor(int n_qubits) : n_qubits{n_qubits}, statevector(1 << this->n_qubits)
+Executor::Executor(int n_qubits) : n_qubits{n_qubits}, statevector(1 << this->n_qubits), instruction_exec()
 {
     statevector[0] = 1.0;
 }
 
-Executor::Executor(StateVector initial_state) : n_qubits(initial_state.size()), statevector(initial_state)
+Executor::Executor(StateVector initial_state) : n_qubits(initial_state.size()), statevector(initial_state), instruction_exec()
 {}
 
 #if defined(QPU_ZMQ)
@@ -57,16 +60,21 @@ Executor::Executor(int n_qubits,
     std::optional<zmq::socket_t> client, 
     std::optional<zmq::socket_t> server, 
     std::optional<std::string> endpoint) : 
-    n_qubits{n_qubits}, statevector(1 << this->n_qubits), client(std::move(client)), server(std::move(server)), endpoint(endpoint)
-{}
+    n_qubits{n_qubits}, statevector(1 << this->n_qubits), instruction_exec(std::move(client), std::move(server), endpoint)
+{
+    statevector[0] = 1.0;
+    SPDLOG_LOGGER_DEBUG(logger, "Executor instanciated with ZMQ.");
+}
 
 
 Executor::Executor(StateVector initial_state, 
     std::optional<zmq::socket_t> client, 
     std::optional<zmq::socket_t> server, 
     std::optional<std::string> endpoint) :
-    n_qubits(initial_state.size()), statevector(initial_state), client(std::move(client)), server(std::move(server)), endpoint(endpoint)
-{}
+    n_qubits(initial_state.size()), statevector(initial_state), instruction_exec(std::move(client), std::move(server), endpoint)
+{
+    SPDLOG_LOGGER_DEBUG(logger, "Executor instanciated with ZMQ.");
+}
 #endif
 
 
@@ -89,6 +97,8 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
     #endif
 
     result.n_qubits = this->n_qubits;
+
+    SPDLOG_LOGGER_DEBUG(logger, "In Cunqa run: variables defined and n_qubits set.");
 
     auto start_time = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < shots; i++) {
@@ -116,7 +126,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case c_if_cy:
                 case c_if_cz:
                 case c_if_ecr:
-                    this->statevector = Instruction::apply_instruction(this->statevector, instruction_name, qubits);
+                    this->statevector = this->instruction_exec.apply_instruction(this->statevector, instruction_name, qubits);
                     break;
                 case rx:
                 case ry:
@@ -125,7 +135,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case c_if_ry:
                 case c_if_rz:
                     param = instruction.at("params").get<Params>();
-                    this->statevector = Instruction::apply_param_instruction(this->statevector, instruction_name, qubits, param);
+                    this->statevector = this->instruction_exec.apply_param_instruction(this->statevector, instruction_name, qubits, param);
                     break;
                 #if defined(QPU_MPI)
                 case d_c_if_h:
@@ -137,14 +147,14 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case d_c_if_cz:
                 case d_c_if_ecr:
                     comm_qpus = instruction.at("qpus").get<qpu_comm_type>();
-                    this->statevector = Instruction::apply_dist_instruction(this->statevector, instruction_name, qubits, comm_qpus);
+                    this->statevector = this->instruction_exec.apply_dist_instruction(this->statevector, instruction_name, qubits, comm_qpus);
                     break;
                 case d_c_if_rx:
                 case d_c_if_ry:
                 case d_c_if_rz:
                     param = instruction.at("params").get<Params>();
                     comm_qpus = instruction.at("qpus").get<qpu_comm_type>();
-                    this->statevector = Instruction::apply_dist_param_instruction(this->statevector, instruction_name, qubits, comm_qpus, param);
+                    this->statevector = this->instruction_exec.apply_dist_param_instruction(this->statevector, instruction_name, qubits, comm_qpus, param);
                     break;
                 #elif defined(QPU_ZMQ)
                 case d_c_if_h:
@@ -155,32 +165,23 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case d_c_if_cy:
                 case d_c_if_cz:
                 case d_c_if_ecr:
-                    if((this->client.has_value()) && (this->server.has_value()) && (this->endpoint.has_value())) {
-                        comm_qpus.comm_endpoints = instruction.at("qpus").get<qpu_comm_type>();
-                        comm_qpus.client = std::move(this->client.value());
-                        comm_qpus.server = std::move(this->server.value());
-                        comm_qpus.my_endpoint = this->endpoint.value();
+                    SPDLOG_LOGGER_DEBUG(logger, "Case d-simple gates.");
+                    
+                    comm_qpus = instruction.at("qpus").get<qpu_comm_type>();
+                    SPDLOG_LOGGER_DEBUG(logger, "comm_qpus.comm_endpoints.");
 
-                        this->statevector = Instruction::apply_dist_instruction(this->statevector, instruction_name, qubits, comm_qpus);
-                    } else {
-                        std::cout << "Client, Server or Endpoint of ZMQ were not given.";
-                    }
+                    this->statevector = this->instruction_exec.apply_dist_instruction(this->statevector, instruction_name, qubits, comm_qpus);
                     break;
                 case d_c_if_rx:
                 case d_c_if_ry:
                 case d_c_if_rz:
+                    SPDLOG_LOGGER_DEBUG(logger, "Case d-parametric gates.");
                     param = instruction.at("params").get<Params>();
-                    comm_qpus.comm_endpoints = instruction.at("qpus").get<qpu_comm_type>();
-                    if((this->client.has_value()) && (this->server.has_value()) && (this->endpoint.has_value())) {
-                        comm_qpus.comm_endpoints = instruction.at("qpus").get<qpu_comm_type>();
-                        comm_qpus.client = std::move(this->client.value());
-                        comm_qpus.server = std::move(this->server.value());
-                        comm_qpus.my_endpoint = this->endpoint.value();
+                    SPDLOG_LOGGER_DEBUG(logger, "Params ready.");
+                    comm_qpus = instruction.at("qpus").get<qpu_comm_type>();
+                    SPDLOG_LOGGER_DEBUG(logger, "comm_qpus.comm_endpoints.");
 
-                        this->statevector = Instruction::apply_dist_param_instruction(this->statevector, instruction_name, qubits, comm_qpus, param);
-                    } else {
-                        std::cout << "Client, Server or Endpoint of ZMQ were not given.";
-                    }
+                    this->statevector = this->instruction_exec.apply_dist_param_instruction(this->statevector, instruction_name, qubits, comm_qpus, param);
                     break;
                 #endif
                 default:
@@ -190,6 +191,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
         }
         
         int position_result = get_nonzero_position(statevector);
+        SPDLOG_LOGGER_DEBUG(logger, "position_result: {}", position_result);
         result.counts[position_result]++;
         
         restart_statevector();

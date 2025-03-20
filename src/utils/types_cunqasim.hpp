@@ -22,7 +22,7 @@ using Params = std::vector<double>;
         std::string my_endpoint;
     };
 
-        using type_comm = zmq_info;
+        using type_comm = std::array<std::string, 2>;
         using qpu_comm_type = std::array<std::string, 2>;
 #endif
 
