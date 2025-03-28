@@ -28,7 +28,6 @@ json ResultCunqa::get_ordered_counts()
 
     for (const auto& [key, value] : this->counts) {
         int new_key = reverse_bits(key, this->n_qubits);
-        std::cout << "New int: " << new_key << "\n";
         std::string new_key_str = std::to_string(new_key);
         counts_js[new_key_str] = value;
     }
