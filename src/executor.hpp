@@ -25,9 +25,12 @@ public:
     Executor(int n_qubits);
     Executor(StateVector initial_state);
 
-    void restart_statevector();
-
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
+    inline int apply_measure(std::array<int, 3>& qubits);
+    inline void apply_gate(std::string& gate_name, std::array<int, 3>& qubits);
+    inline void apply_parametric_gate(std::string& gate_name, std::array<int, 3>& qubits, std::vector<double>& param);
+    inline int get_nonzero_position();
+    inline void restart_statevector();
     
 };
 
@@ -38,13 +41,6 @@ Executor::Executor(int n_qubits) : n_qubits{n_qubits}, statevector(1 << this->n_
 
 Executor::Executor(StateVector initial_state) : n_qubits(initial_state.size()), statevector(initial_state)
 {}
-
-
-void Executor::restart_statevector()
-{
-    this->statevector.assign(this->statevector.size(), {0.0, 0.0});
-    this->statevector[0] = 1.0;
-}
 
 
 //TODO: Classical Registers
@@ -68,6 +64,8 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
             switch (instructions_map[instruction_name])
             {
                 case measure:
+                    Instruction::apply_measure(this->statevector, qubits);
+                    break;
                 case id:
                 case x:
                 case y:
@@ -85,7 +83,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case c_if_cy:
                 case c_if_cz:
                 case c_if_ecr:
-                    this->statevector = Instruction::apply_instruction(this->statevector, instruction_name, qubits);
+                    Instruction::apply_instruction(this->statevector, instruction_name, qubits);
                     break;
                 case rx:
                 case ry:
@@ -94,7 +92,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case c_if_ry:
                 case c_if_rz:
                     param = instruction.at("params").get<Params>();
-                    this->statevector = Instruction::apply_param_instruction(this->statevector, instruction_name, qubits, param);
+                    Instruction::apply_param_instruction(this->statevector, instruction_name, qubits, param);
                     break;
                 
                 default:
@@ -103,7 +101,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
             }
         }
         
-        int position_result = get_nonzero_position(statevector);
+        int position_result = this->get_nonzero_position();
         //SPDLOG_LOGGER_DEBUG(logger, "position_result: {}", position_result);
         result.counts[position_result]++;
         
@@ -119,5 +117,45 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
     result.total_time = total_time;
 
     return result;
+}
+
+
+inline int Executor::apply_measure(std::array<int, 3>& qubits)
+{
+    meas_out meas =  Instruction::apply_measure(this->statevector, qubits);
+
+    return meas.measure;
+}
+
+inline void Executor::apply_gate(std::string& gate_name, std::array<int, 3>& qubits)
+{
+    Instruction::apply_instruction(this->statevector, gate_name, qubits);
+}
+
+inline void Executor::apply_parametric_gate(std::string& gate_name, std::array<int, 3>& qubits, std::vector<double>& param)
+{
+    Instruction::apply_param_instruction(this->statevector, gate_name, qubits, param);
+}
+
+inline void Executor::restart_statevector()
+{
+    this->statevector.assign(this->statevector.size(), {0.0, 0.0});
+    this->statevector[0] = 1.0;
+}
+
+inline int Executor::get_nonzero_position()
+{
+    int position;
+    try {
+        auto it = std::find_if(this->statevector.begin(), this->statevector.end(), [](const complex& c) {
+            return c != std::complex<double>(0, 0); // Check for nonzero
+        });
+        position = std::distance(this->statevector.begin(), it);
+    } catch (const std::exception& e) {
+        //SPDLOG_LOGGER_ERROR(logger, "Error findind the non-zero position. Check if all qubits were measured.");
+        return -1;
+    }
+
+    return position;
 }
 
