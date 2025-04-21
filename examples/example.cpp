@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <complex>
-#include <array>
-//#include <mpi.h>
 
 #include "../src/executor.hpp"
 #include "../src/utils/utils_cunqasim.hpp"
@@ -22,10 +20,6 @@ void printvector (StateVector& sv)
 
 
 int main(int argc, char** argv) {
-
-    //#define NO_COMM
-    //MPI_Init(&argc, &argv);
-    //MPI_Finalize();
 
     QuantumCircuit qc = {
         {

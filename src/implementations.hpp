@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <complex>
-#include <array>
 #include <cmath>
 #include <random>
 
@@ -11,7 +10,7 @@
 #include "utils/utils_cunqasim.hpp"
 
 
-inline meas_out cunqa_apply_measure(StateVector& statevector, std::array<int, 3> qubits)
+inline meas_out cunqa_apply_measure(StateVector& statevector, std::vector<int> qubits)
 {
     meas_out output;
     bool zero;
@@ -61,7 +60,7 @@ inline meas_out cunqa_apply_measure(StateVector& statevector, std::array<int, 3>
 }
 
 // One-Qubit Gates
-inline void cunqa_apply_h(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_h(StateVector& statevector, std::vector<int> qubits)
 {
     StateVector aux_statevector = statevector;
     bool zero;
@@ -77,7 +76,7 @@ inline void cunqa_apply_h(StateVector& statevector, std::array<int, 3> qubits)
 }
 
 
-inline void cunqa_apply_x(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_x(StateVector& statevector, std::vector<int> qubits)
 {
     StateVector aux_statevector = statevector;
 
@@ -87,7 +86,7 @@ inline void cunqa_apply_x(StateVector& statevector, std::array<int, 3> qubits)
 }
 
 
-inline void cunqa_apply_y(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_y(StateVector& statevector, std::vector<int> qubits)
 {
     StateVector aux_statevector = statevector;
     bool zero; 
@@ -103,7 +102,7 @@ inline void cunqa_apply_y(StateVector& statevector, std::array<int, 3> qubits)
 }
 
 
-inline void cunqa_apply_z(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_z(StateVector& statevector, std::vector<int> qubits)
 {
     bool zero; 
 
@@ -117,7 +116,7 @@ inline void cunqa_apply_z(StateVector& statevector, std::array<int, 3> qubits)
 
 // Two-Qubit Gates
 
-inline void cunqa_apply_cx(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cx(StateVector& statevector, std::vector<int> qubits)
 {
     StateVector aux_statevector = statevector;
     bool zero;
@@ -130,7 +129,7 @@ inline void cunqa_apply_cx(StateVector& statevector, std::array<int, 3> qubits)
     }
 }
 
-inline void cunqa_apply_cy(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cy(StateVector& statevector, std::vector<int> qubits)
 {
     StateVector aux_statevector = statevector;
     bool zero_0;
@@ -149,7 +148,7 @@ inline void cunqa_apply_cy(StateVector& statevector, std::array<int, 3> qubits)
     }
 }
 
-inline void cunqa_apply_cz(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cz(StateVector& statevector, std::vector<int> qubits)
 {
     StateVector aux_statevector = statevector;
     bool zero_0;
@@ -166,7 +165,7 @@ inline void cunqa_apply_cz(StateVector& statevector, std::array<int, 3> qubits)
     }
 }
 
-inline void cunqa_apply_ecr(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_ecr(StateVector& statevector, std::vector<int> qubits)
 {
     StateVector aux_statevector = statevector;
     bool zero_0;
@@ -188,7 +187,7 @@ inline void cunqa_apply_ecr(StateVector& statevector, std::array<int, 3> qubits)
 }
 
 //Classical conditional one-qubit gates
-inline void cunqa_apply_cifh(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cifh(StateVector& statevector, std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
@@ -196,7 +195,7 @@ inline void cunqa_apply_cifh(StateVector& statevector, std::array<int, 3> qubits
     }
 }
 
-inline void cunqa_apply_cifx(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cifx(StateVector& statevector, std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
@@ -204,7 +203,7 @@ inline void cunqa_apply_cifx(StateVector& statevector, std::array<int, 3> qubits
     }
 }
 
-inline void cunqa_apply_cify(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cify(StateVector& statevector, std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
@@ -212,7 +211,7 @@ inline void cunqa_apply_cify(StateVector& statevector, std::array<int, 3> qubits
     }
 }
 
-inline void cunqa_apply_cifz(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cifz(StateVector& statevector, std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
@@ -221,7 +220,7 @@ inline void cunqa_apply_cifz(StateVector& statevector, std::array<int, 3> qubits
 }
 
 //Classical conditional two-qubits gates
-inline void cunqa_apply_cifcx(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cifcx(StateVector& statevector, std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[2]});
     if (meas.measure == 1) {
@@ -229,7 +228,7 @@ inline void cunqa_apply_cifcx(StateVector& statevector, std::array<int, 3> qubit
     }
 }
 
-inline void cunqa_apply_cifcy(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cifcy(StateVector& statevector, std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[2]});
     if (meas.measure == 1) {
@@ -237,7 +236,7 @@ inline void cunqa_apply_cifcy(StateVector& statevector, std::array<int, 3> qubit
     }
 }
 
-inline void cunqa_apply_cifcz(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cifcz(StateVector& statevector, std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[2]});
     if (meas.measure == 1) {
@@ -245,7 +244,7 @@ inline void cunqa_apply_cifcz(StateVector& statevector, std::array<int, 3> qubit
     }
 }
 
-inline void cunqa_apply_cifecr(StateVector& statevector, std::array<int, 3> qubits)
+inline void cunqa_apply_cifecr(StateVector& statevector, std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[2]});
     if (meas.measure == 1) {
@@ -254,7 +253,7 @@ inline void cunqa_apply_cifecr(StateVector& statevector, std::array<int, 3> qubi
 }
 
 
-inline void cunqa_apply_rx(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+inline void cunqa_apply_rx(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
     StateVector aux_statevector = statevector;
     bool zero;
@@ -272,7 +271,7 @@ inline void cunqa_apply_rx(StateVector& statevector, std::array<int, 3> qubits, 
 }
 
 
-inline void cunqa_apply_ry(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+inline void cunqa_apply_ry(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
     StateVector aux_statevector = statevector;
     bool zero;
@@ -290,7 +289,7 @@ inline void cunqa_apply_ry(StateVector& statevector, std::array<int, 3> qubits, 
 }
 
 
-inline void cunqa_apply_rz(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+inline void cunqa_apply_rz(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
     bool zero;
     double sin = std::sin(param[0]/2.0);
@@ -308,7 +307,7 @@ inline void cunqa_apply_rz(StateVector& statevector, std::array<int, 3> qubits, 
 
 
 
-inline void cunqa_apply_cifrx(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+inline void cunqa_apply_cifrx(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
@@ -316,7 +315,7 @@ inline void cunqa_apply_cifrx(StateVector& statevector, std::array<int, 3> qubit
     }
 }
 
-inline void cunqa_apply_cifry(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+inline void cunqa_apply_cifry(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {
@@ -324,7 +323,7 @@ inline void cunqa_apply_cifry(StateVector& statevector, std::array<int, 3> qubit
     }
 }
 
-inline void cunqa_apply_cifrz(StateVector& statevector, std::array<int, 3> qubits, Params& param)
+inline void cunqa_apply_cifrz(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
     if (meas.measure == 1) {

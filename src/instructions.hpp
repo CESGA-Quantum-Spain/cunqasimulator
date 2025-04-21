@@ -4,9 +4,7 @@
 #include <string>
 #include <vector>
 #include <complex>
-#include <array>
 #include <algorithm>
-#include <optional>
 #include <cmath>
 #include <random>
 #include <chrono>
@@ -24,19 +22,19 @@ class Instruction
 {
 public:
     
-    static inline meas_out apply_measure(StateVector& statevector, std::array<int, 3> qubits);
-    static inline void apply_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits);
-    static inline void apply_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, Params& param);
+    static inline meas_out apply_measure(StateVector& statevector, std::vector<int> qubits);
+    static inline void apply_instruction(StateVector& statevector, std::string instruction_name, std::vector<int> qubits);
+    static inline void apply_param_instruction(StateVector& statevector, std::string instruction_name, std::vector<int> qubits, Params& param);
     
     
 };
 
-inline meas_out Instruction::apply_measure(StateVector& statevector, std::array<int, 3> qubits)
+inline meas_out Instruction::apply_measure(StateVector& statevector, std::vector<int> qubits)
 {
     return cunqa_apply_measure(statevector, qubits);
 }
 
-inline void Instruction::apply_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits)
+inline void Instruction::apply_instruction(StateVector& statevector, std::string instruction_name, std::vector<int> qubits)
 {
     switch (instructions_map[instruction_name])
     {
@@ -102,7 +100,7 @@ inline void Instruction::apply_instruction(StateVector& statevector, std::string
 }
 
 //Parametric
-inline void Instruction::apply_param_instruction(StateVector& statevector, std::string instruction_name, std::array<int, 3> qubits, Params& param)
+inline void Instruction::apply_param_instruction(StateVector& statevector, std::string instruction_name, std::vector<int> qubits, Params& param)
 {
     switch (instructions_map[instruction_name])
     {

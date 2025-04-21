@@ -3,10 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <complex>
-#include <array>
 #include <chrono>
 #include <string>
-#include <optional>
 
 #include "instructions.hpp"
 #include "result_cunqasim.hpp"
@@ -26,9 +24,9 @@ public:
     Executor(StateVector initial_state);
 
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
-    inline int apply_measure(std::array<int, 3>& qubits);
-    inline void apply_gate(std::string& gate_name, std::array<int, 3>& qubits);
-    inline void apply_parametric_gate(std::string& gate_name, std::array<int, 3>& qubits, std::vector<double>& param);
+    inline int apply_measure(std::vector<int>& qubits);
+    inline void apply_gate(std::string& gate_name, std::vector<int>& qubits);
+    inline void apply_parametric_gate(std::string& gate_name, std::vector<int>& qubits, std::vector<double>& param);
     inline int get_nonzero_position();
     inline void restart_statevector();
     
@@ -48,7 +46,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
 {
     ResultCunqa result;
     std::string instruction_name;
-    std::array<int, 3> qubits;
+    std::vector<int> qubits;
     Params param;
 
     result.n_qubits = this->n_qubits;
@@ -120,19 +118,19 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
 }
 
 
-inline int Executor::apply_measure(std::array<int, 3>& qubits)
+inline int Executor::apply_measure(std::vector<int>& qubits)
 {
     meas_out meas =  Instruction::apply_measure(this->statevector, qubits);
 
     return meas.measure;
 }
 
-inline void Executor::apply_gate(std::string& gate_name, std::array<int, 3>& qubits)
+inline void Executor::apply_gate(std::string& gate_name, std::vector<int>& qubits)
 {
     Instruction::apply_instruction(this->statevector, gate_name, qubits);
 }
 
-inline void Executor::apply_parametric_gate(std::string& gate_name, std::array<int, 3>& qubits, std::vector<double>& param)
+inline void Executor::apply_parametric_gate(std::string& gate_name, std::vector<int>& qubits, std::vector<double>& param)
 {
     Instruction::apply_param_instruction(this->statevector, gate_name, qubits, param);
 }
