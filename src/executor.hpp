@@ -58,7 +58,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
 
         for (auto& instruction : quantumcircuit) {
             instruction_name = instruction.at("name");
-            qubits = instruction.at("qubits");
+            qubits = instruction.at("qubits").get<std::vector<int>>();
             switch (instructions_map[instruction_name])
             {
                 case measure:
