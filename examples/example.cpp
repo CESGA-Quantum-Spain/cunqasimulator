@@ -24,19 +24,24 @@ int main(int argc, char** argv) {
     QuantumCircuit qc = {
         {
             {"name","h"},
-            {"qubits", {0,-1,-1}}
+            {"qubits", {0}}
         },
         {
             {"name", "cx"},
-            {"qubits", {0,1,-1}}
+            {"qubits", {0,1}}
+        },
+        {
+            {"name", "unitary"},
+            {"matrix", {{{0.0, 0.0}, {0.0, 1.0}}, {{0.0, -1.0}, {0.0, 0.0}}}},
+            {"qubits", {0}}
         },
         {
             {"name","measure"},
-            {"qubits", {0,-1,-1}}
+            {"qubits", {0}}
         },
         {
             {"name", "measure"},
-            {"qubits", {1,-1,-1}}
+            {"qubits", {1}}
         }
     };
 

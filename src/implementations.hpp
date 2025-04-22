@@ -175,13 +175,13 @@ inline void cunqa_apply_ecr(StateVector& statevector, std::vector<int> qubits)
         zero_0 = is_zero(i, qubits[0]);
         zero_1 = is_zero(i, qubits[1]);
         if (zero_0  && zero_1) {
-            statevector[i] = inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])] + imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
-        } else if (zero_0 && !zero_1) {
-            statevector[i] = imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] + inverse_sqrt_2 * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+            statevector[i] = inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])] - imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
         } else if (!zero_0 && zero_1) {
-            statevector[i] = inverse_sqrt_2 * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])] - imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
+            statevector[i] = imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] + inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])];
+        } else if (zero_0 && !zero_1) {
+            statevector[i] = inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])] - imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
         } else if (!zero_0 && !zero_1) {
-            statevector[i] = -imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] + inverse_sqrt_2 * aux_statevector[flipbit(statevector.size() - 1 - i, qubits[0])];
+            statevector[i] = imag * inverse_sqrt_2 * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] + inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])];
         }
     }
 }
@@ -330,3 +330,41 @@ inline void cunqa_apply_cifrz(StateVector& statevector, std::vector<int> qubits,
         cunqa_apply_rz(statevector, {qubits[0]}, param);
     }
 }
+
+
+inline void cunqa_apply_1_gate(Matrix& U, StateVector& statevector, std::vector<int> qubits)
+{
+    StateVector aux_statevector = statevector;
+    bool zero;
+
+    for (int i = 0; i < statevector.size(); i++) {
+        zero = is_zero(i, qubits[0]);
+        if (zero == true) { 
+            statevector[i] = U[0][0] * aux_statevector[i] + U[0][1] * aux_statevector[flipbit(i, qubits[0])];
+        } else {
+            statevector[i] = U[1][1] * aux_statevector[i] + U[1][0] * aux_statevector[flipbit(i, qubits[0])];
+        }
+    }
+}
+
+inline void cunqa_apply_2_gate(Matrix& U, StateVector& statevector, std::vector<int> qubits)
+{
+    StateVector aux_statevector = statevector;
+    bool zero_0;
+    bool zero_1;
+
+    for (int i = 0; i < statevector.size(); i++) {
+        zero_0 = is_zero(i, qubits[0]);
+        zero_1 = is_zero(i, qubits[1]);
+        if (zero_0  && zero_1) {
+            statevector[i] = U[0][0] * aux_statevector[i] + U[0][1] * aux_statevector[flipbit(i, qubits[0])] + U[1][0] * aux_statevector[flipbit(i, qubits[1])] + U[1][1] * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])]; 
+        } else if (!zero_0 && zero_1) {
+            statevector[i] = U[1][1] * aux_statevector[i] + U[1][0] * aux_statevector[flipbit(i, qubits[0])] + U[1][2] * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] + U[1][3] * aux_statevector[flipbit(i, qubits[1])];
+        } else if (zero_0 && !zero_1) {
+            statevector[i] = U[2][2] * aux_statevector[i] + U[2][0] * aux_statevector[flipbit(i, qubits[1])] + U[2][1] * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] + U[2][3] * aux_statevector[flipbit(i, qubits[0])];
+        } else if (!zero_0 && !zero_1) {
+            U[3][3] * aux_statevector[i] + U[3][0] * aux_statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] + U[3][1] * aux_statevector[flipbit(i, qubits[1])] + U[3][2] * aux_statevector[flipbit(i, qubits[0])];
+        }
+    }
+}
+

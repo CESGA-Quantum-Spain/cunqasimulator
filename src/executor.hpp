@@ -48,6 +48,8 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
     std::string instruction_name;
     std::vector<int> qubits;
     Params param;
+    Matrix matrix;
+    int dimension;
 
     result.n_qubits = this->n_qubits;
 
@@ -64,6 +66,11 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case measure:
                     Instruction::apply_measure(this->statevector, qubits);
                     break;
+                case unitary:{
+                    matrix = instruction.at("matrix").get<Matrix>();
+                    Instruction::apply_unitary(matrix, this->statevector, qubits);
+                    break;
+                }
                 case id:
                 case x:
                 case y:

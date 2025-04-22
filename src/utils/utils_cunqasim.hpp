@@ -2,10 +2,12 @@
 
 #include "types_cunqasim.hpp"
 
+//Flips the bit in position p of the binary expansion of N
 inline int flipbit(int N, int p) {
     return N ^ (1 << p);  
 }
 
+//Checks if the position p of the binary expansion of N is 0
 inline bool is_zero(int N, int p) {
     bool bit = (N & (1 << p)) == 0;
     return bit;

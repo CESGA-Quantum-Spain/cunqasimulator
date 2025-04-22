@@ -22,12 +22,29 @@ class Instruction
 {
 public:
     
+    static inline void apply_unitary(Matrix& U, StateVector& statevector, std::vector<int> qubits);
     static inline meas_out apply_measure(StateVector& statevector, std::vector<int> qubits);
     static inline void apply_instruction(StateVector& statevector, std::string instruction_name, std::vector<int> qubits);
     static inline void apply_param_instruction(StateVector& statevector, std::string instruction_name, std::vector<int> qubits, Params& param);
     
     
 };
+
+inline void Instruction::apply_unitary(Matrix& U, StateVector& statevector, std::vector<int> qubits)
+{
+    int dimension = U.size();
+    switch(dimension) {
+        case 2:
+            cunqa_apply_1_gate(U, statevector, qubits);
+            break;
+        case 4:
+            cunqa_apply_2_gate(U, statevector, qubits);
+            break;
+        default:
+            std::cout << "Error. Bad unitary dimension. Only 1-qubit and 2-qubit gates are supported." << "\n";
+            break;
+    }
+}
 
 inline meas_out Instruction::apply_measure(StateVector& statevector, std::vector<int> qubits)
 {
