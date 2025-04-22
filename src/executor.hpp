@@ -152,7 +152,7 @@ inline int Executor::get_nonzero_position()
 {
     int position;
     try {
-        auto it = std::find_if(this->statevector.begin(), this->statevector.end(), [](const complex& c) {
+        auto it = std::find_if(this->statevector.begin(), this->statevector.end(), [](const State& c) {
             return c != std::complex<double>(0, 0); // Check for nonzero
         });
         position = std::distance(this->statevector.begin(), it);

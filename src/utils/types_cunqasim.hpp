@@ -1,13 +1,14 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
+#include <complex>
 
 using json = nlohmann::json;
 using QuantumCircuit = std::vector<json>; 
 // using DistributedQuantumCircuit = std::vector<json>;
-using complex = std::complex<double>;
-using StateVector = std::vector<complex>;
-using Matrix = std::vector<std::vector<complex>>; // [[ROW],[ROW]]
+using State = std::complex<double>;
+using StateVector = std::vector<State>;
+using Matrix = std::vector<std::vector<State>>; // [[ROW],[ROW]]
 using Params = std::vector<double>;
 
 struct meas_out {
@@ -15,20 +16,20 @@ struct meas_out {
     int measure;
 };
 
-namespace nlohmann {
+namespace nlohmann  {
     template <>
-    struct adl_serializer<complex> {
-        static void to_json(json& j, const complex& c) 
+    struct adl_serializer<State> {
+        static void to_json(json& j, const State& c) 
         {
             j = json::array({ c.real(), c.imag() });
         }
   
-        static void from_json(const json& j, complex& c)
+        static void from_json(const json& j, State& c)
         {
             if (!j.is_array() || j.size() != 2) {
                 throw std::invalid_argument("Expected JSON array of size 2 for complex number");
             }
-            c = complex(j[0].get<double>(), j[1].get<double>());
+            c = State(j[0].get<double>(), j[1].get<double>());
         }
     };
 }
