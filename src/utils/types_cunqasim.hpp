@@ -16,7 +16,8 @@ struct meas_out {
     int measure;
 };
 
-namespace nlohmann  {
+//Uncomment to test cunqasimulator isolated
+/* namespace nlohmann  {
     template <>
     struct adl_serializer<State> {
         static void to_json(json& j, const State& c) 
@@ -32,5 +33,5 @@ namespace nlohmann  {
             c = State(j[0].get<double>(), j[1].get<double>());
         }
     };
-}
+} */
 
