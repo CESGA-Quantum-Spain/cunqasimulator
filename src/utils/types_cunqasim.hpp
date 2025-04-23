@@ -16,22 +16,15 @@ struct meas_out {
     int measure;
 };
 
-//Uncomment to test cunqasimulator isolated
-/* namespace nlohmann  {
-    template <>
-    struct adl_serializer<State> {
-        static void to_json(json& j, const State& c) 
-        {
-            j = json::array({ c.real(), c.imag() });
-        }
-  
-        static void from_json(const json& j, State& c)
-        {
-            if (!j.is_array() || j.size() != 2) {
-                throw std::invalid_argument("Expected JSON array of size 2 for complex number");
-            }
-            c = State(j[0].get<double>(), j[1].get<double>());
-        }
-    };
-} */
+namespace std {
+    
+    template< class T > void to_json(json &j, const std::complex< T > &p) {
+        j = json {p.real(), p.imag()};
+    }
+    
+    template< class T > void from_json(const json &j, std::complex< T > &p) {
+        p.real(j.at(0));
+        p.imag(j.at(1));
+    }
+}
 
