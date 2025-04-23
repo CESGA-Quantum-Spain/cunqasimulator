@@ -16,7 +16,8 @@ struct meas_out {
     int measure;
 };
 
-namespace std {
+// Uncomment to compile Cunqasimulator isolated
+/* namespace std {
     
     template< class T > void to_json(json &j, const std::complex< T > &p) {
         j = json {p.real(), p.imag()};
@@ -27,4 +28,4 @@ namespace std {
         p.imag(j.at(1));
     }
 }
-
+ */
