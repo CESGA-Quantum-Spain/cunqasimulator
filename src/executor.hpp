@@ -27,6 +27,7 @@ public:
 
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
     inline int apply_measure(std::vector<int>& qubits);
+    inline void apply_unitary(Matrix& matrix, std::vector<int>& qubits);
     inline void apply_gate(std::string& gate_name, std::vector<int>& qubits);
     inline void apply_parametric_gate(std::string& gate_name, std::vector<int>& qubits, std::vector<double>& param);
     inline int get_nonzero_position();
@@ -132,6 +133,11 @@ inline int Executor::apply_measure(std::vector<int>& qubits)
     meas_out meas =  Instruction::apply_measure(this->statevector, qubits);
 
     return meas.measure;
+}
+
+inline void Executor::apply_unitary(Matrix& matrix, std::vector<int>& qubits)
+{
+    Instruction::apply_unitary(matrix, this->statevector, qubits);
 }
 
 inline void Executor::apply_gate(std::string& gate_name, std::vector<int>& qubits)
