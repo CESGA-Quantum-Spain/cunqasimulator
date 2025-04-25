@@ -189,66 +189,66 @@ inline void cunqa_apply_ecr(StateVector& statevector, std::vector<int> qubits)
 //Classical conditional one-qubit gates
 inline void cunqa_apply_cifh(StateVector& statevector, std::vector<int> qubits)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_h(statevector, {qubits[0]});
+        cunqa_apply_h(statevector, {qubits[1]});
     }
 }
 
 inline void cunqa_apply_cifx(StateVector& statevector, std::vector<int> qubits)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_x(statevector, {qubits[0]});
+        cunqa_apply_x(statevector, {qubits[1]});
     }
 }
 
 inline void cunqa_apply_cify(StateVector& statevector, std::vector<int> qubits)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_y(statevector, {qubits[0]});
+        cunqa_apply_y(statevector, {qubits[1]});
     }
 }
 
 inline void cunqa_apply_cifz(StateVector& statevector, std::vector<int> qubits)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_z(statevector, {qubits[0]});
+        cunqa_apply_z(statevector, {qubits[1]});
     }
 }
 
 //Classical conditional two-qubits gates
 inline void cunqa_apply_cifcx(StateVector& statevector, std::vector<int> qubits)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[2]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_cx(statevector, {qubits[0], qubits[1]});
+        cunqa_apply_cx(statevector, {qubits[1], qubits[2]});
     }
 }
 
 inline void cunqa_apply_cifcy(StateVector& statevector, std::vector<int> qubits)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[2]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_cy(statevector, {qubits[0], qubits[1]});
+        cunqa_apply_cy(statevector, {qubits[1], qubits[2]});
     }
 }
 
 inline void cunqa_apply_cifcz(StateVector& statevector, std::vector<int> qubits)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[2]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_cz(statevector, {qubits[0], qubits[1]});
+        cunqa_apply_cz(statevector, {qubits[1], qubits[2]});
     }
 }
 
 inline void cunqa_apply_cifecr(StateVector& statevector, std::vector<int> qubits)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[2]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_ecr(statevector, {qubits[0], qubits[1]});
+        cunqa_apply_ecr(statevector, {qubits[1], qubits[2]});
     }
 }
 
@@ -309,25 +309,25 @@ inline void cunqa_apply_rz(StateVector& statevector, std::vector<int> qubits, Pa
 
 inline void cunqa_apply_cifrx(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_rx(statevector, {qubits[0]}, param);
+        cunqa_apply_rx(statevector, {qubits[1]}, param);
     }
 }
 
 inline void cunqa_apply_cifry(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_ry(statevector, {qubits[0]}, param);
+        cunqa_apply_ry(statevector, {qubits[1]}, param);
     }
 }
 
 inline void cunqa_apply_cifrz(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[1]});
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
-        cunqa_apply_rz(statevector, {qubits[0]}, param);
+        cunqa_apply_rz(statevector, {qubits[1]}, param);
     }
 }
 
@@ -368,3 +368,18 @@ inline void cunqa_apply_2_gate(Matrix& U, StateVector& statevector, std::vector<
     }
 }
 
+inline void cunqa_apply_cif1gate(Matrix& U, StateVector& statevector, std::vector<int> qubits)
+{
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
+    if (meas.measure == 1) {
+        cunqa_apply_1_gate(U, statevector, {qubits[1]});
+    }
+}
+
+inline void cunqa_apply_cif2gate(Matrix& U, StateVector& statevector, std::vector<int> qubits)
+{
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
+    if (meas.measure == 1) {
+        cunqa_apply_2_gate(U, statevector, {qubits[1]});
+    }
+}
