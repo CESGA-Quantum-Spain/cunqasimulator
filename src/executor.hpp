@@ -9,6 +9,7 @@
 
 #include "instructions.hpp"
 #include "result_cunqasim.hpp"
+#include "noise.hpp"
 #include "utils/types_cunqasim.hpp"
 #include "utils/utils_cunqasim.hpp"
 
@@ -24,6 +25,7 @@ public:
 
     Executor(int n_qubits);
     Executor(StateVector initial_state);
+    Executor(int n_qubits, Noise noise);
 
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
     inline int apply_measure(std::vector<int>& qubits);
@@ -42,6 +44,11 @@ Executor::Executor(int n_qubits) : n_qubits{n_qubits}, statevector(1 << this->n_
 
 Executor::Executor(StateVector initial_state) : n_qubits(initial_state.size()), statevector(initial_state)
 {}
+
+Executor::Executor(int n_qubits, Noise noise): n_qubits{n_qubits}, statevector(1 << this->n_qubits)
+{
+    statevector[0] = 1.0;
+}
 
 
 //TODO: Classical Registers
