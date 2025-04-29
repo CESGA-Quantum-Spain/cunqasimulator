@@ -70,7 +70,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                     Instruction::apply_measure(this->statevector, qubits);
                     break;
                 case unitary:{
-                    matrix = instruction.at("matrix").get<Matrix>();
+                    matrix = instruction.at("params").get<Matrix>();
                     Instruction::apply_unitary(matrix, this->statevector, qubits);
                     break;
                 }
