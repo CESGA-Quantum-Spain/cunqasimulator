@@ -130,6 +130,15 @@ inline void Instruction::apply_param_instruction(StateVector& statevector, std::
     case rz:
         cunqa_apply_rz(statevector, qubits, param);
         break;
+    case crx:
+        cunqa_apply_crx(statevector, qubits, param);
+        break;
+    case cry:
+        cunqa_apply_cry(statevector, qubits, param);
+        break;
+    case crz:
+        cunqa_apply_crz(statevector, qubits, param);
+        break;
     case c_if_rx:
         cunqa_apply_cifrx(statevector, qubits, param);
         break;

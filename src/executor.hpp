@@ -69,11 +69,6 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case measure:
                     Instruction::apply_measure(this->statevector, qubits);
                     break;
-                case unitary:{
-                    matrix = instruction.at("params").get<Matrix>();
-                    Instruction::apply_unitary(matrix, this->statevector, qubits);
-                    break;
-                }
                 case id:
                 case x:
                 case y:
@@ -96,13 +91,20 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case rx:
                 case ry:
                 case rz:
+                case crx:
+                case cry:
+                case crz:
                 case c_if_rx:
                 case c_if_ry:
                 case c_if_rz:
                     param = instruction.at("params").get<Params>();
                     Instruction::apply_param_instruction(this->statevector, instruction_name, qubits, param);
                     break;
-                
+                case unitary:{
+                    matrix = instruction.at("params").get<Matrix>();
+                    Instruction::apply_unitary(matrix, this->statevector, qubits);
+                    break;
+                }
                 default:
                     std::cout << "Error. Invalid gate name" << "\n";
                     break;

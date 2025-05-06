@@ -7,7 +7,7 @@ std::complex<double> imag(0.0, 1.0);
 
 double inverse_sqrt_2 = 1.0 / std::sqrt(2.0);
 
-const std::vector<std::string> instructions = {"unitary", "measure", "id", "h", "x", "y", "z", "rx", "ry", "rz", "cx", "cy", "cz", "ecr", "c_if_h", "c_if_x","c_if_y","c_if_z","c_if_rx","c_if_ry","c_if_rz","c_if_cx","c_if_cy","c_if_cz", "d_c_if_h", "d_c_if_x","d_c_if_y","d_c_if_z","d_c_if_rx","d_c_if_ry","d_c_if_rz","d_c_if_cx","d_c_if_cy","d_c_if_cz", "d_c_if_ecr"};
+const std::vector<std::string> instructions = {"unitary", "measure", "id", "h", "x", "y", "z", "rx", "ry", "rz", "cx", "cy", "cz", "crx", "cry", "crz", "ecr", "c_if_h", "c_if_x","c_if_y","c_if_z","c_if_rx","c_if_ry","c_if_rz","c_if_cx","c_if_cy","c_if_cz", "d_c_if_h", "d_c_if_x","d_c_if_y","d_c_if_z","d_c_if_rx","d_c_if_ry","d_c_if_rz","d_c_if_cx","d_c_if_cy","d_c_if_cz", "d_c_if_ecr"};
 
 enum Instructions {
     unitary,
@@ -23,6 +23,9 @@ enum Instructions {
     cx,
     cy,
     cz,
+    crx,
+    cry,
+    crz,
     ecr,
     c_if_h,
     c_if_x,
@@ -63,6 +66,9 @@ std::unordered_map<std::string, int> instructions_map = {
     {"cx", cx},
     {"cy", cy},
     {"cz", cz},
+    {"crx", crx},
+    {"cry", cry},
+    {"crz", crz},
     {"ecr", ecr},
     {"c_if_h", c_if_h},
     {"c_if_x", c_if_x},

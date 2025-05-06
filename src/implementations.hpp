@@ -60,22 +60,6 @@ inline meas_out cunqa_apply_measure(StateVector& statevector, std::vector<int> q
 }
 
 // One-Qubit Gates
-inline void cunqa_apply_h(StateVector& statevector, std::vector<int> qubits)
-{
-    StateVector aux_statevector = statevector;
-    bool zero;
-
-    for (int i = 0; i < statevector.size(); i++) {
-        zero = is_zero(i, qubits[0]);
-        if (zero == true) { 
-            statevector[i] = inverse_sqrt_2 * aux_statevector[i] + inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])];
-        } else {
-            statevector[i] = -inverse_sqrt_2 * aux_statevector[i] + inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])];
-        }
-    }
-}
-
-
 inline void cunqa_apply_x(StateVector& statevector, std::vector<int> qubits)
 {
     StateVector aux_statevector = statevector;
@@ -114,8 +98,22 @@ inline void cunqa_apply_z(StateVector& statevector, std::vector<int> qubits)
     }
 }
 
-// Two-Qubit Gates
+inline void cunqa_apply_h(StateVector& statevector, std::vector<int> qubits)
+{
+    StateVector aux_statevector = statevector;
+    bool zero;
 
+    for (int i = 0; i < statevector.size(); i++) {
+        zero = is_zero(i, qubits[0]);
+        if (zero == true) { 
+            statevector[i] = inverse_sqrt_2 * aux_statevector[i] + inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])];
+        } else {
+            statevector[i] = -inverse_sqrt_2 * aux_statevector[i] + inverse_sqrt_2 * aux_statevector[flipbit(i, qubits[0])];
+        }
+    }
+}
+
+// Two-Qubit Gates
 inline void cunqa_apply_cx(StateVector& statevector, std::vector<int> qubits)
 {
     StateVector aux_statevector = statevector;
@@ -185,6 +183,7 @@ inline void cunqa_apply_ecr(StateVector& statevector, std::vector<int> qubits)
         }
     }
 }
+
 
 //Classical conditional one-qubit gates
 inline void cunqa_apply_cifh(StateVector& statevector, std::vector<int> qubits)
@@ -305,7 +304,62 @@ inline void cunqa_apply_rz(StateVector& statevector, std::vector<int> qubits, Pa
     }
 }
 
+inline void cunqa_apply_crx(StateVector& statevector, std::vector<int> qubits, Params& param)
+{
+    StateVector aux_statevector = statevector;
+    bool zero;
+    double sin = std::sin(param[0]/2.0);
+    double cos = std::cos(param[0]/2.0);
 
+    for (int i = 0; i < statevector.size(); i++) {
+        zero = is_zero(i, qubits[0]);
+        if (!zero) {
+            statevector[i] = cos * aux_statevector[i] - imag * sin *  aux_statevector[flipbit(i, qubits[1])];
+        }
+    }
+}
+
+inline void cunqa_apply_cry(StateVector& statevector, std::vector<int> qubits, Params& param)
+{
+    StateVector aux_statevector = statevector;
+    bool zero_0;
+    bool zero_1;
+    double sin = std::sin(param[0]/2.0);
+    double cos = std::cos(param[0]/2.0);
+
+    for (int i = 0; i < statevector.size(); i++) {
+        zero_0 = is_zero(i, qubits[0]);
+        zero_1 = is_zero(i, qubits[1]);
+        if (!zero_0) {
+            if(zero_1) {
+                statevector[i] =  cos * aux_statevector[i] - sin *  aux_statevector[flipbit(i, qubits[1])];
+            } else {
+                statevector[i] =  cos * aux_statevector[i] + sin * aux_statevector[flipbit(i, qubits[1])];
+            }
+        }
+    }
+}
+
+inline void cunqa_apply_crz(StateVector& statevector, std::vector<int> qubits, Params& param)
+{
+    StateVector aux_statevector = statevector;
+    bool zero_0;
+    bool zero_1;
+    double sin = std::sin(param[0]/2.0);
+    double cos = std::cos(param[0]/2.0);
+
+    for (int i = 0; i < statevector.size(); i++) {
+        zero_0 = is_zero(i, qubits[0]);
+        zero_1 = is_zero(i, qubits[1]);
+        if (!zero_0) {
+            if(zero_1) {
+                statevector[i] = (cos - imag * sin) * aux_statevector[i];
+            } else {
+                statevector[i] = (cos + imag * sin) * aux_statevector[i];
+            }
+        }
+    }
+}
 
 inline void cunqa_apply_cifrx(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
