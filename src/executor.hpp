@@ -142,7 +142,7 @@ inline void Executor::apply_unitary(Matrix& matrix, std::vector<int>& qubits)
     Instruction::apply_unitary(matrix, this->statevector, qubits);
 }
 
-inline void Executor::apply_gate(const td::string& gate_name, std::vector<int>& qubits)
+inline void Executor::apply_gate(const std::string& gate_name, std::vector<int>& qubits)
 {
     Instruction::apply_instruction(this->statevector, gate_name, qubits);
 }
