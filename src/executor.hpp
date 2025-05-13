@@ -28,8 +28,8 @@ public:
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
     inline int apply_measure(std::vector<int>& qubits);
     inline void apply_unitary(Matrix& matrix, std::vector<int>& qubits);
-    inline void apply_gate(std::string& gate_name, std::vector<int>& qubits);
-    inline void apply_parametric_gate(std::string& gate_name, std::vector<int>& qubits, std::vector<double>& param);
+    inline void apply_gate(const std::string& gate_name, std::vector<int>& qubits);
+    inline void apply_parametric_gate(const std::string& gate_name, std::vector<int>& qubits, std::vector<double>& param);
     inline int get_nonzero_position();
     inline void restart_statevector();
     
@@ -142,12 +142,12 @@ inline void Executor::apply_unitary(Matrix& matrix, std::vector<int>& qubits)
     Instruction::apply_unitary(matrix, this->statevector, qubits);
 }
 
-inline void Executor::apply_gate(std::string& gate_name, std::vector<int>& qubits)
+inline void Executor::apply_gate(const td::string& gate_name, std::vector<int>& qubits)
 {
     Instruction::apply_instruction(this->statevector, gate_name, qubits);
 }
 
-inline void Executor::apply_parametric_gate(std::string& gate_name, std::vector<int>& qubits, std::vector<double>& param)
+inline void Executor::apply_parametric_gate(const std::string& gate_name, std::vector<int>& qubits, std::vector<double>& param)
 {
     Instruction::apply_param_instruction(this->statevector, gate_name, qubits, param);
 }

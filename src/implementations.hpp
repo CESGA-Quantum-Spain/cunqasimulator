@@ -9,6 +9,7 @@
 #include "utils/types_cunqasim.hpp"
 #include "utils/utils_cunqasim.hpp"
 
+#include <iostream>
 
 inline meas_out cunqa_apply_measure(StateVector& statevector, std::vector<int> qubits)
 {
@@ -306,7 +307,6 @@ inline void cunqa_apply_rz(StateVector& statevector, std::vector<int> qubits, Pa
 
 inline void cunqa_apply_crx(StateVector& statevector, std::vector<int> qubits, Params& param)
 {
-    StateVector aux_statevector = statevector;
     bool zero;
     double sin = std::sin(param[0]/2.0);
     double cos = std::cos(param[0]/2.0);
@@ -314,7 +314,7 @@ inline void cunqa_apply_crx(StateVector& statevector, std::vector<int> qubits, P
     for (int i = 0; i < statevector.size(); i++) {
         zero = is_zero(i, qubits[0]);
         if (!zero) {
-            statevector[i] = cos * aux_statevector[i] - imag * sin *  aux_statevector[flipbit(i, qubits[1])];
+            statevector[i] = cos * statevector[i] - imag * sin * statevector[flipbit(i, qubits[1])];
         }
     }
 }

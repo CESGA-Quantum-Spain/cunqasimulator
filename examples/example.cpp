@@ -30,9 +30,18 @@ int main(int argc, char** argv) {
             {"name", "cx"},
             {"qubits", {0,1}}
         },
-        {
+        /* {
             {"name", "unitary"},
             {"params", {{{0.0, 0.0}, {0.0, -1.0}}, {{0.0, 1.0}, {0.0, 0.0}}}},
+            {"qubits", {0}}
+        }, */
+        {
+            {"name","crz"},
+            {"params", {2.0}},
+            {"qubits", {0, 1}}
+        },
+        {
+            {"name","h"},
             {"qubits", {0}}
         },
         {
@@ -46,7 +55,7 @@ int main(int argc, char** argv) {
     };
 
 
-    Executor qpu(5);
+    Executor qpu(2);
 
     ResultCunqa result = qpu.run(qc);
     std::cout << "Total time: " << result.total_time << " [ms] \n";
