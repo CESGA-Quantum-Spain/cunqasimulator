@@ -17,8 +17,8 @@ public:
     std::unordered_map<int, int> counts;
     double total_time;
 
-    json get_ordered_counts();
-    json to_json(); 
+    inline json get_ordered_counts();
+    inline json to_json(); 
     
 };
 

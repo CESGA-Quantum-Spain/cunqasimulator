@@ -22,10 +22,10 @@ public:
     int n_qubits;
     StateVector statevector;
 
-    Executor(int n_qubits);
-    Executor(StateVector initial_state);
+    inline Executor(int n_qubits);
+    inline Executor(StateVector initial_state);
 
-    ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
+    inline ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
     inline int apply_measure(std::vector<int>& qubits);
     inline void apply_unitary(Matrix& matrix, std::vector<int>& qubits);
     inline void apply_gate(const std::string& gate_name, std::vector<int>& qubits);

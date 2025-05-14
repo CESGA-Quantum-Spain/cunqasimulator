@@ -14,7 +14,7 @@ inline bool is_zero(int N, int p) {
 }
 
 //Reverse the first M bits of the integer N
-int reverse_bits(int N, int M) {
+inline int reverse_bits(int N, int M) {
     int result = 0;
     for (int i = 0; i < M; ++i) {
         if (N & (1 << i)) {
