@@ -198,13 +198,6 @@ inline void cunqa_apply_ecr(StateVector& statevector, std::vector<int> qubits)
 
 
 //Classical conditional one-qubit gates
-inline void cunqa_apply_cifh(StateVector& statevector, std::vector<int> qubits)
-{
-    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
-    if (meas.measure == 1) {
-        cunqa_apply_h(statevector, {qubits[1]});
-    }
-}
 
 inline void cunqa_apply_cifx(StateVector& statevector, std::vector<int> qubits)
 {
@@ -227,6 +220,22 @@ inline void cunqa_apply_cifz(StateVector& statevector, std::vector<int> qubits)
     meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
         cunqa_apply_z(statevector, {qubits[1]});
+    }
+}
+
+inline void cunqa_apply_cifh(StateVector& statevector, std::vector<int> qubits)
+{
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
+    if (meas.measure == 1) {
+        cunqa_apply_h(statevector, {qubits[1]});
+    }
+}
+
+inline void cunqa_apply_cifsx(StateVector& statevector, std::vector<int> qubits)
+{
+    meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
+    if (meas.measure == 1) {
+        cunqa_apply_sx(statevector, {qubits[1]});
     }
 }
 

@@ -87,9 +87,6 @@ inline void Instruction::apply_instruction(StateVector& statevector, std::string
         cunqa_apply_ecr(statevector, qubits);
         break;
     //Classical conditional one-qubit gates
-    case c_if_h:
-        cunqa_apply_cifh(statevector, qubits);
-        break;
     case c_if_x:
         cunqa_apply_cifx(statevector, qubits);
         break;
@@ -98,6 +95,12 @@ inline void Instruction::apply_instruction(StateVector& statevector, std::string
         break;
     case c_if_z:
         cunqa_apply_cifz(statevector, qubits);
+        break;
+    case c_if_h:
+        cunqa_apply_cifh(statevector, qubits);
+        break;
+    case c_if_sx:
+        cunqa_apply_cifsx(statevector, qubits);
         break;
         //Classical conditional two-qubit gates
     case c_if_cx:
