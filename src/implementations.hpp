@@ -114,6 +114,17 @@ inline void cunqa_apply_h(StateVector& statevector, std::vector<int> qubits)
     }
 }
 
+
+inline void cunqa_apply_sx(StateVector& statevector, std::vector<int> qubits)
+{
+    StateVector aux_statevector = statevector;
+    double a_half = (double)1.0/(double)2.0;
+
+    for (int i = 0; i < statevector.size(); i++) {
+        statevector[i] = a_half * (1.0 + imag) * aux_statevector[i] + a_half * (1.0 - imag) * aux_statevector[flipbit(i, qubits[0])];
+    }
+}
+
 // Two-Qubit Gates
 inline void cunqa_apply_cx(StateVector& statevector, std::vector<int> qubits)
 {

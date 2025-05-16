@@ -58,9 +58,6 @@ inline void Instruction::apply_instruction(StateVector& statevector, std::string
     //One-qubit gates
     case id:
         break;
-    case h:
-        cunqa_apply_h(statevector, qubits);
-        break;
     case x:
         cunqa_apply_x(statevector, qubits);
         break;
@@ -69,6 +66,12 @@ inline void Instruction::apply_instruction(StateVector& statevector, std::string
         break;
     case z:
         cunqa_apply_z(statevector, qubits);
+        break;
+    case h:
+        cunqa_apply_h(statevector, qubits);
+        break;
+    case sx:
+        cunqa_apply_sx(statevector, qubits);
         break;
     //Two-qubit Gates
     case cx:

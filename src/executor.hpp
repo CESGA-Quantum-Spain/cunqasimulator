@@ -74,6 +74,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
                 case y:
                 case z:
                 case h:
+                case sx:
                 case cx:
                 case cy:
                 case cz:
