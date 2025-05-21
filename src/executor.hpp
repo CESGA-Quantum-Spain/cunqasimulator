@@ -122,7 +122,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
     }
 
     auto stop_time = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop_time - start_time);
+    const std::chrono::duration<float> duration = stop_time - start_time;
 
     double total_time = duration.count();
 
