@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 
 #include "utils/types_cunqasim.hpp"

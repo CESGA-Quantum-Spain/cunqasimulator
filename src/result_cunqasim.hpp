@@ -1,3 +1,5 @@
+#pragma once
+
 #include <unordered_map>
 
 #include "utils/types_cunqasim.hpp"
