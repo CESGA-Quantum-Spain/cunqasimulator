@@ -2,9 +2,9 @@
 #include <vector>
 #include <complex>
 
-#include "../src/executor.hpp"
-#include "../src/utils/utils_cunqasim.hpp"
-#include "../src/utils/types_cunqasim.hpp"
+#include "executor.hpp"
+#include "utils/utils_cunqasim.hpp"
+#include "utils/types_cunqasim.hpp"
 
 void printvector (StateVector& sv)
 {
