@@ -1,8 +1,6 @@
-
-distributed_qpu.hpp
-
 qmio_modules.sh
 
 build/
+tests/
 
 example

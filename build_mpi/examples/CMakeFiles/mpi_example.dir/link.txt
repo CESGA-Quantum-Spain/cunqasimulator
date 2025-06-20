@@ -1,0 +1,1 @@
+/opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++ -O3 -DNDEBUG CMakeFiles/mpi_example.dir/mpi_example.cpp.o -o mpi_example  ../src/libcunqasimulator.a -lmpi 

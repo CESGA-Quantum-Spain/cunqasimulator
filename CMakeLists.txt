@@ -18,7 +18,7 @@ message(STATUS "C++ Compiler: ${CMAKE_CXX_COMPILER}")
 
 find_package(nlohmann_json 3.7.3 REQUIRED)
 #find_package(Threads REQUIRED)
-#find_package(MPI REQUIRED)
+find_package(MPI REQUIRED)
 #find_package(OpenMP REQUIRED)
 
 add_subdirectory(src)

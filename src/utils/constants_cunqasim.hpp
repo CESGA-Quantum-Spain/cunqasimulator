@@ -3,6 +3,9 @@
 #include <complex>
 #include <unordered_map>
 
+inline uint64_t ZERO = 0;
+inline uint64_t ONE = 1;
+
 inline std::complex<double> imag(0.0, 1.0);
 
 inline double inverse_sqrt_2 = 1.0 / std::sqrt(2.0);
