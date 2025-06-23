@@ -1,2 +1,0 @@
-/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/bin/ar qc libcunqasimulator.a CMakeFiles/cunqasimulator.dir/executor.cpp.o CMakeFiles/cunqasimulator.dir/mpi_executor.cpp.o CMakeFiles/cunqasimulator.dir/instructions.cpp.o CMakeFiles/cunqasimulator.dir/mpi_instructions.cpp.o CMakeFiles/cunqasimulator.dir/implementations.cpp.o CMakeFiles/cunqasimulator.dir/result_cunqasim.cpp.o
-/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/bin/ranlib libcunqasimulator.a

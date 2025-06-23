@@ -23,9 +23,6 @@ CMAKE_AR:FILEPATH=/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/
 //Build type
 CMAKE_BUILD_TYPE:STRING=Release
 
-//Enable/Disable color output during build.
-CMAKE_COLOR_MAKEFILE:BOOL=ON
-
 //CXX compiler
 CMAKE_CXX_COMPILER:FILEPATH=/opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++
 
@@ -82,8 +79,8 @@ CMAKE_INSTALL_PREFIX:PATH=/usr/local
 //Path to a program.
 CMAKE_LINKER:FILEPATH=/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/bin/ld
 
-//Path to a program.
-CMAKE_MAKE_PROGRAM:FILEPATH=/bin/gmake
+//Program used to build from build.ninja files.
+CMAKE_MAKE_PROGRAM:FILEPATH=/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja
 
 //Flags used by the linker during the creation of modules during
 // all build types.
@@ -297,8 +294,6 @@ CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 CMAKE_CACHE_MINOR_VERSION:INTERNAL=27
 //Patch version of cmake used to create the current loaded cache
 CMAKE_CACHE_PATCH_VERSION:INTERNAL=6
-//ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
-CMAKE_COLOR_MAKEFILE-ADVANCED:INTERNAL=1
 //Path to CMake executable.
 CMAKE_COMMAND:INTERNAL=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/bin/cmake
 //Path to cpack program executable.
@@ -342,7 +337,7 @@ CMAKE_EXPORT_COMPILE_COMMANDS-ADVANCED:INTERNAL=1
 //Name of external makefile project generator.
 CMAKE_EXTRA_GENERATOR:INTERNAL=
 //Name of generator.
-CMAKE_GENERATOR:INTERNAL=Unix Makefiles
+CMAKE_GENERATOR:INTERNAL=Ninja
 //Generator instance identifier.
 CMAKE_GENERATOR_INSTANCE:INTERNAL=
 //Name of generator platform.

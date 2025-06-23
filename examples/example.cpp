@@ -36,15 +36,6 @@ int main(int argc, char** argv) {
             {"qubits", {0}}
         }, */
         {
-            {"name","crz"},
-            {"params", {2.0}},
-            {"qubits", {0, 1}}
-        },
-        {
-            {"name","h"},
-            {"qubits", {0}}
-        },
-        {
             {"name","measure"},
             {"qubits", {0}}
         },
@@ -55,10 +46,10 @@ int main(int argc, char** argv) {
     };
 
 
-    Executor qpu(2);
+    Executor qpu(15);
+    ResultCunqa result = qpu.run(qc, 100000);
 
-    ResultCunqa result = qpu.run(qc);
-    std::cout << "Total time: " << result.total_time << " [ms] \n";
+    std::cout << "Total time: " << result.total_time << " [s] \n";
 
     std::cout << "Print using unordered_map: " << "\n";
     std::cout << "{ ";

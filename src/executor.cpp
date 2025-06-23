@@ -5,11 +5,11 @@
 #include <chrono>
 #include <string>
 
-#include "instructions.hpp"
+#include "implementations.hpp"
 #include "utils/utils_cunqasim.hpp"
 #include "utils/constants_cunqasim.hpp"
 
-Executor::Executor(int n_qubits) : n_qubits{n_qubits}, statevector(1 << this->n_qubits)
+Executor::Executor(const int n_qubits) : n_qubits{n_qubits}, statevector(1 << n_qubits)
 {
     statevector[0] = 1.0;
 }
@@ -18,17 +18,160 @@ Executor::Executor(StateVector initial_state) : n_qubits(initial_state.size()), 
 {}
 
 
-//TODO: Classical Registers
-ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
+int Executor::apply_measure(const std::vector<int>& qubits)
+{
+    meas_out measurement = cunqa_apply_measure(statevector, qubits);
+
+    return measurement.measure;
+}
+
+void Executor::apply_gate(const std::string& gate_name, const std::vector<int>& qubits)
+{
+    switch (instructions_map[gate_name])
+    {
+        case id:
+            break;
+        case x:
+            cunqa_apply_x(statevector, qubits);
+            break;
+        case y:
+            cunqa_apply_y(statevector, qubits);
+            break;
+        case z:
+            cunqa_apply_z(statevector, qubits);
+            break;
+        case h:
+            cunqa_apply_h(statevector, qubits);
+            break;
+        case sx:
+            cunqa_apply_sx(statevector, qubits);
+            break;
+        case cx:
+            cunqa_apply_cx(statevector, qubits);
+            break;
+        case cy:
+            cunqa_apply_cy(statevector, qubits);
+            break;
+        case cz:
+            cunqa_apply_cz(statevector, qubits);
+            break;
+        case ecr:
+            cunqa_apply_ecr(statevector, qubits);
+            break;
+        case c_if_x:
+            cunqa_apply_cifx(statevector, qubits);
+            break;
+        case c_if_y:
+            cunqa_apply_cify(statevector, qubits);
+            break;
+        case c_if_z:
+            cunqa_apply_cifz(statevector, qubits);
+            break;
+        case c_if_h:
+            cunqa_apply_cifh(statevector, qubits);
+            break;
+        case c_if_sx:
+            cunqa_apply_cifsx(statevector, qubits);
+            break;
+        case c_if_cx:
+            cunqa_apply_cifcx(statevector, qubits);
+            break;
+        case c_if_cy:
+            cunqa_apply_cifcy(statevector, qubits);
+            break;
+        case c_if_cz:
+            cunqa_apply_cifcz(statevector, qubits);
+            break;
+        case c_if_ecr:
+            cunqa_apply_cifecr(statevector, qubits);
+            break;
+        default:
+            std::cout << "Error. Invalid gate name" << "\n";
+            break;
+    }
+}
+
+void Executor::apply_parametric_gate(const std::string& gate_name, const std::vector<int>& qubits, Params& param)
+{
+    switch (instructions_map[gate_name])
+    {
+        case rx:
+            cunqa_apply_rx(statevector, qubits, param);
+            break;
+        case ry:
+            cunqa_apply_ry(statevector, qubits, param);
+            break;
+        case rz:
+            cunqa_apply_rz(statevector, qubits, param);
+            break;
+        case crx:
+            cunqa_apply_crx(statevector, qubits, param);
+            break;
+        case cry:
+            cunqa_apply_cry(statevector, qubits, param);
+            break;
+        case crz:
+            cunqa_apply_crz(statevector, qubits, param);
+            break;
+        case c_if_rx:
+            cunqa_apply_cifrx(statevector, qubits, param);
+            break;
+        case c_if_ry:
+            cunqa_apply_cifry(statevector, qubits, param);
+            break;
+        case c_if_rz:
+            cunqa_apply_cifrz(statevector, qubits, param);
+            break;
+        default:
+            std::cout << "Error. Invalid gate name" << "\n";
+            break;
+    }
+}
+
+void Executor::apply_unitary(const Matrix& matrix, const std::vector<int>& qubits)
+{
+    if (matrix.size() == 2){
+        cunqa_apply_1_gate(matrix, statevector, qubits);
+    } else if (matrix.size() == 4) {
+        cunqa_apply_2_gate(matrix, statevector, qubits);
+    } else {
+        std::cout << "Error. Invalid matrix dimension" << "\n";
+    }
+}
+
+void Executor::restart_statevector()
+{
+    statevector.assign(statevector.size(), {0.0, 0.0});
+    statevector[0] = 1.0;
+}
+
+int Executor::get_nonzero_position()
+{
+    int position;
+    try {
+        auto it = std::find_if(statevector.begin(), statevector.end(), [](const State& c) {
+            return c != std::complex<double>(0, 0); // Check for nonzero
+        });
+        position = std::distance(statevector.begin(), it);
+    } catch (const std::exception& e) {
+        //SPDLOG_LOGGER_ERROR(logger, "Error findind the non-zero position. Check if all qubits were measured.");
+        return -1;
+    }
+
+    return position;
+}
+
+
+ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, const int shots)
 {
     ResultCunqa result;
     std::string instruction_name;
     std::vector<int> qubits;
+    int measurement;
     Params param;
     Matrix matrix;
-    int dimension;
 
-    result.n_qubits = this->n_qubits;
+    result.n_qubits = n_qubits;
 
     //SPDLOG_LOGGER_DEBUG(logger, "In Cunqa run: variables defined and n_qubits set.");
 
@@ -38,62 +181,32 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
         for (auto& instruction : quantumcircuit) {
             instruction_name = instruction.at("name");
             qubits = instruction.at("qubits").get<std::vector<int>>();
-            switch (instructions_map[instruction_name])
+            switch (case_map[instruction_name])
             {
                 case measure:
-                    Instruction::apply_measure(this->statevector, qubits);
+                    measurement = apply_measure(qubits);
                     break;
-                case id:
-                case x:
-                case y:
-                case z:
-                case h:
-                case sx:
-                case cx:
-                case cy:
-                case cz:
-                case ecr:
-                case c_if_x:
-                case c_if_y:
-                case c_if_z:
-                case c_if_h:
-                case c_if_sx:
-                case c_if_cx:
-                case c_if_cy:
-                case c_if_cz:
-                case c_if_ecr:
-                    Instruction::apply_instruction(this->statevector, instruction_name, qubits);
+                case gate:
+                    apply_gate(instruction_name, qubits);
                     break;
-                case rx:
-                case ry:
-                case rz:
-                case crx:
-                case cry:
-                case crz:
-                case c_if_rx:
-                case c_if_ry:
-                case c_if_rz:
+                case parametric_gate:
                     param = instruction.at("params").get<Params>();
-                    Instruction::apply_param_instruction(this->statevector, instruction_name, qubits, param);
+                    apply_parametric_gate(instruction_name, qubits, param);
                     break;
-                case unitary:{
+                case unitary:
                     matrix = instruction.at("params").get<Matrix>();
-                    Instruction::apply_unitary(matrix, this->statevector, qubits);
-                    break;
-                }
-                default:
-                    std::cout << "Error. Invalid gate name" << "\n";
+                    apply_unitary(matrix, qubits);
                     break;
             }
-        }
+        } // End one shot
         
-        int position_result = this->get_nonzero_position();
+        int position_result = get_nonzero_position();
         //SPDLOG_LOGGER_DEBUG(logger, "position_result: {}", position_result);
         result.counts[position_result]++;
         
         restart_statevector();
 
-    }
+    } // End all shots
 
     auto stop_time = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<float> duration = stop_time - start_time;
@@ -103,49 +216,4 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, int shots)
     result.total_time = total_time;
 
     return result;
-}
-
-
-int Executor::apply_measure(std::vector<int>& qubits)
-{
-    meas_out meas =  Instruction::apply_measure(this->statevector, qubits);
-
-    return meas.measure;
-}
-
-void Executor::apply_unitary(Matrix& matrix, std::vector<int>& qubits)
-{
-    Instruction::apply_unitary(matrix, this->statevector, qubits);
-}
-
-void Executor::apply_gate(const std::string& gate_name, std::vector<int>& qubits)
-{
-    Instruction::apply_instruction(this->statevector, gate_name, qubits);
-}
-
-void Executor::apply_parametric_gate(const std::string& gate_name, std::vector<int>& qubits, std::vector<double>& param)
-{
-    Instruction::apply_param_instruction(this->statevector, gate_name, qubits, param);
-}
-
-void Executor::restart_statevector()
-{
-    this->statevector.assign(this->statevector.size(), {0.0, 0.0});
-    this->statevector[0] = 1.0;
-}
-
-int Executor::get_nonzero_position()
-{
-    int position;
-    try {
-        auto it = std::find_if(this->statevector.begin(), this->statevector.end(), [](const State& c) {
-            return c != std::complex<double>(0, 0); // Check for nonzero
-        });
-        position = std::distance(this->statevector.begin(), it);
-    } catch (const std::exception& e) {
-        //SPDLOG_LOGGER_ERROR(logger, "Error findind the non-zero position. Check if all qubits were measured.");
-        return -1;
-    }
-
-    return position;
 }

@@ -15,13 +15,13 @@ public:
     Executor(int n_qubits);
     Executor(StateVector initial_state);
 
-    ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
-    int apply_measure(std::vector<int>& qubits);
-    void apply_unitary(Matrix& matrix, std::vector<int>& qubits);
-    void apply_gate(const std::string& gate_name, std::vector<int>& qubits);
-    void apply_parametric_gate(const std::string& gate_name, std::vector<int>& qubits, std::vector<double>& param);
+    int apply_measure(const std::vector<int>& qubits);
+    void apply_gate(const std::string& gate_name, const std::vector<int>& qubits);
+    void apply_parametric_gate(const std::string& gate_name, const std::vector<int>& qubits, std::vector<double>& param);
+    void apply_unitary(const Matrix& matrix, const std::vector<int>& qubits);
     int get_nonzero_position();
     void restart_statevector();
+    ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
     
 };
 
