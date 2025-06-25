@@ -17,8 +17,8 @@ meas_out cunqa_apply_measure(StateVector& statevector, const std::vector<int> qu
     std::vector<int> index_0;
     std::vector<int> index_1;
 
-    for (uint64_t j = 0; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
-        for (uint64_t i = j; i < j + (1 << qubits[0]); i++) {
+    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             index_0.push_back(i);
             index_1.push_back(flipbit(i, qubits[0]));
             prob_0 = prob_0 + std::norm(statevector[i]);
@@ -80,7 +80,6 @@ void cunqa_apply_z(StateVector& statevector, const std::vector<int> qubits)
             statevector[flipbit(i, qubits[0])] = -statevector[flipbit(i, qubits[0])];
         }
     }
-
 }
 
 void cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits)
