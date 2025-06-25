@@ -114,10 +114,16 @@ void cunqa_apply_sx(StateVector& statevector, const std::vector<int> qubits)
 // Two-Qubit Gates
 void cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits)
 {
-    std::complex<double> aux;
+    //std::complex<double> aux;
     bool zero;
 
-    for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { // Iterate over target qubit
+    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
+            statevector[flipbit(i, qubits[0])] = statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
+        }
+    }
+
+    /* for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { // Iterate over target qubit
         for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             zero = is_zero(i, qubits[0]);
             if (!zero) {
@@ -126,15 +132,27 @@ void cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits)
                 statevector[flipbit(i, qubits[1])] = aux;
             }
         }
-    }
+    } */
 }
 
 void cunqa_apply_cy(StateVector& statevector, const std::vector<int> qubits)
 {
-    std::complex<double> aux;
+    std::complex<double> aux_01;
     bool zero;
 
-    for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
+    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
+            zero = is_zero(statevector[flipbit(i, qubits[0])], qubits[1]);
+            if (zero) {
+                aux_01 = statevector[flipbit(i, qubits[0])];
+                statevector[flipbit(i, qubits[0])] = imag * statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
+            } else {
+                statevector[flipbit(i, qubits[0])] = -imag * aux_01;
+            }
+        }
+    }
+
+    /* for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
         for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             zero = is_zero(i, qubits[0]);
             if (!zero) {
@@ -143,15 +161,24 @@ void cunqa_apply_cy(StateVector& statevector, const std::vector<int> qubits)
                 statevector[flipbit(i, qubits[1])] = -imag * aux;
             }
         }
-    }
+    } */
 }
 
 void cunqa_apply_cz(StateVector& statevector, const std::vector<int> qubits)
 {
-    std::complex<double> aux;
+    //std::complex<double> aux;
     bool zero;
 
-    for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
+    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
+            zero = is_zero(statevector[flipbit(i, qubits[0])], qubits[1]);
+            if (!zero) {
+                statevector[flipbit(i, qubits[0])] = -statevector[flipbit(i, qubits[0])];
+            }
+        }
+    }
+
+    /* for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
         for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             zero = is_zero(i, qubits[0]);
             if (!zero) {
@@ -159,7 +186,7 @@ void cunqa_apply_cz(StateVector& statevector, const std::vector<int> qubits)
                 statevector[flipbit(i, qubits[1])] = statevector[flipbit(i, qubits[1])];
             }
         }
-    }
+    } */
 }
 
 void cunqa_apply_ecr(StateVector& statevector, const std::vector<int> qubits)
@@ -169,7 +196,25 @@ void cunqa_apply_ecr(StateVector& statevector, const std::vector<int> qubits)
     std::complex<double> aux_10;
     bool zero;
 
-    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) { 
+
+    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
+            zero = is_zero(flipbit(i, qubits[0]), qubits[1]);
+            if (zero) {
+                aux_00 = statevector[i];
+                aux_01 = statevector[flipbit(i, qubits[0])];
+                statevector[i] = inverse_sqrt_2 * imag * statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] + inverse_sqrt_2 * statevector[flipbit(i, qubits[0])];
+                statevector[flipbit(i, qubits[0])] = inverse_sqrt_2 * aux_00 - imag * inverse_sqrt_2 * statevector[flipbit(i, qubits[1])];
+            } else {
+                aux_10 = statevector[i];
+                statevector[i] = imag * inverse_sqrt_2 * aux_01 + inverse_sqrt_2 * statevector[flipbit(i, qubits[0])];
+                statevector[flipbit[i, qubits[0]]] = -imag * inverse_sqrt_2 * aux_00 + inverse_sqrt_2 * aux_10;
+            }
+        }
+    }
+
+
+    /* for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) { 
         for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             zero = is_zero(i, qubits[1]);
             if (zero) {
@@ -182,7 +227,7 @@ void cunqa_apply_ecr(StateVector& statevector, const std::vector<int> qubits)
                 statevector[flipbit(flipbit(i, qubits[0]), qubits[1])] = -imag * inverse_sqrt_2 * aux_00 + inverse_sqrt_2 * aux_10;
             }
         }
-    }
+    } */
 }
 
 
@@ -288,7 +333,7 @@ void cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits, con
         for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             aux = statevector[i];
             statevector[i] = cos * statevector[i] + sin * statevector[flipbit(i, qubits[0])];
-            statevector[flipbit(i, qubits[0])] = cos * statevector[flipbit(i, qubits[0])] + sin * aux;
+            statevector[flipbit(i, qubits[0])] = cos * statevector[flipbit(i, qubits[0])] - sin * aux;
         }
     }
 }
@@ -310,12 +355,24 @@ void cunqa_apply_rz(StateVector& statevector, const std::vector<int> qubits, con
 
 void cunqa_apply_crx(StateVector& statevector, const std::vector<int> qubits, const Params& param)
 {
-    std::complex<double> aux;
+    std::complex<double> aux_01;
     double sin = std::sin(param[0]/2.0);
     double cos = std::cos(param[0]/2.0);
     bool zero;
 
-    for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
+    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
+            zero = is_zero(statevector[flipbit(i, qubits[0])], qubits[1]);
+            if (zero) {
+                aux_01 = statevector[flipbit(i, qubits[0])];
+                statevector[flipbit(i, qubits[0])] = cos * statevector[flipbit(i, qubits[0])] - imag * sin * statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
+            } else {
+                statevector[flipbit(i, qubits[0])] = cos * statevector[flipbit(i, qubits[0])] - imag * sin * aux_01;
+            }
+        }
+    }
+
+    /* for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
         for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             zero = is_zero(i, qubits[0]);
             if (!zero) {
@@ -324,17 +381,29 @@ void cunqa_apply_crx(StateVector& statevector, const std::vector<int> qubits, co
                 statevector[flipbit(i, qubits[1])] = cos * statevector[flipbit(i, qubits[1])] - imag * sin * aux;
             }
         }
-    }
+    } */
 }
 
 void cunqa_apply_cry(StateVector& statevector, const std::vector<int> qubits, const Params& param)
 {
-    std::complex<double> aux;
+    std::complex<double> aux_01;
     double sin = std::sin(param[0]/2.0);
     double cos = std::cos(param[0]/2.0);
     bool zero;
 
-    for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
+    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
+            zero = is_zero(statevector[flipbit(i, qubits[0])], qubits[1]);
+            if (zero) {
+                aux_01 = statevector[flipbit(i, qubits[0])];
+                statevector[flipbit(i, qubits[0])] = cos * statevector[flipbit(i, qubits[0])] + sin * statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
+            } else {
+                statevector[flipbit(i, qubits[0])] = cos * statevector[flipbit(i, qubits[0])] - sin * aux_01;
+            }
+        }
+    }
+
+    /* for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
         for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             zero = is_zero(i, qubits[0]);
             if (!zero) {
@@ -343,17 +412,28 @@ void cunqa_apply_cry(StateVector& statevector, const std::vector<int> qubits, co
                 statevector[flipbit(i, qubits[1])] = cos * statevector[flipbit(i, qubits[1])] + sin * aux;
             }
         }
-    }
+    } */
 }
 
 void cunqa_apply_crz(StateVector& statevector, const std::vector<int> qubits, const Params& param)
 {
-    std::complex<double> aux;
+    //std::complex<double> aux;
     double sin = std::sin(param[0]/2.0);
     double cos = std::cos(param[0]/2.0);
     bool zero;
 
-    for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
+    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
+            zero = is_zero(statevector[flipbit(i, qubits[0])], qubits[1]);
+            if (zero) {
+                statevector[flipbit(i, qubits[0])] = (cos - imag * sin) * statevector[flipbit(i, qubits[0])];
+            } else {
+                statevector[flipbit(i, qubits[0])] = (cos + imag * sin) * statevector[flipbit(i, qubits[0])];
+            }
+        }
+    }
+
+    /* for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
         for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             zero = is_zero(i, qubits[0]);
             if (!zero) {
@@ -361,7 +441,7 @@ void cunqa_apply_crz(StateVector& statevector, const std::vector<int> qubits, co
                 statevector[flipbit(i, qubits[1])] = (cos + imag * sin) * statevector[flipbit(i, qubits[1])];
             }
         }
-    }
+    } */
 }
 
 void cunqa_apply_cifrx(StateVector& statevector, const std::vector<int> qubits, const Params& param)
@@ -393,12 +473,20 @@ void cunqa_apply_1_gate(const Matrix& U, StateVector& statevector, const std::ve
 {
     std::complex<double> aux;
 
-    for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
+    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
+            aux = statevector[i];
+            statevector[i] = U[0][0] * statevector[i] + U[0][1] * statevector[flipbit(i, qubits[0])];
+            statevector[flipbit(i, qubits[0])] = U[1][0] * aux  + U[1][1] * satevector[flipbit(i, qubits[0])];
+        }
+    }
+
+    /* for (uint64_t j = qubits[1]; j < statevector.size(); j = j + (1 << (qubits[1] + 1))) { 
         for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             statevector[i] = U[0][0] * statevector[i] + U[0][1] * statevector[flipbit(i, qubits[0])];
             statevector[flipbit(i, qubits[0])] = U[1][1] * statevector[flipbit(i, qubits[0])] + U[1][0] * statevector[i];
         }
-    }
+    } */
 }
 
 void cunqa_apply_2_gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits)
