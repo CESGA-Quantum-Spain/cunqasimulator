@@ -32,8 +32,8 @@ meas_out cunqa_apply_measure(StateVector& statevector, const std::vector<int> qu
     int sample = dist(gen);
     output.measure = sample;
 
-    for (uint64_t j = 0; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
-        for (uint64_t i = j; i < j + (1 << qubits[0]); i++) {
+    for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j - qubits[0]; i < j + (1 << qubits[0]); i++) {
             statevector[i] = (1 - sample) * (1.0/std::sqrt((1 - prob_1))) * statevector[i];
             statevector[flipbit(i, qubits[0])] = sample * (1.0/std::sqrt((1 - prob_0))) * statevector[flipbit(i, qubits[0])];
         }
@@ -43,6 +43,7 @@ meas_out cunqa_apply_measure(StateVector& statevector, const std::vector<int> qu
 
     return output;
 }
+
 
 // One-Qubit Gates
 void cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits)
@@ -72,7 +73,6 @@ void cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits)
     }
 }
 
-
 void cunqa_apply_z(StateVector& statevector, const std::vector<int> qubits)
 {
     for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
@@ -94,7 +94,6 @@ void cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits)
         }
     }
 }
-
 
 void cunqa_apply_sx(StateVector& statevector, const std::vector<int> qubits)
 {
@@ -229,9 +228,7 @@ void cunqa_apply_ecr(StateVector& statevector, const std::vector<int> qubits)
     } */
 }
 
-
 //Classical conditional one-qubit gates
-
 void cunqa_apply_cifx(StateVector& statevector, const std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
@@ -305,7 +302,6 @@ void cunqa_apply_cifecr(StateVector& statevector, const std::vector<int> qubits)
     }
 }
 
-
 void cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits, const Params& param)
 {
     std::complex<double> aux;
@@ -321,7 +317,6 @@ void cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits, con
     }
 }
 
-
 void cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits, const Params& param)
 {
     std::complex<double> aux;
@@ -336,7 +331,6 @@ void cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits, con
         }
     }
 }
-
 
 void cunqa_apply_rz(StateVector& statevector, const std::vector<int> qubits, const Params& param)
 {
@@ -466,7 +460,6 @@ void cunqa_apply_cifrz(StateVector& statevector, const std::vector<int> qubits, 
         cunqa_apply_rz(statevector, {qubits[1]}, param);
     }
 }
-
 
 void cunqa_apply_1_gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits)
 {
