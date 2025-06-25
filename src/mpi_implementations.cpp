@@ -42,7 +42,7 @@ uint64_t get_max_easy_position(uint64_t initial_position, uint64_t max_vector_po
 
 } // End anonymous namespace
 
-meas_out mpi_cunqa_apply_measure(StateVector& statevector, std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) 
+meas_out mpi_cunqa_apply_measure(StateVector& statevector, std::vector<int> qubits, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) 
 {
     StateVector sv;
     meas_out res;
@@ -51,7 +51,7 @@ meas_out mpi_cunqa_apply_measure(StateVector& statevector, std::vector<int> qubi
     return res;
 }
 // One-Qubit Gates
-void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) 
+void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) 
 {
     std::cout << "Start of mpi_cunqa_apply_x on process " << mpi_rank << "\n";
     std::cout << "statevector_ranges[1] on " << mpi_rank << " :" << statevector_ranges.at(mpi_rank)[1] << "\n";
@@ -61,19 +61,24 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
     double my_real_part;
     double my_imag_part;
     std::complex<double> comming_complex;
-
+    uint64_t max_easy_position;
+    uint64_t possibly_last_easy_element;
+    uint64_t number_of_not_easy_no_comm;
+    uint64_t max_no_comm_position;
+    uint64_t first_communication_position;
+    uint64_t last_communication_position;
+    uint64_t number_of_communications_with_following;
     uint64_t number_of_communications_with_previous = 0;
-    uint64_t previous_first_communication_position;
+    uint64_t previous_first_communication_position = 0;
     uint64_t first_communication_position_with_previous = 0;
+
     if (mpi_rank != 0) {
         MPI_Recv(&number_of_communications_with_previous, 1, MPI_UINT64_T, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(&previous_first_communication_position, 1, MPI_UINT64_T, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        //std::cout << "number_of_communications_with_previous on " << mpi_rank << ": " << number_of_communications_with_previous << "\n";
-        //std::cout << "previous_first_communication_position on " << mpi_rank << ": " << previous_first_communication_position << "\n";
 
         if (previous_first_communication_position + (1ULL << qubits[0]) > statevector_ranges.at(mpi_rank - 1)[1]) {
-            uint64_t number_first_easies = statevector_ranges.at(mpi_rank - 1)[0] + previous_first_communication_position + (1ULL << qubits[0]) - statevector_ranges.at(mpi_rank - 1)[1];
-            for (uint64_t i = statevector_ranges.at(mpi_rank - 1)[0]; i < number_first_easies + 1; i++) {
+            uint64_t number_first_easies = previous_first_communication_position + (1ULL << qubits[0]) - statevector_ranges.at(mpi_rank - 1)[1];
+            for (uint64_t i = 0; i < number_first_easies + 1; i++) {
                 aux = statevector[i];
                 statevector[i] = statevector[flipbit(i, qubits[0])];
                 statevector[flipbit(i, qubits[0])] = aux;
@@ -92,67 +97,46 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
     }
 
     
-    uint64_t max_easy_position = get_max_easy_position(first_communication_position_with_previous + number_of_communications_with_previous, statevector_ranges.at(mpi_rank)[1], qubits[0]);
+    max_easy_position = get_max_easy_position(first_communication_position_with_previous + number_of_communications_with_previous, local_statevector_len, qubits[0]);
     std::cout << "max_easy_position on " << mpi_rank << " :" << max_easy_position << "\n";
-    uint64_t P = max_easy_position + (1ULL << qubits[0]); // TODO: naming
-    std::cout << "P on " << mpi_rank << " :" << P << "\n";
-    uint64_t number_of_not_easy_no_comm;
-    uint64_t max_no_comm_position;
-    uint64_t first_communication_position;
-    uint64_t last_communication_position;
-    uint64_t number_of_communications_with_following;
-    if (P <= statevector_ranges.at(mpi_rank)[1]) {
-        number_of_not_easy_no_comm = statevector_ranges.at(mpi_rank)[1] - P;
-        max_no_comm_position = max_easy_position + number_of_not_easy_no_comm; // +1?
-        first_communication_position = std::min(max_no_comm_position + 1, statevector_ranges.at(mpi_rank)[1]);
-        last_communication_position = P - first_communication_position;
+    possibly_last_easy_element = max_easy_position + (1ULL << qubits[0]); // TODO: naming
+    std::cout << "possibly_last_easy_element on " << mpi_rank << " :" << possibly_last_easy_element << "\n";
+    
+    if (possibly_last_easy_element <= local_statevector_len) {
+        std::cout << "possibly_last_easy_element > statevector_ranges.at(mpi_rank)[1]" << "\n";
+        number_of_not_easy_no_comm = local_statevector_len - possibly_last_easy_element;
+        max_no_comm_position = max_easy_position + number_of_not_easy_no_comm; 
+        first_communication_position = std::min(max_no_comm_position + 1, local_statevector_len); 
+        last_communication_position = possibly_last_easy_element - first_communication_position; // TODO: Warning. Positions vs lengths
         number_of_communications_with_following = last_communication_position - first_communication_position;
-        /* std::cout << "P > statevector_ranges.at(mpi_rank)[1]" << "\n";
-        std::cout << "P on else on " << mpi_rank << ": " << P << "\n";
-        std::cout << "max_no_comm_position on " << mpi_rank << ": " << max_no_comm_position << "\n";
-        std::cout << "first_communication_position on " << mpi_rank << ": " << first_communication_position << "\n";
-        std::cout << "last_communication_position on " << mpi_rank << ": " << last_communication_position << "\n";
-        std::cout << "number_of_communications_with_following on " << mpi_rank << ": " << number_of_communications_with_following << "\n"; */
     } else {
-        P = statevector_ranges.at(mpi_rank)[1];
+        std::cout << "possibly_last_easy_element > statevector_ranges.at(mpi_rank)[1]" << "\n";
+        possibly_last_easy_element = local_statevector_len;
         number_of_not_easy_no_comm = 0;
         max_no_comm_position = max_easy_position; // +1?
-        first_communication_position = std::min(max_no_comm_position + 1, statevector_ranges.at(mpi_rank)[1]);
-        last_communication_position = statevector_ranges.at(mpi_rank)[1];
+        first_communication_position = std::min(max_no_comm_position + 1, local_statevector_len);
+        last_communication_position = local_statevector_len; // TODO: Warning. Positions vs lengths 
         number_of_communications_with_following = last_communication_position - first_communication_position;
-        
-        std::cout << "P > statevector_ranges.at(mpi_rank)[1]" << "\n";
-        std::cout << "P on else on " << mpi_rank << ": " << P << "\n";
-        std::cout << "max_no_comm_position on " << mpi_rank << ": " << max_no_comm_position << "\n";
-        std::cout << "first_communication_position on " << mpi_rank << ": " << first_communication_position << "\n";
-        std::cout << "last_communication_position on " << mpi_rank << ": " << last_communication_position << "\n";
-        std::cout << "number_of_communications_with_following on " << mpi_rank << ": " << number_of_communications_with_following << "\n";
-
     }
+
+    std::cout << "possibly_last_easy_element on else on " << mpi_rank << ": " << possibly_last_easy_element << "\n";
+    std::cout << "max_no_comm_position on " << mpi_rank << ": " << max_no_comm_position << "\n";
+    std::cout << "first_communication_position on " << mpi_rank << ": " << first_communication_position << "\n";
+    std::cout << "last_communication_position on " << mpi_rank << ": " << last_communication_position << "\n";
+    std::cout << "number_of_communications_with_following on " << mpi_rank << ": " << number_of_communications_with_following << "\n";
     
-    if (mpi_rank != mpi_size - 1) {
+    if (!is_last_process) {
         MPI_Send(&number_of_communications_with_following, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
         MPI_Send(&first_communication_position, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
     }
 
     std::cout << "max_easy_position on " << mpi_rank << ": " << max_easy_position << "\n";
     std::cout << "(1 << (qubits[0] + 1)) on " << mpi_rank << ": " << (1 << (qubits[0] + 1)) << "\n";
-    for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous; j < max_easy_position + 1; j = j + (1 << (qubits[0] + 1))) {
+    for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous + qubits[0]; j < max_easy_position + 1; j = j + (1 << (qubits[0] + 1))) {
         for (uint64_t i = j; i < j + (1 << qubits[0]); i++) {
             aux = statevector[i];
-            if (i == 2) { std::cout << "IS REACHING 2!" << "\n";}
-            if (i == 0 || i == 1) {
-                std::cout << "statevector[" << i << "]: " << statevector[i] << " on rank " << mpi_rank << "\n";
-                std::cout << "flipbit(i, qubits[0]) " << flipbit(i, qubits[0]) << " on rank " << mpi_rank << "\n";
-            }
             statevector[i] = statevector[flipbit(i, qubits[0])];
-            if (i == 0 || i == 1) {
-                std::cout << "statevector[" << i << "]: " << statevector[i] << " on rank " << mpi_rank << "\n";
-            }
             statevector[flipbit(i, qubits[0])] = aux;
-            if (i == 0 || i == 1) {
-                std::cout << "statevector[" << flipbit(i, qubits[0]) << "]: " << statevector[flipbit(i, qubits[0])] << " on rank " << mpi_rank << "\n";
-            }
         }
     }
 
@@ -176,41 +160,267 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
         comming_complex = std::complex<double>(comming_real_part, comming_imag_part);
         statevector[i] = comming_complex;
     }
-    
 }
 
 
-void mpi_cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_z(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_sx(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) 
+{
+    std::cout << "Start of mpi_cunqa_apply_x on process " << mpi_rank << "\n";
+    std::cout << "statevector_ranges[1] on " << mpi_rank << " :" << statevector_ranges.at(mpi_rank)[1] << "\n";
+    std::complex<double> aux;
+    double comming_real_part;
+    double comming_imag_part;
+    double my_real_part;
+    double my_imag_part;
+    std::complex<double> comming_complex;
+    uint64_t max_easy_position;
+    uint64_t possibly_last_easy_element;
+    uint64_t number_of_not_easy_no_comm;
+    uint64_t max_no_comm_position;
+    uint64_t first_communication_position;
+    uint64_t last_communication_position;
+    uint64_t number_of_communications_with_following;
+    uint64_t number_of_communications_with_previous = 0;
+    uint64_t previous_first_communication_position = 0;
+    uint64_t first_communication_position_with_previous = 0;
+
+    if (mpi_rank != 0) {
+        MPI_Recv(&number_of_communications_with_previous, 1, MPI_UINT64_T, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&previous_first_communication_position, 1, MPI_UINT64_T, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (previous_first_communication_position + (1ULL << qubits[0]) > statevector_ranges.at(mpi_rank - 1)[1]) {
+            uint64_t number_first_easies = previous_first_communication_position + (1ULL << qubits[0]) - statevector_ranges.at(mpi_rank - 1)[1];
+            for (uint64_t i = 0; i < number_first_easies + 1; i++) {
+                aux = statevector[i];
+                statevector[i] = imag * statevector[flipbit(i, qubits[0])];
+                statevector[flipbit(i, qubits[0])] = -imag * aux;
+            }
+            first_communication_position_with_previous = number_first_easies + 1;
+        }
+
+        for (uint64_t i = first_communication_position_with_previous; i < first_communication_position_with_previous + number_of_communications_with_previous; i++) {
+            MPI_Recv(&comming_real_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(&comming_imag_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Send(&my_real_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD);
+            MPI_Send(&my_imag_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD);    
+            comming_complex = std::complex<double>(comming_real_part, comming_imag_part);
+            statevector[i] = -imag * comming_complex;
+        }
+    }
+
+    
+    max_easy_position = get_max_easy_position(first_communication_position_with_previous + number_of_communications_with_previous, local_statevector_len, qubits[0]);
+    std::cout << "max_easy_position on " << mpi_rank << " :" << max_easy_position << "\n";
+    possibly_last_easy_element = max_easy_position + (1ULL << qubits[0]); // TODO: naming
+    std::cout << "possibly_last_easy_element on " << mpi_rank << " :" << possibly_last_easy_element << "\n";
+    
+    if (possibly_last_easy_element <= local_statevector_len) {
+        std::cout << "possibly_last_easy_element > statevector_ranges.at(mpi_rank)[1]" << "\n";
+        number_of_not_easy_no_comm = local_statevector_len - possibly_last_easy_element;
+        max_no_comm_position = max_easy_position + number_of_not_easy_no_comm; 
+        first_communication_position = std::min(max_no_comm_position + 1, local_statevector_len); 
+        last_communication_position = possibly_last_easy_element - first_communication_position; // TODO: Warning. Positions vs lengths
+        number_of_communications_with_following = last_communication_position - first_communication_position;
+    } else {
+        std::cout << "possibly_last_easy_element > statevector_ranges.at(mpi_rank)[1]" << "\n";
+        possibly_last_easy_element = local_statevector_len;
+        number_of_not_easy_no_comm = 0;
+        max_no_comm_position = max_easy_position; // +1?
+        first_communication_position = std::min(max_no_comm_position + 1, local_statevector_len);
+        last_communication_position = local_statevector_len; // TODO: Warning. Positions vs lengths 
+        number_of_communications_with_following = last_communication_position - first_communication_position;
+    }
+
+    std::cout << "possibly_last_easy_element on else on " << mpi_rank << ": " << possibly_last_easy_element << "\n";
+    std::cout << "max_no_comm_position on " << mpi_rank << ": " << max_no_comm_position << "\n";
+    std::cout << "first_communication_position on " << mpi_rank << ": " << first_communication_position << "\n";
+    std::cout << "last_communication_position on " << mpi_rank << ": " << last_communication_position << "\n";
+    std::cout << "number_of_communications_with_following on " << mpi_rank << ": " << number_of_communications_with_following << "\n";
+    
+    if (!is_last_process) {
+        MPI_Send(&number_of_communications_with_following, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
+        MPI_Send(&first_communication_position, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
+    }
+
+    std::cout << "max_easy_position on " << mpi_rank << ": " << max_easy_position << "\n";
+    std::cout << "(1 << (qubits[0] + 1)) on " << mpi_rank << ": " << (1 << (qubits[0] + 1)) << "\n";
+    for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous + qubits[0]; j < max_easy_position + 1; j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j; i < j + (1 << qubits[0]); i++) {
+            aux = statevector[i];
+            statevector[i] = statevector[flipbit(i, qubits[0])];
+            statevector[flipbit(i, qubits[0])] = aux;
+        }
+    }
+
+    std::cout << "statevector[0]: " << statevector[0] << "\n"; 
+    std::cout << "statevector[1]: " << statevector[1] << "\n";
+    std::cout << "statevector[2]: " << statevector[2] << "\n";
+
+    for (uint64_t i = max_easy_position + 1; i < max_easy_position + 1 + number_of_not_easy_no_comm; i++) {
+        aux = statevector[i];
+        statevector[i] = imag * statevector[flipbit(i, qubits[0])];
+        statevector[flipbit(i, qubits[0])] = -imag * aux;
+    }
+
+    for (uint64_t i = first_communication_position; i < first_communication_position + number_of_communications_with_following; i++) {
+        my_real_part = statevector[i].real();
+        my_imag_part = statevector[i].imag();
+        MPI_Send(&my_real_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD);
+        MPI_Send(&my_imag_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD);
+        MPI_Recv(&comming_real_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&comming_imag_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        comming_complex = std::complex<double>(comming_real_part, comming_imag_part);
+
+        statevector[i] = imag * comming_complex;
+    }
+}
+
+
+void mpi_cunqa_apply_z(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) 
+{
+    // TODO   
+}
+
+
+void mpi_cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) 
+{
+    std::cout << "Start of mpi_cunqa_apply_x on process " << mpi_rank << "\n";
+    std::cout << "statevector_ranges[1] on " << mpi_rank << " :" << statevector_ranges.at(mpi_rank)[1] << "\n";
+    std::complex<double> aux;
+    double comming_real_part;
+    double comming_imag_part;
+    double my_real_part;
+    double my_imag_part;
+    std::complex<double> comming_complex;
+    uint64_t max_easy_position;
+    uint64_t possibly_last_easy_element;
+    uint64_t number_of_not_easy_no_comm;
+    uint64_t max_no_comm_position;
+    uint64_t first_communication_position;
+    uint64_t last_communication_position;
+    uint64_t number_of_communications_with_following;
+    uint64_t number_of_communications_with_previous = 0;
+    uint64_t previous_first_communication_position = 0;
+    uint64_t first_communication_position_with_previous = 0;
+
+    if (mpi_rank != 0) {
+        MPI_Recv(&number_of_communications_with_previous, 1, MPI_UINT64_T, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&previous_first_communication_position, 1, MPI_UINT64_T, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (previous_first_communication_position + (1ULL << qubits[0]) > statevector_ranges.at(mpi_rank - 1)[1]) {
+            uint64_t number_first_easies = previous_first_communication_position + (1ULL << qubits[0]) - statevector_ranges.at(mpi_rank - 1)[1];
+            for (uint64_t i = 0; i < number_first_easies + 1; i++) {
+                aux = statevector[i];
+                statevector[i] = inverse_sqrt_2 * statevector[i] + inverse_sqrt_2 * statevector[flipbit(i, qubits[0])];
+                statevector[flipbit(i, qubits[0])] = inverse_sqrt_2 * aux + inverse_sqrt_2 * statevector[flipbit(i, qubits[0])];
+            }
+            first_communication_position_with_previous = number_first_easies + 1;
+        }
+
+        for (uint64_t i = first_communication_position_with_previous; i < first_communication_position_with_previous + number_of_communications_with_previous; i++) {
+            MPI_Recv(&comming_real_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(&comming_imag_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Send(&my_real_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD);
+            MPI_Send(&my_imag_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD);    
+            comming_complex = std::complex<double>(comming_real_part, comming_imag_part);
+            statevector[i] = -inverse_sqrt_2 * comming_complex + inverse_sqrt_2 * statevector[i];
+        }
+    }
+
+    
+    max_easy_position = get_max_easy_position(first_communication_position_with_previous + number_of_communications_with_previous, local_statevector_len, qubits[0]);
+    std::cout << "max_easy_position on " << mpi_rank << " :" << max_easy_position << "\n";
+    possibly_last_easy_element = max_easy_position + (1ULL << qubits[0]); // TODO: naming
+    std::cout << "possibly_last_easy_element on " << mpi_rank << " :" << possibly_last_easy_element << "\n";
+    
+    if (possibly_last_easy_element <= local_statevector_len) {
+        std::cout << "possibly_last_easy_element > statevector_ranges.at(mpi_rank)[1]" << "\n";
+        number_of_not_easy_no_comm = local_statevector_len - possibly_last_easy_element;
+        max_no_comm_position = max_easy_position + number_of_not_easy_no_comm; 
+        first_communication_position = std::min(max_no_comm_position + 1, local_statevector_len); 
+        last_communication_position = possibly_last_easy_element - first_communication_position; // TODO: Warning. Positions vs lengths
+        number_of_communications_with_following = last_communication_position - first_communication_position;
+    } else {
+        std::cout << "possibly_last_easy_element > statevector_ranges.at(mpi_rank)[1]" << "\n";
+        possibly_last_easy_element = local_statevector_len;
+        number_of_not_easy_no_comm = 0;
+        max_no_comm_position = max_easy_position; // +1?
+        first_communication_position = std::min(max_no_comm_position + 1, local_statevector_len);
+        last_communication_position = local_statevector_len; // TODO: Warning. Positions vs lengths 
+        number_of_communications_with_following = last_communication_position - first_communication_position;
+    }
+
+    std::cout << "possibly_last_easy_element on else on " << mpi_rank << ": " << possibly_last_easy_element << "\n";
+    std::cout << "max_no_comm_position on " << mpi_rank << ": " << max_no_comm_position << "\n";
+    std::cout << "first_communication_position on " << mpi_rank << ": " << first_communication_position << "\n";
+    std::cout << "last_communication_position on " << mpi_rank << ": " << last_communication_position << "\n";
+    std::cout << "number_of_communications_with_following on " << mpi_rank << ": " << number_of_communications_with_following << "\n";
+    
+    if (!is_last_process) {
+        MPI_Send(&number_of_communications_with_following, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
+        MPI_Send(&first_communication_position, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
+    }
+
+    std::cout << "max_easy_position on " << mpi_rank << ": " << max_easy_position << "\n";
+    std::cout << "(1 << (qubits[0] + 1)) on " << mpi_rank << ": " << (1 << (qubits[0] + 1)) << "\n";
+    for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous + qubits[0]; j < max_easy_position + 1; j = j + (1 << (qubits[0] + 1))) {
+        for (uint64_t i = j; i < j + (1 << qubits[0]); i++) {
+            aux = statevector[i];
+            statevector[i] = inverse_sqrt_2 * statevector[i] + inverse_sqrt_2 * statevector[flipbit(i, qubits[0])];
+            statevector[flipbit(i, qubits[0])] = inverse_sqrt_2 * aux + inverse_sqrt_2 * statevector[flipbit(i, qubits[0])];
+        }
+    }
+
+    std::cout << "statevector[0]: " << statevector[0] << "\n"; 
+    std::cout << "statevector[1]: " << statevector[1] << "\n";
+    std::cout << "statevector[2]: " << statevector[2] << "\n";
+
+    for (uint64_t i = max_easy_position + 1; i < max_easy_position + 1 + number_of_not_easy_no_comm; i++) {
+        aux = statevector[i];
+        statevector[i] = inverse_sqrt_2 * statevector[i] + inverse_sqrt_2 * statevector[flipbit(i, qubits[0])];
+        statevector[flipbit(i, qubits[0])] = inverse_sqrt_2 * aux + inverse_sqrt_2 * statevector[flipbit(i, qubits[0])];
+    }
+
+    for (uint64_t i = first_communication_position; i < first_communication_position + number_of_communications_with_following; i++) {
+        my_real_part = statevector[i].real();
+        my_imag_part = statevector[i].imag();
+        MPI_Send(&my_real_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD);
+        MPI_Send(&my_imag_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD);
+        MPI_Recv(&comming_real_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&comming_imag_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        comming_complex = std::complex<double>(comming_real_part, comming_imag_part);
+
+        statevector[i] = iinverse_sqrt_2 * statevector[i] + inverse_sqrt_2 * comming_complex;
+    }
+}
+void mpi_cunqa_apply_sx(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
 // Two-Qubit Gates
-void mpi_cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cy(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cz(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_ecr(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cy(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cz(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_ecr(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
 //Classical conditional one-qubit gates
-void mpi_cunqa_apply_cifx(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cify(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cifz(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cifh(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cifsx(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifx(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cify(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifz(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifh(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifsx(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
 //Classical conditional two-qubits gates
-void mpi_cunqa_apply_cifcx(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cifcy(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cifcz(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cifecr(StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_rz(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_crx(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cry(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_crz(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cifrx(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cifry(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cifrz(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifcx(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifcy(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifcz(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifecr(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const Params& param, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const Params& param, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_rz(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const Params& param, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_crx(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const Params& param, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cry(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const Params& param, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_crz(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const Params& param, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifrx(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const Params& param, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifry(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const Params& param, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cifrz(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const Params& param, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
 // Personalized gates
-void mpi_cunqa_apply_1_gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_2_gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cif1gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
-void mpi_cunqa_apply_cif2gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& mpi_rank, const int& mpi_size, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_1_gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_2_gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cif1gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
+void mpi_cunqa_apply_cif2gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) {}
