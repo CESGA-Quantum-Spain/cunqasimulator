@@ -128,14 +128,30 @@ void Executor::apply_parametric_gate(const std::string& gate_name, const std::ve
     }
 }
 
-void Executor::apply_unitary(const Matrix& matrix, const std::vector<int>& qubits)
+void Executor::apply_unitary(const std::string& gate_name, const Matrix& matrix, const std::vector<int>& qubits)
 {
-    if (matrix.size() == 2){
-        cunqa_apply_1_gate(matrix, statevector, qubits);
-    } else if (matrix.size() == 4) {
-        cunqa_apply_2_gate(matrix, statevector, qubits);
-    } else {
-        std::cout << "Error. Invalid matrix dimension" << "\n";
+    switch (case_map[gate_name])
+    {
+        case unitary:
+        {
+            if (matrix.size() == 2){
+                cunqa_apply_1_gate(matrix, statevector, qubits);
+            } else if (matrix.size() == 4) {
+                cunqa_apply_2_gate(matrix, statevector, qubits);
+            } else {
+                std::cout << "Error. Invalid matrix dimension" << "\n";
+            }
+        }
+        case c_if_unitary:
+        {
+            if (matrix.size() == 2){
+                cunqa_apply_cif1gate(matrix, statevector, qubits);
+            } else if (matrix.size() == 4) {
+                cunqa_apply_cif2gate(matrix, statevector, qubits);
+            } else {
+                std::cout << "Error. Invalid matrix dimension" << "\n";
+            }
+        }
     }
 }
 
@@ -195,7 +211,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, const int shots)
                     break;
                 case unitary:
                     matrix = instruction.at("params").get<Matrix>();
-                    apply_unitary(matrix, qubits);
+                    apply_unitary(instruction_name, matrix, qubits);
                     break;
             }
         } // End one shot

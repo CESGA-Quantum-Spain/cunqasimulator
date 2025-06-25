@@ -427,7 +427,7 @@ void cunqa_apply_2_gate(const Matrix& U, StateVector& statevector, const std::ve
     }
 }
 
-void cunqa_apply_cif1gate(Matrix& U, StateVector& statevector, std::vector<int> qubits)
+void cunqa_apply_cif1gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {
@@ -435,7 +435,7 @@ void cunqa_apply_cif1gate(Matrix& U, StateVector& statevector, std::vector<int> 
     }
 }
 
-void cunqa_apply_cif2gate(Matrix& U, StateVector& statevector, std::vector<int> qubits)
+void cunqa_apply_cif2gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits)
 {
     meas_out meas = cunqa_apply_measure(statevector, {qubits[0]});
     if (meas.measure == 1) {

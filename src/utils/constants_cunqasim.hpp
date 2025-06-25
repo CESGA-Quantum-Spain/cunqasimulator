@@ -4,18 +4,17 @@
 #include <unordered_map>
 
 inline uint64_t ZERO = 0;
-inline uint64_t ONE = 1;
+inline uint64_t ONE = 1ULL;
 
 inline std::complex<double> imag(0.0, 1.0);
 
 inline double inverse_sqrt_2 = 1.0 / std::sqrt(2.0);
 
-inline const std::vector<std::string> instructions = {"gate", "parametric_gate", "unitary", "measure", "id", "x", "y", "z", "h", "sx", "rx", "ry", "rz", "cx", "cy", "cz", "crx", "cry", "crz", "ecr", "c_if_x","c_if_y", "c_if_z", "c_if_h", "c_if_sx", "c_if_rx", "c_if_ry", "c_if_rz", "c_if_cx", "c_if_cy", "c_if_cz"};
+inline const std::vector<std::string> instructions = {"gate", "parametric_gate", "measure", "id", "x", "y", "z", "h", "sx", "rx", "ry", "rz", "cx", "cy", "cz", "crx", "cry", "crz", "ecr", "unitary", "c_if_x","c_if_y", "c_if_z", "c_if_h", "c_if_sx", "c_if_rx", "c_if_ry", "c_if_rz", "c_if_cx", "c_if_cy", "c_if_cz", "c_if_unitary"};
 
 enum Instructions {
     gate,
     parametric_gate,
-    unitary,
     measure,
     id,    
     x,  
@@ -33,6 +32,7 @@ enum Instructions {
     cry,
     crz,
     ecr,
+    unitary,
     c_if_x,
     c_if_y,
     c_if_z,
@@ -45,10 +45,10 @@ enum Instructions {
     c_if_cy,
     c_if_cz,
     c_if_ecr,
+    c_if_unitary
 };
 
 inline std::unordered_map<std::string, int> instructions_map = {
-    {"unitary", unitary},
     {"measure", measure},
     {"id", id},
     {"x", x},
@@ -66,6 +66,7 @@ inline std::unordered_map<std::string, int> instructions_map = {
     {"cry", cry},
     {"crz", crz},
     {"ecr", ecr},
+    {"unitary", unitary},
     {"c_if_x", c_if_x},
     {"c_if_y", c_if_y},
     {"c_if_z", c_if_z},
@@ -78,10 +79,10 @@ inline std::unordered_map<std::string, int> instructions_map = {
     {"c_if_cy", c_if_cy},
     {"c_if_cz", c_if_cz},
     {"c_if_ecr", c_if_ecr},
+    {"c_if_unitary", c_if_unitary},
 };
 
 inline std::unordered_map<std::string, int> case_map = {
-    {"unitary", unitary},
     {"measure", measure},
     {"id", gate},
     {"x", gate},
@@ -99,6 +100,7 @@ inline std::unordered_map<std::string, int> case_map = {
     {"cry", parametric_gate},
     {"crz", parametric_gate},
     {"ecr", gate},
+    {"unitary", unitary},
     {"c_if_x", gate},
     {"c_if_y", gate},
     {"c_if_z", gate},
@@ -111,4 +113,5 @@ inline std::unordered_map<std::string, int> case_map = {
     {"c_if_cy", parametric_gate},
     {"c_if_cz", parametric_gate},
     {"c_if_ecr", gate},
+    {"c_if_unitary", c_if_unitary}
 };
