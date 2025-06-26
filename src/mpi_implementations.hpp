@@ -5,7 +5,7 @@
 #include "utils/types_cunqasim.hpp"
 
 
-meas_out mpi_cunqa_apply_measure(StateVector& statevector, std::vector<int> qubits, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges);
+meas_out mpi_cunqa_apply_measure(StateVector& statevector, std::vector<int> qubits,const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges);
 // One-Qubit Gates
 void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges);
 void mpi_cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges);

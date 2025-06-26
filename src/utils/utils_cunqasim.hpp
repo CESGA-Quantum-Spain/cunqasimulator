@@ -34,6 +34,9 @@ inline uint64_t get_process_memory_in_bytes()
     uint64_t int_SLURM_CPUS_PER_TASK;
     uint64_t int_SLURM_MEM_PER_CPU;
     uint64_t int_SLURM_MEM_PER_NODE;
+    uint64_t final_mem_per_cpu;
+    uint64_t final_mem_per_node;
+
 
     const char* cpus_per_task_cstr = std::getenv("SLURM_CPUS_PER_TASK");
     if (cpus_per_task_cstr != nullptr) {

@@ -1,0 +1,100 @@
+slurmstepd: info: Setting TMPDIR to /scratch/183295. Previous errors about TMPDIR can be discarded
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+[0] MPI startup(): Intel(R) MPI Library, Version 2021.13  Build 20240515 (id: df72937)
+[0] MPI startup(): Copyright (C) 2003-2024 Intel Corporation.  All rights reserved.
+[0] MPI startup(): library kind: release
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+[0] MPI startup(): libfabric version: 1.20.1-impi
+[0] MPI startup(): libfabric provider: mlx
+[0] MPI startup(): File "/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/opt/mpi/etc/tuning_icx_shm-ofi_mlx_200_x1.dat" not found
+[0] MPI startup(): File "/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/opt/mpi/etc/tuning_icx_shm-ofi_mlx_200.dat" not found
+[0] MPI startup(): Load tuning file: "/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/opt/mpi/etc/tuning_icx_shm-ofi_mlx.dat"
+total_statevector_len: total_statevector_len: 4294967296
+total_statevector_len: 4294967296
+4294967296
+[0] MPI startup(): Number of NICs:  1 
+[0] MPI startup(): ===== NIC pinning on c7-4.cluster.lan.cesga.es =====
+[0] MPI startup(): Rank    Thread id  Pin nic
+[0] MPI startup(): 0       0          mlx
+[0] MPI startup(): 1       0          mlx
+[0] MPI startup(): 2       0          mlx
+[0] MPI startup(): 3       0          mlx
+[0] MPI startup(): 4       0          mlx
+total_statevector_len: 4294967296
+[0] MPI startup(): ===== CPU pinning =====
+[0] MPI startup(): Rank    Pid      Node name                  Pin cpu
+[0] MPI startup(): 0       56091    c7-4.cluster.lan.cesga.es  {0}
+[0] MPI startup(): 1       56092    c7-4.cluster.lan.cesga.es  {1}
+[0] MPI startup(): 2       56093    c7-4.cluster.lan.cesga.es  {2}
+[0] MPI startup(): 3       56094    c7-4.cluster.lan.cesga.es  {32}
+[0] MPI startup(): 4       56095    c7-4.cluster.lan.cesga.es  {33}
+[0] MPI startup(): I_MPI_LIBRARY_KIND=release_mt
+[0] MPI startup(): I_MPI_ROOT=/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13
+[0] MPI startup(): I_MPI_MPIRUN=mpirun
+[0] MPI startup(): I_MPI_BIND_WIN_ALLOCATE=localalloc
+[0] MPI startup(): I_MPI_HYDRA_BOOTSTRAP_EXEC_EXTRA_ARGS=--external-launcher
+[0] MPI startup(): I_MPI_HYDRA_TOPOLIB=hwloc
+[0] MPI startup(): I_MPI_HYDRA_BOOTSTRAP=slurm
+[0] MPI startup(): I_MPI_RETURN_WIN_MEM_NUMA=0
+[0] MPI startup(): I_MPI_PIN_DOMAIN=1
+[0] MPI startup(): I_MPI_INTERNAL_MEM_POLICY=default
+[0] MPI startup(): I_MPI_DEBUG=5
+[0] MPI startup(): I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so
+total_statevector_len: 4294967296
+Maximum len suported: Maximum len suported: 5033164804
+Maximum len suported: 5033164804
+Maximum len suported: 5033164804
+Maximum len suported: 5033164804
+5033164804
+The process 4 will manage vector elements from 4026531844 to 4294967297
+Last process: 4
+Before mpi_cunqa_apply_x on process 4
+The process 3 will manage vector elements from 3019898883 to 4026531843
+Before mpi_cunqa_apply_x on process 3
+The process 2 will manage vector elements from 2013265922 to 3019898882
+Before mpi_cunqa_apply_x on process 2
+The process 1 will manage vector elements from 1006632961 to 2013265921
+Before mpi_cunqa_apply_x on process 1
+The process 0 will manage vector elements from 0 to 1006632960
+Before mpi_cunqa_apply_x on process 0
+max_easy_position: 1006632959
+possibly_last_easy_element: 1006632961
+possibly_last_easy_element > local_statevector_len: 
+max_no_comm_position 1006632958
+first_communication_position 1006632959
+last_communication_position 1006632960
+number_of_communications_with_following: number_of_communications_with_previous: 1
+previous_first_communication_position: 1006632959
+Inside if
+number_first_easies: 1
+1
+After mpi_cunqa_apply_x on process 0
+Process: 0
+NonZeroPosition on process 0: 2
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 1 PID 56092 RUNNING AT c7-4
+=   KILLED BY SIGNAL: 9 (Killed)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 2 PID 56093 RUNNING AT c7-4
+=   KILLED BY SIGNAL: 9 (Killed)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 3 PID 56094 RUNNING AT c7-4
+=   KILLED BY SIGNAL: 9 (Killed)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 4 PID 56095 RUNNING AT c7-4
+=   KILLED BY SIGNAL: 9 (Killed)
+===================================================================================

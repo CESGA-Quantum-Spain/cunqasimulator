@@ -24,9 +24,10 @@ public:
     void restart_statevector();
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
 
+    int mpi_rank;
+
 private:
     int mpi_size;
-    int mpi_rank;
     bool mpi_process_needed = true;
     bool is_last_process = false;
     std::unordered_map<int, std::vector<uint64_t>> statevector_ranges;

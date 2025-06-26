@@ -6,6 +6,7 @@
 #include "utils/utils_cunqasim.hpp"
 #include "utils/types_cunqasim.hpp"
 
+namespace {
 void printvector (StateVector& sv)
 {
     std::cout << "( ";
@@ -16,6 +17,7 @@ void printvector (StateVector& sv)
         }
     } 
     std::cout << " ) \n";
+}
 }
 
 
@@ -46,8 +48,9 @@ int main(int argc, char** argv) {
     };
 
 
-    Executor qpu(15);
-    ResultCunqa result = qpu.run(qc, 100000);
+    Executor qpu(5);
+    
+    ResultCunqa result = qpu.run(qc, 100);
 
     std::cout << "Total time: " << result.total_time << " [s] \n";
 
