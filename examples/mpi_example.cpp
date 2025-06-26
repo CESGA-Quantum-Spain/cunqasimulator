@@ -9,15 +9,14 @@
 
 int main() {
 
-    int N_QUBITS = 32;
+    int N_QUBITS = 35;
     try {
         MPIExecutor mpi_executor(N_QUBITS);
         
-        mpi_executor.apply_gate("x", {1});
+        mpi_executor.apply_gate("x", {28});
         int nonzero_position = mpi_executor.get_nonzero_position();
-        std::cout << "Process: " << mpi_executor.mpi_rank << "\n";
-        std::cout.flush();
         std::cout << "NonZeroPosition on process " << mpi_executor.mpi_rank << ": " << nonzero_position << "\n";
+        std::cout.flush();
 
         
     } catch (const std::exception& e) {

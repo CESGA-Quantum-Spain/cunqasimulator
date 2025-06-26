@@ -14,6 +14,7 @@ public:
     StateVector statevector;
 
     MPIExecutor(int n_qubits);
+    ~MPIExecutor();
 
     
     int apply_measure(const std::vector<int>& qubits);

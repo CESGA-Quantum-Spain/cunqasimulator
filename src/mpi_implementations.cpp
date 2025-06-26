@@ -73,76 +73,54 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
     if (mpi_rank != 0) {
         MPI_Recv(&number_of_communications_with_previous, 1, MPI_UINT64_T, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(&previous_first_communication_position, 1, MPI_UINT64_T, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        if (mpi_rank == 1) { 
-            std::cout << "number_of_communications_with_previous: " << number_of_communications_with_previous << "\n";
-            std::cout << "previous_first_communication_position: " << previous_first_communication_position << "\n";
-        }
         
-        // Llegan el 1 y el 2
-
-        if (previous_first_communication_position + (1ULL << qubits[0]) > statevector_ranges.at(mpi_rank - 1)[1]) {
-            if (mpi_rank == 1) { 
-            std::cout << "Inside if" << "\n";
-            }
-            uint64_t number_first_easies = previous_first_communication_position + (1ULL << qubits[0]) - statevector_ranges.at(mpi_rank - 1)[1];
-            if (mpi_rank == 1) { 
-            std::cout << "number_first_easies: " << number_first_easies << "\n"; // This returns 1 but should return 0 in this case
-            }
-            for (uint64_t i = 0; i < number_first_easies + 1; i++) {
+        if (previous_first_communication_position + number_of_communications_with_previous == statevector_ranges.at(mpi_rank - 1)[1]) {
+            uint64_t number_first_easies =  (1ULL << qubits[0]) - statevector_ranges.at(mpi_rank - 1)[1] + previous_first_communication_position;
+            for (uint64_t i = 0; i < number_first_easies; i++) {
                 aux = statevector[i];
                 statevector[i] = statevector[flipbit(i, qubits[0])];
                 statevector[flipbit(i, qubits[0])] = aux;
             }
-            first_communication_position_with_previous = number_first_easies + 1;
+            first_communication_position_with_previous = number_first_easies - 1;
         }
-
-        // Llegan el 1 y el 2
 
         for (uint64_t i = first_communication_position_with_previous; i < first_communication_position_with_previous + number_of_communications_with_previous; i++) {
             MPI_Recv(&comming_real_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             MPI_Recv(&comming_imag_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            my_real_part = statevector[i].real();
+            my_imag_part = statevector[i].imag();
             MPI_Send(&my_real_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD);
             MPI_Send(&my_imag_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD);    
+
             comming_complex = std::complex<double>(comming_real_part, comming_imag_part);
             statevector[i] = comming_complex;
         }
-        // Llegan solo el 1
     }
 
-    // Llegan el 0 y el 1
+    if (mpi_rank == 0) {
+        std::cout << "Position 0" << "\n";
+    }
     
     max_easy_position = get_max_easy_position(first_communication_position_with_previous + number_of_communications_with_previous, local_statevector_len, qubits[0]);
-    if (mpi_rank == 0){
-        std::cout << "max_easy_position: " << max_easy_position << "\n";
-    }
     possibly_last_easy_element = max_easy_position + (1ULL << qubits[0]);
-    if (mpi_rank == 0){
-        std::cout << "possibly_last_easy_element: " << possibly_last_easy_element << "\n";
-    }
     
     if (possibly_last_easy_element <= local_statevector_len) {
-        if (mpi_rank == 0){
-            std::cout << "possibly_last_easy_element <= local_statevector_len: " << "\n";
-        }
         number_of_not_easy_no_comm = local_statevector_len - possibly_last_easy_element;
         max_no_comm_position = max_easy_position + number_of_not_easy_no_comm; 
         first_communication_position = std::min(max_no_comm_position + 1, local_statevector_len); 
-        last_communication_position = possibly_last_easy_element - first_communication_position; // TODO: Warning. Positions vs lengths
+        last_communication_position = first_communication_position + (1ULL << qubits[0]);
         number_of_communications_with_following = last_communication_position - first_communication_position;
     } else {
-        if (mpi_rank == 0){
-            std::cout << "possibly_last_easy_element > local_statevector_len: " << "\n";
-        }
         number_of_not_easy_no_comm = possibly_last_easy_element - local_statevector_len;
         max_no_comm_position = max_easy_position - number_of_not_easy_no_comm; // TODO
         first_communication_position = std::min(max_no_comm_position + 1, local_statevector_len);
-        last_communication_position = local_statevector_len; // TODO: Warning. Positions vs lengths 
-        if (mpi_rank == 0){
-            std::cout << "max_no_comm_position " <<  max_no_comm_position << "\n";
-            std::cout << "first_communication_position " <<  first_communication_position << "\n";
-            std::cout << "last_communication_position " <<  last_communication_position << "\n";
-        }
+        last_communication_position = local_statevector_len; 
         number_of_communications_with_following = last_communication_position - first_communication_position;
+    }
+
+    if (mpi_rank == 0) {
+        std::cout << "Position 1" << "\n";
     }
     
     if (!is_last_process) {
@@ -150,8 +128,8 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
         MPI_Send(&first_communication_position, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
     }
 
-    if (mpi_rank == 0){
-        std::cout << "number_of_communications_with_following: " << number_of_communications_with_following << "\n";
+    if (mpi_rank == 0) {
+        std::cout << "Position 2" << "\n";
     }
 
     for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous + (1 << qubits[0]); j < max_easy_position - (1 << qubits[0]); j = j + (1 << (qubits[0] + 1))) {
@@ -162,21 +140,36 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
         }
     }
 
+    if (mpi_rank == 0) {
+        std::cout << "Position 3" << "\n";
+    }
+
     for (uint64_t i = max_easy_position - (1 << qubits[0]) + 1; i < max_easy_position - (1 << qubits[0]) + 1 + number_of_not_easy_no_comm; i++) {
         aux = statevector[i];
         statevector[i] = statevector[flipbit(i, qubits[0])];
         statevector[flipbit(i, qubits[0])] = aux;
     }
 
-    for (uint64_t i = first_communication_position; i < first_communication_position + number_of_communications_with_following; i++) {
-        my_real_part = statevector[i].real();
-        my_imag_part = statevector[i].imag();
-        MPI_Send(&my_real_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD);
-        MPI_Send(&my_imag_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD);
-        MPI_Recv(&comming_real_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        MPI_Recv(&comming_imag_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        comming_complex = std::complex<double>(comming_real_part, comming_imag_part);
-        statevector[i] = comming_complex;
+    if (mpi_rank == 0) {
+        std::cout << "Position 4" << "\n";
+    }
+
+
+    if (!is_last_process) {
+        for (uint64_t i = first_communication_position; i < first_communication_position + number_of_communications_with_following; i++) {
+            my_real_part = statevector[i].real();
+            my_imag_part = statevector[i].imag();
+            MPI_Send(&my_real_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD);
+            MPI_Send(&my_imag_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD);
+            MPI_Recv(&comming_real_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(&comming_imag_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            comming_complex = std::complex<double>(comming_real_part, comming_imag_part);
+            statevector[i] = comming_complex;
+        }
+    }
+
+    if (mpi_rank == 0) {
+        std::cout << "Position 5" << "\n";
     }
 }
 

@@ -81,6 +81,11 @@ MPIExecutor::MPIExecutor(int n_qubits) : n_qubits{n_qubits}
     
 }
 
+MPIExecutor::~MPIExecutor()
+{
+    MPI_Finalize();
+}
+
 
 int MPIExecutor::apply_measure(const std::vector<int>& qubits) 
 {
@@ -229,17 +234,20 @@ void MPIExecutor::apply_unitary(const std::string& gate_name, const Matrix& matr
 
 int MPIExecutor::get_nonzero_position()
 {
-    int position;
     try {
         auto it = std::find_if(statevector.begin(), statevector.end(), [](const State& c) {
-            return c != std::complex<double>(0, 0); // Check for nonzero
+            return c != std::complex<double>(0.0, 0.0);
         });
-        position = std::distance(statevector.begin(), it);
+
+        if (it == statevector.end()) {
+            return -1;
+        } else {
+            return std::distance(statevector.begin(), it);
+        }
     } catch (const std::exception& e) {
+        std::cerr << "An error occurred: " << e.what() << std::endl;
         return -1;
     }
-
-    return position;
 }
 
 
