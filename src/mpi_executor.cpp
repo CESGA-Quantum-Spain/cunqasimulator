@@ -4,6 +4,7 @@
 #include <complex>
 #include <chrono>
 #include <string>
+#include <chrono>
 #include <mpi.h>
 
 #include "mpi_implementations.hpp"
@@ -39,17 +40,26 @@ MPIExecutor::MPIExecutor(int n_qubits) : n_qubits{n_qubits}
         aux_last_element = last_element_on_this_process;
     }
 
-    for (int i = 0; i < mpi_size; i++) {
-        MPI_Bcast(&aux_first_element, 1, MPI_UINT64_T, i, MPI_COMM_WORLD);
-        MPI_Bcast(&aux_last_element, 1, MPI_UINT64_T, i, MPI_COMM_WORLD);
-        statevector_ranges[i] = {aux_first_element, aux_last_element};
-        first_element_on_this_process = aux_last_element + 1;
-        last_element_on_this_process = first_element_on_this_process + max_len_on_this_process;
-        aux_first_element = first_element_on_this_process;
-        aux_last_element = last_element_on_this_process;
-    }   
+    if (mpi_size > 1) {
+        for (int i = 0; i < mpi_size; i++) {
+            MPI_Bcast(&aux_first_element, 1, MPI_UINT64_T, i, MPI_COMM_WORLD);
+            MPI_Bcast(&aux_last_element, 1, MPI_UINT64_T, i, MPI_COMM_WORLD);
+            statevector_ranges[i] = {aux_first_element, aux_last_element};
+            first_element_on_this_process = aux_last_element + 1;
+            last_element_on_this_process = first_element_on_this_process + max_len_on_this_process;
+            aux_first_element = first_element_on_this_process;
+            aux_last_element = last_element_on_this_process;
+        }  
+    } else {
+        statevector_ranges[mpi_rank] = {aux_first_element, aux_last_element};
+    }
 
-    std::cout << "Maximum len suported: " << statevector_ranges[mpi_size - 1][1] << "\n";
+    std::cout << "Maximum len: " << statevector_ranges[mpi_size - 1][1] << "\n";
+    std::cout.flush();
+
+    std::cout << "max_len_on_this_process: " << max_len_on_this_process << "\n";
+    std::cout.flush();
+    std::cout << "statevector_ranges[mpi_rank][1]: " << statevector_ranges[mpi_rank][1] << "\n";
     std::cout.flush();
 
     if (total_statevector_len > statevector_ranges[mpi_size - 1][1]) {
@@ -59,7 +69,7 @@ MPIExecutor::MPIExecutor(int n_qubits) : n_qubits{n_qubits}
         statevector.resize(max_len_on_this_process);
         local_statevector_len = statevector.size();
     } else if (statevector_ranges[mpi_rank][0] <= total_statevector_len && total_statevector_len <= statevector_ranges[mpi_rank][1]) { 
-        statevector.resize(total_statevector_len - statevector_ranges[mpi_rank][0] + 1);   // Then resize
+        statevector.resize(total_statevector_len - statevector_ranges[mpi_rank][0]);   
         local_statevector_len = statevector.size();
         is_last_process = true;
     } else {
@@ -71,14 +81,16 @@ MPIExecutor::MPIExecutor(int n_qubits) : n_qubits{n_qubits}
     
     if(mpi_process_needed) {
         std::cout << "The process " << mpi_rank << " will manage vector elements from " << statevector_ranges[mpi_rank][0] << " to " << statevector_ranges[mpi_rank][0] + statevector.size() << "\n";
+        std::cout.flush();
     } else {
         std::cout << "The process " << mpi_rank << " is not needed to simulate this statevector." << "\n";
+        std::cout.flush();
     }
 
     if (is_last_process) {
         std::cout << "Last process: " << mpi_rank << "\n";
+        std::cout.flush();
     }
-    
 }
 
 MPIExecutor::~MPIExecutor()
@@ -103,9 +115,11 @@ void MPIExecutor::apply_gate(const std::string& gate_name, const std::vector<int
             break; 
         case x:
             if (mpi_process_needed) {
-                std::cout << "Before mpi_cunqa_apply_x on process " << mpi_rank << "\n";
+                auto start = std::chrono::high_resolution_clock::now();
                 mpi_cunqa_apply_x(statevector, qubits, local_statevector_len, mpi_rank, is_last_process, statevector_ranges);
-                std::cout << "After mpi_cunqa_apply_x on process " << mpi_rank << "\n";
+                auto end = std::chrono::high_resolution_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+                std::cout << "Time taken on process " << mpi_rank << ": " << duration.count() << " ms" << "\n";
             }
             break;
         case y:
@@ -232,7 +246,7 @@ void MPIExecutor::apply_unitary(const std::string& gate_name, const Matrix& matr
 }
 
 
-int MPIExecutor::get_nonzero_position()
+uint64_t MPIExecutor::get_nonzero_position()
 {
     try {
         auto it = std::find_if(statevector.begin(), statevector.end(), [](const State& c) {

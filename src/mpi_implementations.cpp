@@ -36,9 +36,10 @@ int find_mpi_rank(const std::unordered_map<int, std::vector<uint64_t>>& statevec
 uint64_t get_max_easy_position(uint64_t initial_position, uint64_t max_vector_position, const uint64_t& qubit_position)
 {
     
-    uint64_t max_easy_position = std::floor(((double)max_vector_position + 1 - (double)initial_position - (1 << qubit_position)));
+    uint64_t max_easy_position = std::floor(((double)max_vector_position + 1 - (double)initial_position - (1ULL << qubit_position)));
     return max_easy_position;
 }
+
 
 } // End anonymous namespace
 
@@ -54,10 +55,6 @@ meas_out mpi_cunqa_apply_measure(StateVector& statevector, std::vector<int> qubi
 void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, const uint64_t& local_statevector_len, const int& mpi_rank, const bool& is_last_process, const std::unordered_map<int, std::vector<uint64_t>>& statevector_ranges) 
 {
     std::complex<double> aux;
-    double comming_real_part;
-    double comming_imag_part;
-    double my_real_part;
-    double my_imag_part;
     std::complex<double> comming_complex;
     uint64_t max_easy_position;
     uint64_t possibly_last_easy_element;
@@ -85,23 +82,14 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
         }
 
         for (uint64_t i = first_communication_position_with_previous; i < first_communication_position_with_previous + number_of_communications_with_previous; i++) {
-            MPI_Recv(&comming_real_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            MPI_Recv(&comming_imag_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-            my_real_part = statevector[i].real();
-            my_imag_part = statevector[i].imag();
-            MPI_Send(&my_real_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD);
-            MPI_Send(&my_imag_part, 1, MPI_DOUBLE, mpi_rank - 1, 0, MPI_COMM_WORLD);    
-
-            comming_complex = std::complex<double>(comming_real_part, comming_imag_part);
+            MPI_Recv(&comming_complex, 1, MPI_CXX_DOUBLE_COMPLEX, mpi_rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            statevector[i] = comming_complex;
+            MPI_Send(&statevector[i], 1, MPI_CXX_DOUBLE_COMPLEX, mpi_rank - 1, 0, MPI_COMM_WORLD);
             statevector[i] = comming_complex;
         }
     }
 
-    if (mpi_rank == 0) {
-        std::cout << "Position 0" << "\n";
-    }
-    
+
     max_easy_position = get_max_easy_position(first_communication_position_with_previous + number_of_communications_with_previous, local_statevector_len, qubits[0]);
     possibly_last_easy_element = max_easy_position + (1ULL << qubits[0]);
     
@@ -113,63 +101,35 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
         number_of_communications_with_following = last_communication_position - first_communication_position;
     } else {
         number_of_not_easy_no_comm = possibly_last_easy_element - local_statevector_len;
-        max_no_comm_position = max_easy_position - number_of_not_easy_no_comm; // TODO
+        max_no_comm_position = max_easy_position - number_of_not_easy_no_comm; 
         first_communication_position = std::min(max_no_comm_position + 1, local_statevector_len);
         last_communication_position = local_statevector_len; 
         number_of_communications_with_following = last_communication_position - first_communication_position;
     }
 
-    if (mpi_rank == 0) {
-        std::cout << "Position 1" << "\n";
-    }
     
     if (!is_last_process) {
         MPI_Send(&number_of_communications_with_following, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
         MPI_Send(&first_communication_position, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
+        for (uint64_t i = first_communication_position; i < first_communication_position + number_of_communications_with_following; i++) {
+            MPI_Send(&statevector[i], 1, MPI_CXX_DOUBLE_COMPLEX, mpi_rank + 1, 0, MPI_COMM_WORLD);
+            MPI_Recv(&comming_complex, 1, MPI_CXX_DOUBLE_COMPLEX, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            statevector[i] = comming_complex;
+        }
     }
 
-    if (mpi_rank == 0) {
-        std::cout << "Position 2" << "\n";
-    }
-
-    for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous + (1 << qubits[0]); j < max_easy_position - (1 << qubits[0]); j = j + (1 << (qubits[0] + 1))) {
-        for (uint64_t i = j - (1 << qubits[0]); i < j; i++) {
+    for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous + (1ULL << qubits[0]); j < max_easy_position + (1ULL << qubits[0]); j = j + (1ULL << (qubits[0] + 1))) {
+        for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
             aux = statevector[i];
             statevector[i] = statevector[flipbit(i, qubits[0])];
             statevector[flipbit(i, qubits[0])] = aux;
         }
     }
 
-    if (mpi_rank == 0) {
-        std::cout << "Position 3" << "\n";
-    }
-
-    for (uint64_t i = max_easy_position - (1 << qubits[0]) + 1; i < max_easy_position - (1 << qubits[0]) + 1 + number_of_not_easy_no_comm; i++) {
+    for (uint64_t i = max_easy_position - (1ULL << qubits[0]) + 1; i < max_easy_position - (1ULL << qubits[0]) + 1 + number_of_not_easy_no_comm; i++) {
         aux = statevector[i];
         statevector[i] = statevector[flipbit(i, qubits[0])];
         statevector[flipbit(i, qubits[0])] = aux;
-    }
-
-    if (mpi_rank == 0) {
-        std::cout << "Position 4" << "\n";
-    }
-
-
-    if (!is_last_process) {
-        for (uint64_t i = first_communication_position; i < first_communication_position + number_of_communications_with_following; i++) {
-            my_real_part = statevector[i].real();
-            my_imag_part = statevector[i].imag();
-            MPI_Send(&my_real_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD);
-            MPI_Send(&my_imag_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD);
-            MPI_Recv(&comming_real_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            MPI_Recv(&comming_imag_part, 1, MPI_DOUBLE, mpi_rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            comming_complex = std::complex<double>(comming_real_part, comming_imag_part);
-            statevector[i] = comming_complex;
-        }
-    }
-
-    if (mpi_rank == 0) {
-        std::cout << "Position 5" << "\n";
     }
 }
 
@@ -241,8 +201,8 @@ void mpi_cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, 
         MPI_Send(&first_communication_position, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
     }
 
-    for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous + (1 << qubits[0]); j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
-        for (uint64_t i = j - (1 << qubits[0]); i < j; i++) {
+    for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous + (1ULL << (qubits[0] + 1)); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
+        for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
             aux = statevector[i];
             statevector[i] = statevector[flipbit(i, qubits[0])];
             statevector[flipbit(i, qubits[0])] = aux;
@@ -342,8 +302,8 @@ void mpi_cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits, 
         MPI_Send(&first_communication_position, 1, MPI_UINT64_T, mpi_rank + 1, 0, MPI_COMM_WORLD);
     }
 
-    for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous + (1 << qubits[0]); j < statevector.size(); j = j + (1 << (qubits[0] + 1))) {
-        for (uint64_t i = j - (1 << qubits[0]); i < j; i++) {
+    for (uint64_t j = first_communication_position_with_previous + number_of_communications_with_previous + (1ULL << (qubits[0] + 1)); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
+        for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
             aux = statevector[i];
             statevector[i] = inverse_sqrt_2 * statevector[i] + inverse_sqrt_2 * statevector[flipbit(i, qubits[0])];
             statevector[flipbit(i, qubits[0])] = inverse_sqrt_2 * aux + inverse_sqrt_2 * statevector[flipbit(i, qubits[0])];
