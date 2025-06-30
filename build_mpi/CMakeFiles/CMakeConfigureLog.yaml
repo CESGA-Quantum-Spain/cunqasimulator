@@ -39,8 +39,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-T1v709"
-      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-T1v709"
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-1w0RIF"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-1w0RIF"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -49,10 +49,10 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-T1v709'
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-1w0RIF'
         
-        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_d944f
-        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++   -v -o CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o -c /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_d8daa
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++   -v -o CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o -c /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp
         Using built-in specs.
         COLLECT_GCC=/opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++
         OFFLOAD_TARGET_NAMES=nvptx-none
@@ -61,8 +61,8 @@ events:
         Thread model: posix
         Supported LTO compression algorithms: zlib zstd
         gcc version 12.3.0 (GCC) 
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d944f.dir/'
-         /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/cc1plus -quiet -v -iprefix /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/ -D_GNU_SOURCE /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_d944f.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /scratch/183128/ccSiDWT4.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d8daa.dir/'
+         /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/cc1plus -quiet -v -iprefix /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/ -D_GNU_SOURCE /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_d8daa.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /scratch/183546/ccygCIHQ.s
         GNU C++17 (GCC) version 12.3.0 (x86_64-pc-linux-gnu)
         	compiled by GNU C version 12.3.0, GMP version 6.2.1, MPFR version 4.2.0, MPC version 1.3.1, isl version isl-0.26-GMP
         
@@ -92,13 +92,13 @@ events:
         
         GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
         Compiler executable checksum: 082dbd96531fd2c79f1fd62b307c70bf
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d944f.dir/'
-         as -v --64 -o CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o /scratch/183128/ccSiDWT4.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d8daa.dir/'
+         as -v --64 -o CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o /scratch/183546/ccygCIHQ.s
         GNU assembler version 2.40 (x86_64-pc-linux-gnu) using BFD version (GNU Binutils) 2.40
         COMPILER_PATH=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/
         LIBRARY_PATH=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/:/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/../lib64/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/libfabric/lib/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/release/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/:/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.'
-        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -v CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_d944f   && :
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.'
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -v CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_d8daa   && :
         Using built-in specs.
         COLLECT_GCC=/opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++
         COLLECT_LTO_WRAPPER=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/lto-wrapper
@@ -110,9 +110,9 @@ events:
         gcc version 12.3.0 (GCC) 
         COMPILER_PATH=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/
         LIBRARY_PATH=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/:/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/../lib64/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/libfabric/lib/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/release/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/:/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_d944f' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_d944f.'
-         /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/collect2 -plugin /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/liblto_plugin.so -plugin-opt=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/lto-wrapper -plugin-opt=-fresolution=/scratch/183128/cc2DUaKV.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_d944f /lib/../lib64/crt1.o /lib/../lib64/crti.o /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/crtbegin.o -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0 -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc -L/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/../lib64 -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/libfabric/lib -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/release -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -L/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../.. CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/crtend.o /lib/../lib64/crtn.o
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_d944f' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_d944f.'
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_d8daa' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_d8daa.'
+         /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/collect2 -plugin /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/liblto_plugin.so -plugin-opt=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/lto-wrapper -plugin-opt=-fresolution=/scratch/183546/ccictgP7.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_d8daa /lib/../lib64/crt1.o /lib/../lib64/crti.o /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/crtbegin.o -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0 -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc -L/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/../lib64 -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/libfabric/lib -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/release -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -L/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../.. CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/crtend.o /lib/../lib64/crtn.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_d8daa' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_d8daa.'
         
       exitCode: 0
   -
@@ -158,10 +158,10 @@ events:
     message: |
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
-        ignore line: [Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-T1v709']
+        ignore line: [Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-1w0RIF']
         ignore line: []
-        ignore line: [Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_d944f]
-        ignore line: [[1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++   -v -o CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o -c /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_d8daa]
+        ignore line: [[1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++   -v -o CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o -c /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++]
         ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
@@ -170,8 +170,8 @@ events:
         ignore line: [Thread model: posix]
         ignore line: [Supported LTO compression algorithms: zlib zstd]
         ignore line: [gcc version 12.3.0 (GCC) ]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d944f.dir/']
-        ignore line: [ /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/cc1plus -quiet -v -iprefix /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/ -D_GNU_SOURCE /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_d944f.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /scratch/183128/ccSiDWT4.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d8daa.dir/']
+        ignore line: [ /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/cc1plus -quiet -v -iprefix /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/ -D_GNU_SOURCE /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_d8daa.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /scratch/183546/ccygCIHQ.s]
         ignore line: [GNU C++17 (GCC) version 12.3.0 (x86_64-pc-linux-gnu)]
         ignore line: [	compiled by GNU C version 12.3.0  GMP version 6.2.1  MPFR version 4.2.0  MPC version 1.3.1  isl version isl-0.26-GMP]
         ignore line: []
@@ -201,13 +201,13 @@ events:
         ignore line: []
         ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
         ignore line: [Compiler executable checksum: 082dbd96531fd2c79f1fd62b307c70bf]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d944f.dir/']
-        ignore line: [ as -v --64 -o CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o /scratch/183128/ccSiDWT4.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d8daa.dir/']
+        ignore line: [ as -v --64 -o CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o /scratch/183546/ccygCIHQ.s]
         ignore line: [GNU assembler version 2.40 (x86_64-pc-linux-gnu) using BFD version (GNU Binutils) 2.40]
         ignore line: [COMPILER_PATH=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/]
         ignore line: [LIBRARY_PATH=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/:/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/../lib64/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/libfabric/lib/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/release/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/:/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.']
-        ignore line: [[2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -v CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_d944f   && :]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [[2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -v CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_d8daa   && :]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++]
         ignore line: [COLLECT_LTO_WRAPPER=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/lto-wrapper]
@@ -219,13 +219,13 @@ events:
         ignore line: [gcc version 12.3.0 (GCC) ]
         ignore line: [COMPILER_PATH=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/]
         ignore line: [LIBRARY_PATH=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/:/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/../lib64/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/libfabric/lib/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/release/:/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/:/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/:/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_d944f' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_d944f.']
-        link line: [ /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/collect2 -plugin /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/liblto_plugin.so -plugin-opt=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/lto-wrapper -plugin-opt=-fresolution=/scratch/183128/cc2DUaKV.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_d944f /lib/../lib64/crt1.o /lib/../lib64/crti.o /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/crtbegin.o -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0 -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc -L/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/../lib64 -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/libfabric/lib -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/release -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -L/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../.. CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/crtend.o /lib/../lib64/crtn.o]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_d8daa' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_d8daa.']
+        link line: [ /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/collect2 -plugin /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/liblto_plugin.so -plugin-opt=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/lto-wrapper -plugin-opt=-fresolution=/scratch/183546/ccictgP7.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_d8daa /lib/../lib64/crt1.o /lib/../lib64/crti.o /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/crtbegin.o -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0 -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc -L/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib/../lib64 -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/libfabric/lib -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/release -L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -L/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib -L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../.. CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/crtend.o /lib/../lib64/crtn.o]
           arg [/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/collect2] ==> ignore
           arg [-plugin] ==> ignore
           arg [/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/liblto_plugin.so] ==> ignore
           arg [-plugin-opt=/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.3.0/lto-wrapper] ==> ignore
-          arg [-plugin-opt=-fresolution=/scratch/183128/cc2DUaKV.res] ==> ignore
+          arg [-plugin-opt=-fresolution=/scratch/183546/ccictgP7.res] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
           arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -237,7 +237,7 @@ events:
           arg [-dynamic-linker] ==> ignore
           arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
           arg [-o] ==> ignore
-          arg [cmTC_d944f] ==> ignore
+          arg [cmTC_d8daa] ==> ignore
           arg [/lib/../lib64/crt1.o] ==> obj [/lib/../lib64/crt1.o]
           arg [/lib/../lib64/crti.o] ==> obj [/lib/../lib64/crti.o]
           arg [/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/crtbegin.o] ==> obj [/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/crtbegin.o]
@@ -252,7 +252,7 @@ events:
           arg [-L/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib] ==> dir [/opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib]
           arg [-L/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib] ==> dir [/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/binutils/2.40/lib]
           arg [-L/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../..] ==> dir [/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Core/gcccore/12.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/12.3.0/../../..]
-          arg [CMakeFiles/cmTC_d944f.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [CMakeFiles/cmTC_d8daa.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
           arg [-lstdc++] ==> lib [stdc++]
           arg [-lm] ==> lib [m]
           arg [-lgcc_s] ==> lib [gcc_s]
@@ -293,8 +293,8 @@ events:
       - "CMakeLists.txt:21 (find_package)"
     description: "The MPI test test_mpi for CXX in mode normal"
     directories:
-      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-pKy6m7"
-      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-pKy6m7"
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-r5nHH0"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-r5nHH0"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -303,11 +303,11 @@ events:
       variable: "MPI_RESULT_CXX_test_mpi_normal"
       cached: true
       stdout: |
-        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-pKy6m7'
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-r5nHH0'
         
-        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_dd1eb
-        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_dd1eb.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-pKy6m7/test_mpi.cpp
-        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_dd1eb.dir/test_mpi.cpp.o -o cmTC_dd1eb  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_008da
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_008da.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-r5nHH0/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_008da.dir/test_mpi.cpp.o -o cmTC_008da  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
         
       exitCode: 0
   -
@@ -318,8 +318,8 @@ events:
       - "CMakeLists.txt:21 (find_package)"
     description: "The MPI test test_mpi for CXX in mode MPICXX"
     directories:
-      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-2BXPHd"
-      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-2BXPHd"
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-FqPxw3"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-FqPxw3"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -328,176 +328,11 @@ events:
       variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
       cached: true
       stdout: |
-        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-2BXPHd'
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-FqPxw3'
         
-        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_03517
-        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_03517.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-2BXPHd/test_mpi.cpp
-        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_03517.dir/test_mpi.cpp.o -o cmTC_03517  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
-        
-      exitCode: 0
-...
-
----
-events:
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
-      - "CMakeLists.txt:21 (find_package)"
-    description: "The MPI test test_mpi for CXX in mode normal"
-    directories:
-      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-MoM1kE"
-      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-MoM1kE"
-    cmakeVariables:
-      CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-    buildResult:
-      variable: "MPI_RESULT_CXX_test_mpi_normal"
-      cached: true
-      stdout: |
-        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-MoM1kE'
-        
-        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_04dd1
-        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_04dd1.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-MoM1kE/test_mpi.cpp
-        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_04dd1.dir/test_mpi.cpp.o -o cmTC_04dd1  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
-        
-      exitCode: 0
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
-      - "CMakeLists.txt:21 (find_package)"
-    description: "The MPI test test_mpi for CXX in mode MPICXX"
-    directories:
-      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-devfWh"
-      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-devfWh"
-    cmakeVariables:
-      CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-    buildResult:
-      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
-      cached: true
-      stdout: |
-        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-devfWh'
-        
-        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_7f1d9
-        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_7f1d9.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-devfWh/test_mpi.cpp
-        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_7f1d9.dir/test_mpi.cpp.o -o cmTC_7f1d9  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
-        
-      exitCode: 0
-...
-
----
-events:
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
-      - "CMakeLists.txt:21 (find_package)"
-    description: "The MPI test test_mpi for CXX in mode normal"
-    directories:
-      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-PESqSs"
-      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-PESqSs"
-    cmakeVariables:
-      CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-    buildResult:
-      variable: "MPI_RESULT_CXX_test_mpi_normal"
-      cached: true
-      stdout: |
-        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-PESqSs'
-        
-        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_2f29b
-        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_2f29b.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-PESqSs/test_mpi.cpp
-        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_2f29b.dir/test_mpi.cpp.o -o cmTC_2f29b  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
-        
-      exitCode: 0
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
-      - "CMakeLists.txt:21 (find_package)"
-    description: "The MPI test test_mpi for CXX in mode MPICXX"
-    directories:
-      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-WNRKfP"
-      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-WNRKfP"
-    cmakeVariables:
-      CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-    buildResult:
-      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
-      cached: true
-      stdout: |
-        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-WNRKfP'
-        
-        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_3ebcb
-        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_3ebcb.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-WNRKfP/test_mpi.cpp
-        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_3ebcb.dir/test_mpi.cpp.o -o cmTC_3ebcb  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
-        
-      exitCode: 0
-...
-
----
-events:
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
-      - "CMakeLists.txt:21 (find_package)"
-    description: "The MPI test test_mpi for CXX in mode normal"
-    directories:
-      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-a5OqK7"
-      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-a5OqK7"
-    cmakeVariables:
-      CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-    buildResult:
-      variable: "MPI_RESULT_CXX_test_mpi_normal"
-      cached: true
-      stdout: |
-        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-a5OqK7'
-        
-        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_df362
-        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_df362.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-a5OqK7/test_mpi.cpp
-        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_df362.dir/test_mpi.cpp.o -o cmTC_df362  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
-        
-      exitCode: 0
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
-      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
-      - "CMakeLists.txt:21 (find_package)"
-    description: "The MPI test test_mpi for CXX in mode MPICXX"
-    directories:
-      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-po9uFE"
-      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-po9uFE"
-    cmakeVariables:
-      CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-    buildResult:
-      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
-      cached: true
-      stdout: |
-        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-po9uFE'
-        
-        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_66938
-        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_66938.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-po9uFE/test_mpi.cpp
-        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_66938.dir/test_mpi.cpp.o -o cmTC_66938  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_fb820
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_fb820.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-FqPxw3/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_fb820.dir/test_mpi.cpp.o -o cmTC_fb820  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
         
       exitCode: 0
 ...
