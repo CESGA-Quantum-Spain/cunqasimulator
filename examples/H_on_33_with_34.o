@@ -1,0 +1,30 @@
+slurmstepd: info: Setting TMPDIR to /scratch/184020. Previous errors about TMPDIR can be discarded
+Time taken instanciating executor with 34 qubits: 46636298257 nanos
+Time taken for Gate with 34 qubits: 99787137193 nanos
+
+*****************************************************************************
+*                                                                           *
+*                    JOB EFFICIENCY REPORT (seff 184020)                   *
+*                                                                           *
+*****************************************************************************
+
+Job ID: 184020
+Cluster: qmio
+User/Group: acarballido/cesga
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 64
+CPU Utilized: 00:02:27
+CPU Efficiency: 1.54% of 02:38:56 core-walltime
+Job Wall-clock time: 00:02:29
+Memory Utilized: 256.00 GB
+Memory Efficiency: 26.43% of 968.75 GB
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ ++   Memory Efficiency is too small. Please review the requested memory. ++
+ ++ It seems that you do not need that much memory so we recommend        ++
+ ++ requesting less memory in other similar jobs.                         ++
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+*****************************************************************************
+

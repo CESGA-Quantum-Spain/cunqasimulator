@@ -2,9 +2,7 @@
 
 #include <iostream>
 #include <complex>
-#include <chrono>
 #include <string>
-#include <chrono>
 #include <mpi.h>
 
 #include "mpi_implementations.hpp"
@@ -39,7 +37,7 @@ MPIExecutor::~MPIExecutor()
 
 int MPIExecutor::apply_measure(const std::vector<int>& qubits) 
 {
-    meas_out measurement = mpi_cunqa_apply_measure(statevector, qubits, mpi_rank);
+    meas_out measurement = mpi_cunqa_apply_measure(statevector, qubits, n_qubits, mpi_rank);
 
     return measurement.measure;
 }
@@ -51,64 +49,59 @@ void MPIExecutor::apply_gate(const std::string& gate_name, const std::vector<int
     {
         case id:
             break; 
-        case x: {
-            auto start = std::chrono::high_resolution_clock::now();
-            mpi_cunqa_apply_x(statevector, qubits, mpi_rank);
-            auto end = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-            std::cout << "Time taken on process " << mpi_rank << ": " << duration.count() << " ms" << "\n";
+        case x: 
+            mpi_cunqa_apply_x(statevector, qubits, n_qubits, mpi_rank);
             break;
-        }
         case y:
-            mpi_cunqa_apply_y(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_y(statevector, qubits, n_qubits, mpi_rank);
             break;
         case z:
-            mpi_cunqa_apply_z(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_z(statevector, qubits, n_qubits, mpi_rank);
             break;
-        case h:
-            mpi_cunqa_apply_h(statevector, qubits, mpi_rank);
+        case h: 
+            mpi_cunqa_apply_h(statevector, qubits, n_qubits, mpi_rank);
             break;
         case sx:
-            mpi_cunqa_apply_sx(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_sx(statevector, qubits, n_qubits, mpi_rank);
             break;
         case cx:
-            mpi_cunqa_apply_cx(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cx(statevector, qubits, n_qubits, mpi_rank);
             break;
         case cy:
-            mpi_cunqa_apply_cy(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cy(statevector, qubits, n_qubits, mpi_rank);
             break;
         case cz:
-            mpi_cunqa_apply_cz(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cz(statevector, qubits, n_qubits, mpi_rank);
             break;
         case ecr:
-            mpi_cunqa_apply_ecr(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_ecr(statevector, qubits, n_qubits, mpi_rank);
             break;
         case c_if_x:
-            mpi_cunqa_apply_cifx(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cifx(statevector, qubits, n_qubits, mpi_rank);
             break;
         case c_if_y:
-            mpi_cunqa_apply_cify(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cify(statevector, qubits, n_qubits, mpi_rank);
             break;
         case c_if_z:
-            mpi_cunqa_apply_cifz(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cifz(statevector, qubits, n_qubits, mpi_rank);
             break;
         case c_if_h:
-            mpi_cunqa_apply_cifh(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cifh(statevector, qubits, n_qubits, mpi_rank);
             break;
         case c_if_sx:
-            mpi_cunqa_apply_cifsx(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cifsx(statevector, qubits, n_qubits, mpi_rank);
             break;
         case c_if_cx:
-            mpi_cunqa_apply_cifcx(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cifcx(statevector, qubits, n_qubits, mpi_rank);
             break;
         case c_if_cy:
-            mpi_cunqa_apply_cifcy(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cifcy(statevector, qubits, n_qubits, mpi_rank);
             break;
         case c_if_cz:
-            mpi_cunqa_apply_cifcz(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cifcz(statevector, qubits, n_qubits, mpi_rank);
             break;
         case c_if_ecr:
-            mpi_cunqa_apply_cifecr(statevector, qubits, mpi_rank);
+            mpi_cunqa_apply_cifecr(statevector, qubits, n_qubits, mpi_rank);
             break;
         default:
             std::cout << "Error. Invalid gate name" << "\n";
@@ -122,31 +115,31 @@ void MPIExecutor::apply_parametric_gate(const std::string& gate_name, const std:
     switch (instructions_map[gate_name])
     {
         case rx:
-            mpi_cunqa_apply_rx(statevector, qubits, param, mpi_rank);
+            mpi_cunqa_apply_rx(statevector, qubits, param, n_qubits, mpi_rank);
             break;
         case ry:
-            mpi_cunqa_apply_ry(statevector, qubits, param, mpi_rank);
+            mpi_cunqa_apply_ry(statevector, qubits, param, n_qubits, mpi_rank);
             break;
         case rz:
-            mpi_cunqa_apply_rz(statevector, qubits, param, mpi_rank);
+            mpi_cunqa_apply_rz(statevector, qubits, param, n_qubits, mpi_rank);
             break;
         case crx:
-            mpi_cunqa_apply_crx(statevector, qubits, param, mpi_rank);
+            mpi_cunqa_apply_crx(statevector, qubits, param, n_qubits, mpi_rank);
             break;
         case cry:
-            mpi_cunqa_apply_cry(statevector, qubits, param, mpi_rank);
+            mpi_cunqa_apply_cry(statevector, qubits, param, n_qubits, mpi_rank);
             break;
         case crz:
-            mpi_cunqa_apply_crz(statevector, qubits, param, mpi_rank);
+            mpi_cunqa_apply_crz(statevector, qubits, param, n_qubits, mpi_rank);
             break;
         case c_if_rx:
-            mpi_cunqa_apply_cifrx(statevector, qubits, param, mpi_rank);
+            mpi_cunqa_apply_cifrx(statevector, qubits, param, n_qubits, mpi_rank);
             break;
         case c_if_ry:
-            mpi_cunqa_apply_cifry(statevector, qubits, param, mpi_rank);
+            mpi_cunqa_apply_cifry(statevector, qubits, param, n_qubits, mpi_rank);
             break;
         case c_if_rz:
-            mpi_cunqa_apply_cifrz(statevector, qubits, param, mpi_rank);
+            mpi_cunqa_apply_cifrz(statevector, qubits, param, n_qubits, mpi_rank);
             break;
         default:
             std::cout << "Error. Invalid gate name" << "\n";
@@ -162,9 +155,9 @@ void MPIExecutor::apply_unitary(const std::string& gate_name, const Matrix& matr
         case unitary:
         {
             if (matrix.size() == 2){
-                mpi_cunqa_apply_1_gate(matrix, statevector, qubits, mpi_rank);
+                mpi_cunqa_apply_1_gate(matrix, statevector, qubits, n_qubits, mpi_rank);
             } else if (matrix.size() == 4) {
-                mpi_cunqa_apply_2_gate(matrix, statevector, qubits, mpi_rank);
+                mpi_cunqa_apply_2_gate(matrix, statevector, qubits, n_qubits, mpi_rank);
             } else {
                 std::cout << "Error. Invalid matrix dimension" << "\n";
             }
@@ -172,9 +165,9 @@ void MPIExecutor::apply_unitary(const std::string& gate_name, const Matrix& matr
         case c_if_unitary:
         {
             if (matrix.size() == 2){
-                mpi_cunqa_apply_cif1gate(matrix, statevector, qubits, mpi_rank);
+                mpi_cunqa_apply_cif1gate(matrix, statevector, qubits, n_qubits, mpi_rank);
             } else if (matrix.size() == 4) {
-                mpi_cunqa_apply_cif2gate(matrix, statevector, qubits, mpi_rank);
+                mpi_cunqa_apply_cif2gate(matrix, statevector, qubits, n_qubits, mpi_rank);
             } else {
                 std::cout << "Error. Invalid matrix dimension" << "\n";
             }
@@ -189,7 +182,6 @@ uint64_t MPIExecutor::get_nonzero_position()
         auto it = std::find_if(statevector.begin(), statevector.end(), [](const State& c) {
             return c != std::complex<double>(0.0, 0.0);
         });
-
         if (it == statevector.end()) {
             return -1;
         } else {
