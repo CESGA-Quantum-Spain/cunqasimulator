@@ -5,7 +5,7 @@
 #include "utils/types_cunqasim.hpp"
 
 
-meas_out mpi_cunqa_apply_measure(StateVector& statevector, std::vector<int> qubits, const int& n_qubits, const int& mpi_rank);
+int mpi_cunqa_apply_measure(StateVector& statevector, std::vector<int> qubits, const int& n_qubits, const int& mpi_rank);
 // One-Qubit Gates
 void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, const int& mpi_rank);
 void mpi_cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, const int& mpi_rank);

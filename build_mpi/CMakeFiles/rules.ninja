@@ -96,6 +96,25 @@ rule CXX_EXECUTABLE_LINKER__gate_test_Release
 
 
 #############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__gate_bench_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}/opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__gate_bench_Release
+  command = $PRE_LINK && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++ $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE

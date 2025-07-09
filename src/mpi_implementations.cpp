@@ -22,13 +22,10 @@ namespace
 }
 
 
-meas_out mpi_cunqa_apply_measure(StateVector& statevector, std::vector<int> qubits, const int& n_qubits, const int& mpi_rank) 
+int mpi_cunqa_apply_measure(StateVector& statevector, std::vector<int> qubits, const int& n_qubits, const int& mpi_rank) 
 {
-    StateVector sv;
-    meas_out res;
-    res.statevector = sv;
-    res.measure = 0;
-    return res;
+    int measurement;
+    return measurement;
 }
 
 
@@ -37,12 +34,12 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
 {
     if (n_qubits <= max_qubits_per_node) {
         if (mpi_rank == 0) {
-            cunqa_apply_x(statevector, qubits, n_qubits);
+            cunqa_apply_x(statevector, qubits, n_qubits, false);
         }
     }
     else {
         if (qubits[0] <= max_qubits_per_node ) {
-            cunqa_apply_x(statevector, qubits, n_qubits);
+            cunqa_apply_x(statevector, qubits, n_qubits, false);
         } else {
             MPI_Request send_request;
             MPI_Request recv_request;
@@ -79,7 +76,7 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
 void mpi_cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, const int& mpi_rank) 
 {
     if (qubits[0] <= max_qubits_per_node) {
-        cunqa_apply_y(statevector, qubits, n_qubits);
+        cunqa_apply_y(statevector, qubits, n_qubits, false);
     } else {
         MPI_Request send_request;
         MPI_Request recv_request;
@@ -120,7 +117,7 @@ void mpi_cunqa_apply_z(StateVector& statevector, const std::vector<int> qubits, 
 {
 
     if (qubits[0] <= max_qubits_per_node) {
-        cunqa_apply_z(statevector, qubits, n_qubits);
+        cunqa_apply_z(statevector, qubits, n_qubits, false);
     } else {
         int M = qubits[0] - max_qubits_per_node;
         if(!is_zero(mpi_rank, M - 1)) {
@@ -135,7 +132,7 @@ void mpi_cunqa_apply_z(StateVector& statevector, const std::vector<int> qubits, 
 void mpi_cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, const int& mpi_rank) 
 {
     if (qubits[0] <= max_qubits_per_node) {
-        cunqa_apply_h(statevector, qubits, n_qubits);
+        cunqa_apply_h(statevector, qubits, n_qubits, false);
     } else {
         MPI_Request send_request;
         MPI_Request recv_request;
@@ -176,7 +173,7 @@ void mpi_cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits, 
 void mpi_cunqa_apply_sx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, const int& mpi_rank) 
 {
     if (qubits[0] <= max_qubits_per_node) {
-        cunqa_apply_sx(statevector, qubits, n_qubits);
+        cunqa_apply_sx(statevector, qubits, n_qubits, false);
     } else {
         MPI_Request send_request;
         MPI_Request recv_request;
@@ -219,7 +216,7 @@ void mpi_cunqa_apply_sx(StateVector& statevector, const std::vector<int> qubits,
 void mpi_cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, const int& mpi_rank) 
 {
     if (qubits[0] <= max_qubits_per_node) {
-        cunqa_apply_rx(statevector, qubits, param, n_qubits);
+        cunqa_apply_rx(statevector, qubits, param, n_qubits, false);
     } else {
         MPI_Request send_request;
         MPI_Request recv_request;
@@ -255,7 +252,7 @@ void mpi_cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits,
 void mpi_cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, const int& mpi_rank) 
 {
     if (qubits[0] <= max_qubits_per_node) {
-        cunqa_apply_ry(statevector, qubits, param, n_qubits);
+        cunqa_apply_ry(statevector, qubits, param, n_qubits, false);
     } else {
         MPI_Request send_request;
         MPI_Request recv_request;
@@ -299,7 +296,7 @@ void mpi_cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits,
 void mpi_cunqa_apply_rz(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, const int& mpi_rank) 
 {
     if (qubits[0] <= max_qubits_per_node) {
-        cunqa_apply_rz(statevector, qubits, param, n_qubits);
+        cunqa_apply_rz(statevector, qubits, param, n_qubits, false);
     } else {
         int M = qubits[0] - max_qubits_per_node;
         double sin = std::sin(param[0]/2.0);
@@ -326,7 +323,7 @@ void mpi_cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits,
     int comm;
 
     if (qubits[0] <= max_qubits_per_node && qubits[1] <= max_qubits_per_node) {
-        cunqa_apply_cx(statevector, qubits, n_qubits);
+        cunqa_apply_cx(statevector, qubits, n_qubits, false);
     } else if (qubits[0] <= max_qubits_per_node && qubits[1] > max_qubits_per_node) {
         comm = flipbit(mpi_rank, N - 1);
         MPI_Request send_request;

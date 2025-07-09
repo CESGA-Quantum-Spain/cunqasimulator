@@ -946,3 +946,278 @@ events:
         
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
+      - "CMakeLists.txt:21 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode normal"
+    directories:
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-v6dqgw"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-v6dqgw"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_normal"
+      cached: true
+      stdout: |
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-v6dqgw'
+        
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_41549
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_41549.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-v6dqgw/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_41549.dir/test_mpi.cpp.o -o cmTC_41549  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
+      - "CMakeLists.txt:21 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode MPICXX"
+    directories:
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-0qlcs2"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-0qlcs2"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
+      cached: true
+      stdout: |
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-0qlcs2'
+        
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_88219
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_88219.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-0qlcs2/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_88219.dir/test_mpi.cpp.o -o cmTC_88219  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
+      - "CMakeLists.txt:21 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode normal"
+    directories:
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-9P2slW"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-9P2slW"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_normal"
+      cached: true
+      stdout: |
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-9P2slW'
+        
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_f322d
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_f322d.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-9P2slW/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_f322d.dir/test_mpi.cpp.o -o cmTC_f322d  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
+      - "CMakeLists.txt:21 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode MPICXX"
+    directories:
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-UncL4C"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-UncL4C"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
+      cached: true
+      stdout: |
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-UncL4C'
+        
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_859ef
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_859ef.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-UncL4C/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_859ef.dir/test_mpi.cpp.o -o cmTC_859ef  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
+      - "CMakeLists.txt:21 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode normal"
+    directories:
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-nAhYfr"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-nAhYfr"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_normal"
+      cached: true
+      stdout: |
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-nAhYfr'
+        
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_73168
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_73168.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-nAhYfr/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_73168.dir/test_mpi.cpp.o -o cmTC_73168  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
+      - "CMakeLists.txt:21 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode MPICXX"
+    directories:
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-BUliC9"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-BUliC9"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
+      cached: true
+      stdout: |
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-BUliC9'
+        
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_d8321
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_d8321.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-BUliC9/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_d8321.dir/test_mpi.cpp.o -o cmTC_d8321  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
+      - "CMakeLists.txt:21 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode normal"
+    directories:
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-O3mKDp"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-O3mKDp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_normal"
+      cached: true
+      stdout: |
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-O3mKDp'
+        
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_9b133
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_9b133.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-O3mKDp/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_9b133.dir/test_mpi.cpp.o -o cmTC_9b133  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
+      - "CMakeLists.txt:21 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode MPICXX"
+    directories:
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-wDhT3H"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-wDhT3H"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
+      cached: true
+      stdout: |
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-wDhT3H'
+        
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_ca33a
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_ca33a.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-wDhT3H/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_ca33a.dir/test_mpi.cpp.o -o cmTC_ca33a  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
+      - "CMakeLists.txt:21 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode normal"
+    directories:
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-UHGZux"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-UHGZux"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_normal"
+      cached: true
+      stdout: |
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-UHGZux'
+        
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_0ea06
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_0ea06.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-UHGZux/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_0ea06.dir/test_mpi.cpp.o -o cmTC_0ea06  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcccore/12.3.0/cmake/3.27.6/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
+      - "CMakeLists.txt:21 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode MPICXX"
+    directories:
+      source: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-SG6HnC"
+      binary: "/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-SG6HnC"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
+      cached: true
+      stdout: |
+        Change Dir: '/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-SG6HnC'
+        
+        Run Build Command(s): /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/ninja/1.9.0/bin/ninja -v cmTC_c0bc1
+        [1/2] /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -isystem /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/include -std=gnu++20 -o CMakeFiles/cmTC_c0bc1.dir/test_mpi.cpp.o -c /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/CMakeFiles/CMakeScratch/TryCompile-SG6HnC/test_mpi.cpp
+        [2/2] : && /opt/cesga/qmio/hpc/software/Core/gcccore/12.3.0/bin/c++  -Xlinker --enable-new-dtags -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker -rpath -Xlinker /opt/cesga/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib -Xlinker --enable-new-dtags CMakeFiles/cmTC_c0bc1.dir/test_mpi.cpp.o -o cmTC_c0bc1  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpicxx.so  /mnt/netapp1/Optcesga_FT2_RHEL7/qmio/hpc/software/Compiler/gcc/12.3.0/impi/2021.13.0/mpi/2021.13/lib/libmpi.so  /lib64/librt.so  /lib64/libpthread.so  /lib64/libdl.so && :
+        
+      exitCode: 0
+...

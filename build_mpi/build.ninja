@@ -257,6 +257,39 @@ build examples/gate_test: CXX_EXECUTABLE_LINKER__gate_test_Release examples/CMak
   TARGET_FILE = examples/gate_test
   TARGET_PDB = gate_test.dbg
 
+# =============================================================================
+# Object build statements for EXECUTABLE target gate_bench
+
+
+#############################################
+# Order-only phony target for gate_bench
+
+build cmake_object_order_depends_target_gate_bench: phony || cmake_object_order_depends_target_cunqasimulator
+
+build examples/CMakeFiles/gate_bench.dir/gate_benchmarking.cpp.o: CXX_COMPILER__gate_bench_unscanned_Release /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/examples/gate_benchmarking.cpp || cmake_object_order_depends_target_gate_bench
+  DEP_FILE = examples/CMakeFiles/gate_bench.dir/gate_benchmarking.cpp.o.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++20
+  INCLUDES = -I/mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/examples/../src -isystem /opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/nlohmann_json/3.11.3/include
+  OBJECT_DIR = examples/CMakeFiles/gate_bench.dir
+  OBJECT_FILE_DIR = examples/CMakeFiles/gate_bench.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target gate_bench
+
+
+#############################################
+# Link the executable examples/gate_bench
+
+build examples/gate_bench: CXX_EXECUTABLE_LINKER__gate_bench_Release examples/CMakeFiles/gate_bench.dir/gate_benchmarking.cpp.o | src/libcunqasimulator.a || src/libcunqasimulator.a
+  FLAGS = -O3 -DNDEBUG
+  LINK_LIBRARIES = src/libcunqasimulator.a  -lmpi  -lpthread
+  OBJECT_DIR = examples/CMakeFiles/gate_bench.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = examples/gate_bench
+  TARGET_PDB = gate_bench.dbg
+
 
 #############################################
 # Utility command for edit_cache
@@ -288,6 +321,8 @@ build cunqasimulator: phony src/libcunqasimulator.a
 
 build example: phony examples/example
 
+build gate_bench: phony examples/gate_bench
+
 build gate_test: phony examples/gate_test
 
 build libcunqasimulator.a: phony src/libcunqasimulator.a
@@ -309,7 +344,7 @@ build all: phony src/all examples/all
 #############################################
 # Folder: /mnt/netapp1/Store_CESGA/home/cesga/acarballido/repos/cunqasimulator/build_mpi/examples
 
-build examples/all: phony examples/example examples/mpi_example examples/gate_test
+build examples/all: phony examples/example examples/mpi_example examples/gate_test examples/gate_bench
 
 # =============================================================================
 

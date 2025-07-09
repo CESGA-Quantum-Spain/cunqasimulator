@@ -9,21 +9,23 @@
 #include "utils/utils_cunqasim.hpp"
 #include "utils/constants_cunqasim.hpp"
 
-Executor::Executor(const int n_qubits) : n_qubits{n_qubits}
+Executor::Executor(const int n_qubits, bool with_threads) : n_qubits{n_qubits}, with_threads{with_threads}
 {
+    //n_qubits > 21 ? with_threads = true : false;
+
     statevector.resize(1ULL << n_qubits); // Danger. May cause silent errors.
     statevector[0] = 1.0;
 }
 
-Executor::Executor(StateVector initial_state) : n_qubits(initial_state.size()), statevector(initial_state)
+Executor::Executor(StateVector initial_state, bool with_threads) : n_qubits(initial_state.size()), statevector(initial_state), with_threads{with_threads}
 {}
 
 
 int Executor::apply_measure(const std::vector<int>& qubits)
 {
-    meas_out measurement = cunqa_apply_measure(statevector, qubits, n_qubits);
+    int measurement = cunqa_apply_measure(statevector, qubits, n_qubits, with_threads);
 
-    return measurement.measure;
+    return measurement;
 }
 
 void Executor::apply_gate(const std::string& gate_name, const std::vector<int>& qubits)
@@ -33,58 +35,61 @@ void Executor::apply_gate(const std::string& gate_name, const std::vector<int>& 
         case id:
             break;
         case x:
-            cunqa_apply_x(statevector, qubits, n_qubits);
+            cunqa_apply_x(statevector, qubits, n_qubits, with_threads);
             break;
         case y:
-            cunqa_apply_y(statevector, qubits, n_qubits);
+            cunqa_apply_y(statevector, qubits, n_qubits, with_threads);
             break;
         case z:
-            cunqa_apply_z(statevector, qubits, n_qubits);
+            cunqa_apply_z(statevector, qubits, n_qubits, with_threads);
             break;
         case h:
-            cunqa_apply_h(statevector, qubits, n_qubits);
+            cunqa_apply_h(statevector, qubits, n_qubits, with_threads);
             break;
         case sx:
-            cunqa_apply_sx(statevector, qubits, n_qubits);
+            cunqa_apply_sx(statevector, qubits, n_qubits, with_threads);
+            break;
+        case swap:
+            cunqa_apply_swap(statevector, qubits, n_qubits, with_threads);
             break;
         case cx:
-            cunqa_apply_cx(statevector, qubits, n_qubits);
+            cunqa_apply_cx(statevector, qubits, n_qubits, with_threads);
             break;
         case cy:
-            cunqa_apply_cy(statevector, qubits, n_qubits);
+            cunqa_apply_cy(statevector, qubits, n_qubits, with_threads);
             break;
         case cz:
-            cunqa_apply_cz(statevector, qubits, n_qubits);
+            cunqa_apply_cz(statevector, qubits, n_qubits, with_threads);
             break;
         case ecr:
-            cunqa_apply_ecr(statevector, qubits, n_qubits);
+            cunqa_apply_ecr(statevector, qubits, n_qubits, with_threads);
             break;
         case c_if_x:
-            cunqa_apply_cifx(statevector, qubits, n_qubits);
+            cunqa_apply_cifx(statevector, qubits, n_qubits, with_threads);
             break;
         case c_if_y:
-            cunqa_apply_cify(statevector, qubits, n_qubits);
+            cunqa_apply_cify(statevector, qubits, n_qubits, with_threads);
             break;
         case c_if_z:
-            cunqa_apply_cifz(statevector, qubits, n_qubits);
+            cunqa_apply_cifz(statevector, qubits, n_qubits, with_threads);
             break;
         case c_if_h:
-            cunqa_apply_cifh(statevector, qubits, n_qubits);
+            cunqa_apply_cifh(statevector, qubits, n_qubits, with_threads);
             break;
         case c_if_sx:
-            cunqa_apply_cifsx(statevector, qubits, n_qubits);
+            cunqa_apply_cifsx(statevector, qubits, n_qubits, with_threads);
             break;
         case c_if_cx:
-            cunqa_apply_cifcx(statevector, qubits, n_qubits);
+            cunqa_apply_cifcx(statevector, qubits, n_qubits, with_threads);
             break;
         case c_if_cy:
-            cunqa_apply_cifcy(statevector, qubits, n_qubits);
+            cunqa_apply_cifcy(statevector, qubits, n_qubits, with_threads);
             break;
         case c_if_cz:
-            cunqa_apply_cifcz(statevector, qubits, n_qubits);
+            cunqa_apply_cifcz(statevector, qubits, n_qubits, with_threads);
             break;
         case c_if_ecr:
-            cunqa_apply_cifecr(statevector, qubits, n_qubits);
+            cunqa_apply_cifecr(statevector, qubits, n_qubits, with_threads);
             break;
         default:
             std::cout << "Error. Invalid gate name" << "\n";
@@ -97,31 +102,31 @@ void Executor::apply_parametric_gate(const std::string& gate_name, const std::ve
     switch (instructions_map[gate_name])
     {
         case rx:
-            cunqa_apply_rx(statevector, qubits, param, n_qubits);
+            cunqa_apply_rx(statevector, qubits, param, n_qubits, with_threads);
             break;
         case ry:
-            cunqa_apply_ry(statevector, qubits, param, n_qubits);
+            cunqa_apply_ry(statevector, qubits, param, n_qubits, with_threads);
             break;
         case rz:
-            cunqa_apply_rz(statevector, qubits, param, n_qubits);
+            cunqa_apply_rz(statevector, qubits, param, n_qubits, with_threads);
             break;
         case crx:
-            cunqa_apply_crx(statevector, qubits, param, n_qubits);
+            cunqa_apply_crx(statevector, qubits, param, n_qubits, with_threads);
             break;
         case cry:
-            cunqa_apply_cry(statevector, qubits, param, n_qubits);
+            cunqa_apply_cry(statevector, qubits, param, n_qubits, with_threads);
             break;
         case crz:
-            cunqa_apply_crz(statevector, qubits, param, n_qubits);
+            cunqa_apply_crz(statevector, qubits, param, n_qubits, with_threads);
             break;
         case c_if_rx:
-            cunqa_apply_cifrx(statevector, qubits, param, n_qubits);
+            cunqa_apply_cifrx(statevector, qubits, param, n_qubits, with_threads);
             break;
         case c_if_ry:
-            cunqa_apply_cifry(statevector, qubits, param, n_qubits);
+            cunqa_apply_cifry(statevector, qubits, param, n_qubits, with_threads);
             break;
         case c_if_rz:
-            cunqa_apply_cifrz(statevector, qubits, param, n_qubits);
+            cunqa_apply_cifrz(statevector, qubits, param, n_qubits, with_threads);
             break;
         default:
             std::cout << "Error. Invalid gate name" << "\n";
@@ -136,9 +141,9 @@ void Executor::apply_unitary(const std::string& gate_name, const Matrix& matrix,
         case unitary:
         {
             if (matrix.size() == 2){
-                cunqa_apply_1_gate(matrix, statevector, qubits, n_qubits);
+                cunqa_apply_1_gate(matrix, statevector, qubits, n_qubits, with_threads);
             } else if (matrix.size() == 4) {
-                cunqa_apply_2_gate(matrix, statevector, qubits, n_qubits);
+                cunqa_apply_2_gate(matrix, statevector, qubits, n_qubits, with_threads);
             } else {
                 std::cout << "Error. Invalid matrix dimension" << "\n";
             }
@@ -146,9 +151,9 @@ void Executor::apply_unitary(const std::string& gate_name, const Matrix& matrix,
         case c_if_unitary:
         {
             if (matrix.size() == 2){
-                cunqa_apply_cif1gate(matrix, statevector, qubits, n_qubits);
+                cunqa_apply_cif1gate(matrix, statevector, qubits, n_qubits, with_threads);
             } else if (matrix.size() == 4) {
-                cunqa_apply_cif2gate(matrix, statevector, qubits, n_qubits);
+                cunqa_apply_cif2gate(matrix, statevector, qubits, n_qubits, with_threads);
             } else {
                 std::cout << "Error. Invalid matrix dimension" << "\n";
             }

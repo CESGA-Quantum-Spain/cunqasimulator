@@ -12,8 +12,8 @@ public:
     int n_qubits;
     StateVector statevector;
 
-    Executor(int n_qubits);
-    Executor(StateVector initial_state);
+    Executor(int n_qubits, bool with_threads = false);
+    Executor(StateVector initial_state, bool with_treads = false);
 
     int apply_measure(const std::vector<int>& qubits);
     void apply_gate(const std::string& gate_name, const std::vector<int>& qubits);
@@ -22,6 +22,9 @@ public:
     uint64_t get_nonzero_position();
     void restart_statevector();
     ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
+
+private:
+    bool with_threads;
     
 };
 

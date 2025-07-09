@@ -37,9 +37,9 @@ MPIExecutor::~MPIExecutor()
 
 int MPIExecutor::apply_measure(const std::vector<int>& qubits) 
 {
-    meas_out measurement = mpi_cunqa_apply_measure(statevector, qubits, n_qubits, mpi_rank);
+    int measurement = mpi_cunqa_apply_measure(statevector, qubits, n_qubits, mpi_rank);
 
-    return measurement.measure;
+    return measurement;
 }
 
 

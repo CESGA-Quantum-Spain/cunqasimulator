@@ -9,3 +9,7 @@ target_include_directories(mpi_example PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../sr
 add_executable(gate_test gate_test.cpp)
 target_link_libraries(gate_test PUBLIC cunqasimulator nlohmann_json::nlohmann_json) 
 target_include_directories(gate_test PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../src")
+
+add_executable(gate_bench gate_benchmarking.cpp)
+target_link_libraries(gate_bench PUBLIC cunqasimulator nlohmann_json::nlohmann_json) 
+target_include_directories(gate_bench PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../src")

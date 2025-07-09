@@ -10,7 +10,7 @@ inline std::complex<double> imag(0.0, 1.0);
 
 inline double inverse_sqrt_2 = 1.0 / std::sqrt(2.0);
 
-inline const std::vector<std::string> instructions = {"gate", "parametric_gate", "measure", "id", "x", "y", "z", "h", "sx", "rx", "ry", "rz", "cx", "cy", "cz", "crx", "cry", "crz", "ecr", "unitary", "c_if_x","c_if_y", "c_if_z", "c_if_h", "c_if_sx", "c_if_rx", "c_if_ry", "c_if_rz", "c_if_cx", "c_if_cy", "c_if_cz", "c_if_unitary"};
+inline const std::vector<std::string> instructions = {"gate", "parametric_gate", "measure", "id", "x", "y", "z", "h", "sx", "rx", "ry", "rz", "swap", "cx", "cy", "cz", "crx", "cry", "crz", "ecr", "unitary", "c_if_x","c_if_y", "c_if_z", "c_if_h", "c_if_sx", "c_if_rx", "c_if_ry", "c_if_rz", "c_if_cx", "c_if_cy", "c_if_cz", "c_if_unitary"};
 
 enum Instructions {
     gate,
@@ -25,6 +25,7 @@ enum Instructions {
     rx,
     ry,
     rz,
+    swap,
     cx,
     cy,
     cz,
@@ -59,6 +60,7 @@ inline std::unordered_map<std::string, int> instructions_map = {
     {"rx", rx},
     {"ry", ry},
     {"rz", rz},
+    {"swap", swap},
     {"cx", cx},
     {"cy", cy},
     {"cz", cz},
@@ -93,6 +95,7 @@ inline std::unordered_map<std::string, int> case_map = {
     {"rx", parametric_gate},
     {"ry", parametric_gate},
     {"rz", parametric_gate},
+    {"swap", gate},
     {"cx", gate},
     {"cy", gate},
     {"cz", gate},
