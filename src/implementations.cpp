@@ -8,30 +8,25 @@
 #include <thread>
 #include <barrier>
 
+
 #include "utils/utils_cunqasim.hpp"
 #include "utils/constants_cunqasim.hpp"
 
-namespace {
-    const int n_threads_exponent = 6;
-    const int n_threads = (1 << n_threads_exponent);
-    std::barrier<> first_barrier(n_threads);
-    std::barrier<> second_barrier(n_threads);
-}
-
-int cunqa_apply_measure(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+int cunqa_apply_measure(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement;
 
-    if (threads) { 
+    if (threads) {
+        const int n_threads = (1 << n_threads_exponent); 
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
-        std::vector<double> partials_prob_0(n_threads);
-        std::vector<double> partials_prob_1(n_threads);
-        double prob_0 = 0;
-        double prob_1 = 0;
+        std::vector<Precision> partials_prob_0(n_threads);
+        std::vector<Precision> partials_prob_1(n_threads);
+        Precision prob_0 = 0;
+        Precision prob_1 = 0;
 
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_measure, std::ref(statevector), qubits, n_qubits, i, std::ref(partials_prob_0), std::ref(partials_prob_1), std::ref(prob_0), std::ref(prob_1), std::ref(measurement), std::ref(first_barrier), std::ref(second_barrier)); 
+            threads_vector.emplace_back(apply_thread_measure, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent, std::ref(partials_prob_0), std::ref(partials_prob_1), std::ref(prob_0), std::ref(prob_1), std::ref(measurement)); 
         }
         for (std::thread& t : threads_vector) {
             t.join();
@@ -41,8 +36,8 @@ int cunqa_apply_measure(StateVector& statevector, const std::vector<int> qubits,
 
         return measurement;
     } else {
-        double prob_0 = 0;
-        double prob_1 = 0;
+        Precision prob_0 = 0;
+        Precision prob_1 = 0;
         std::vector<int> index_0;
         std::vector<int> index_1;
 
@@ -62,8 +57,8 @@ int cunqa_apply_measure(StateVector& statevector, const std::vector<int> qubits,
 
         for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
-                statevector[i] = (1 - measurement) * (1.0/std::sqrt((measurement + prob_0))) * statevector[i];
-                statevector[flipbit(i, qubits[0])] = measurement * (1.0/std::sqrt((1 - measurement + prob_1))) * statevector[flipbit(i, qubits[0])];
+                statevector[i] = (1 - measurement) * (ONE/std::sqrt((measurement + prob_0))) * statevector[i];
+                statevector[flipbit(i, qubits[0])] = measurement * (ONE/std::sqrt((1 - measurement + prob_1))) * statevector[flipbit(i, qubits[0])];
             }
         }
 
@@ -73,20 +68,21 @@ int cunqa_apply_measure(StateVector& statevector, const std::vector<int> qubits,
 
 
 // One-Qubit Gates
-void cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_x, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_x, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); // Blocks until the thread finishes
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
+        std::complex<Precision> aux;
 
         for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
@@ -99,20 +95,21 @@ void cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, cons
 }
 
 
-void cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_y, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_y, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
+        std::complex<Precision> aux;
 
         for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
@@ -124,13 +121,14 @@ void cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, cons
     }
 }
 
-void cunqa_apply_z(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_z(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_z, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_z, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
@@ -145,20 +143,21 @@ void cunqa_apply_z(StateVector& statevector, const std::vector<int> qubits, cons
     }   
 }
 
-void cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_h, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_h, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
+        std::complex<Precision> aux;
 
         for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
@@ -170,47 +169,49 @@ void cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits, cons
     }
 }
 
-void cunqa_apply_sx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_sx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_sx, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_sx, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
-        double a_half = (double)1.0/(double)2.0;
+        std::complex<Precision> aux;
+        Precision a_half = ONE/(Precision)2;
 
         for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
                 aux = statevector[i];
-                statevector[i] = a_half * (1.0 + imag) * statevector[i] + a_half * (1.0 - imag) * statevector[flipbit(i, qubits[0])];
-                statevector[flipbit(i, qubits[0])] = a_half * (1.0 + imag) * aux + a_half * (1.0 - imag) * statevector[flipbit(i, qubits[0])];
+                statevector[i] = a_half * (ONE + imag) * statevector[i] + a_half * (ONE - imag) * statevector[flipbit(i, qubits[0])];
+                statevector[flipbit(i, qubits[0])] = a_half * (ONE + imag) * aux + a_half * (ONE - imag) * statevector[flipbit(i, qubits[0])];
             }
         }
     }
 }
 
 // Two-Qubit Gates
-void cunqa_apply_swap(StateVector& statevector, std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_swap(StateVector& statevector, std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_swap, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_swap, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
+        std::complex<Precision> aux;
         if (qubits[0] > qubits[1]) {
             for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
@@ -236,20 +237,21 @@ void cunqa_apply_swap(StateVector& statevector, std::vector<int> qubits, const i
 }
 
 
-void cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_cx, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_cx, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
+        std::complex<Precision> aux;
         if (qubits[0] > qubits[1]) {
             for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
@@ -274,20 +276,21 @@ void cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits, con
     }
 }
 
-void cunqa_apply_cy(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cy(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_cy, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_cy, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
+        std::complex<Precision> aux;
         if (qubits[0] > qubits[1]) {
             for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
@@ -312,20 +315,21 @@ void cunqa_apply_cy(StateVector& statevector, const std::vector<int> qubits, con
     }
 }
 
-void cunqa_apply_cz(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cz(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_cz, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_cz, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
+        std::complex<Precision> aux;
         if (qubits[0] > qubits[1]) {
             for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
@@ -346,22 +350,23 @@ void cunqa_apply_cz(StateVector& statevector, const std::vector<int> qubits, con
     }
 }
 
-void cunqa_apply_ecr(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_ecr(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_ecr, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_ecr, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux_00;
-        std::complex<double> aux_01;
-        std::complex<double> aux_10;
+        std::complex<Precision> aux_00;
+        std::complex<Precision> aux_01;
+        std::complex<Precision> aux_10;
         if (qubits[0] > qubits[1]) {
             for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
@@ -395,7 +400,7 @@ void cunqa_apply_ecr(StateVector& statevector, const std::vector<int> qubits, co
 }
 
 //Classical conditional one-qubit gates
-void cunqa_apply_cifx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cifx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -403,7 +408,7 @@ void cunqa_apply_cifx(StateVector& statevector, const std::vector<int> qubits, c
     }
 }
 
-void cunqa_apply_cify(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cify(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -411,7 +416,7 @@ void cunqa_apply_cify(StateVector& statevector, const std::vector<int> qubits, c
     }
 }
 
-void cunqa_apply_cifz(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cifz(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -419,7 +424,7 @@ void cunqa_apply_cifz(StateVector& statevector, const std::vector<int> qubits, c
     }
 }
 
-void cunqa_apply_cifh(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cifh(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -427,7 +432,7 @@ void cunqa_apply_cifh(StateVector& statevector, const std::vector<int> qubits, c
     }
 }
 
-void cunqa_apply_cifsx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cifsx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -436,7 +441,7 @@ void cunqa_apply_cifsx(StateVector& statevector, const std::vector<int> qubits, 
 }
 
 //Classical conditional two-qubits gates
-void cunqa_apply_cifcx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cifcx(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -444,7 +449,7 @@ void cunqa_apply_cifcx(StateVector& statevector, const std::vector<int> qubits, 
     }
 }
 
-void cunqa_apply_cifcy(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cifcy(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -452,7 +457,7 @@ void cunqa_apply_cifcy(StateVector& statevector, const std::vector<int> qubits, 
     }
 }
 
-void cunqa_apply_cifcz(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cifcz(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -460,7 +465,7 @@ void cunqa_apply_cifcz(StateVector& statevector, const std::vector<int> qubits, 
     }
 }
 
-void cunqa_apply_cifecr(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cifecr(StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -468,22 +473,23 @@ void cunqa_apply_cifecr(StateVector& statevector, const std::vector<int> qubits,
     }
 }
 
-void cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads)
+void cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_rx, std::ref(statevector), qubits, param, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_rx, std::ref(statevector), qubits, param, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
-        double sin = std::sin(param[0]/2.0);
-        double cos = std::cos(param[0]/2.0);
+        std::complex<Precision> aux;
+        Precision sin = std::sin(param[0]/2.0);
+        Precision cos = std::cos(param[0]/2.0);
 
         for (uint64_t j = qubits[0]; j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - qubits[0]; i < j + (1ULL << qubits[0]); i++) {
@@ -495,22 +501,23 @@ void cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits, con
     }
 }
 
-void cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads)
+void cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_ry, std::ref(statevector), qubits, param, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_ry, std::ref(statevector), qubits, param, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
-        double sin = std::sin(param[0]/2.0);
-        double cos = std::cos(param[0]/2.0);
+        std::complex<Precision> aux;
+        Precision sin = std::sin(param[0]/2.0);
+        Precision cos = std::cos(param[0]/2.0);
 
         for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
@@ -522,22 +529,23 @@ void cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits, con
     }
 }
 
-void cunqa_apply_rz(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads)
+void cunqa_apply_rz(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_rz, std::ref(statevector), qubits, param, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_rz, std::ref(statevector), qubits, param, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
-        double sin = std::sin(param[0]/2.0);
-        double cos = std::cos(param[0]/2.0);
+        std::complex<Precision> aux;
+        Precision sin = std::sin(param[0]/2.0);
+        Precision cos = std::cos(param[0]/2.0);
 
         for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
@@ -548,22 +556,23 @@ void cunqa_apply_rz(StateVector& statevector, const std::vector<int> qubits, con
     }
 }
 
-void cunqa_apply_crx(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads)
+void cunqa_apply_crx(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_crx, std::ref(statevector), qubits, param, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_crx, std::ref(statevector), qubits, param, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
-        double sin = std::sin(param[0]/2.0);
-        double cos = std::cos(param[0]/2.0);
+        std::complex<Precision> aux;
+        Precision sin = std::sin(param[0]/2.0);
+        Precision cos = std::cos(param[0]/2.0);
         if (qubits[0] > qubits[1]) {
             for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
@@ -588,22 +597,23 @@ void cunqa_apply_crx(StateVector& statevector, const std::vector<int> qubits, co
     }
 }
 
-void cunqa_apply_cry(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads)
+void cunqa_apply_cry(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_cry, std::ref(statevector), qubits, param, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_cry, std::ref(statevector), qubits, param, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
-        double sin = std::sin(param[0]/2.0);
-        double cos = std::cos(param[0]/2.0);
+        std::complex<Precision> aux;
+        Precision sin = std::sin(param[0]/2.0);
+        Precision cos = std::cos(param[0]/2.0);
         if (qubits[0] > qubits[1]) {
             for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
@@ -628,22 +638,23 @@ void cunqa_apply_cry(StateVector& statevector, const std::vector<int> qubits, co
     }
 }
 
-void cunqa_apply_crz(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads)
+void cunqa_apply_crz(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_crz, std::ref(statevector), qubits, param, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_crz, std::ref(statevector), qubits, param, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
-        double sin = std::sin(param[0]/2.0);
-        double cos = std::cos(param[0]/2.0);
+        std::complex<Precision> aux;
+        Precision sin = std::sin(param[0]/2.0);
+        Precision cos = std::cos(param[0]/2.0);
         if (qubits[0] > qubits[1]) {
             for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
@@ -668,7 +679,7 @@ void cunqa_apply_crz(StateVector& statevector, const std::vector<int> qubits, co
     }
 }
 
-void cunqa_apply_cifrx(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads)
+void cunqa_apply_cifrx(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -676,7 +687,7 @@ void cunqa_apply_cifrx(StateVector& statevector, const std::vector<int> qubits, 
     }
 }
 
-void cunqa_apply_cifry(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads)
+void cunqa_apply_cifry(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -684,7 +695,7 @@ void cunqa_apply_cifry(StateVector& statevector, const std::vector<int> qubits, 
     }
 }
 
-void cunqa_apply_cifrz(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads)
+void cunqa_apply_cifrz(StateVector& statevector, const std::vector<int> qubits, const Params& param, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -692,21 +703,22 @@ void cunqa_apply_cifrz(StateVector& statevector, const std::vector<int> qubits, 
     }
 }
 
-void cunqa_apply_1_gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_1_gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
 
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_1_gate, U, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_1_gate, U, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux;
+        std::complex<Precision> aux;
 
         for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
@@ -718,22 +730,23 @@ void cunqa_apply_1_gate(const Matrix& U, StateVector& statevector, const std::ve
     }
 }
 
-void cunqa_apply_2_gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_2_gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     if (threads) {
+        const int n_threads = (1 << n_threads_exponent);
         std::vector<std::thread> threads_vector;
         threads_vector.reserve(n_threads);
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_2_gate, U, std::ref(statevector), qubits, n_qubits, i); 
+            threads_vector.emplace_back(apply_thread_2_gate, U, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent); 
         }
         for (std::thread& t : threads_vector) {
             t.join(); 
         }
         threads_vector.clear();
     } else {
-        std::complex<double> aux_00;
-        std::complex<double> aux_01;
-        std::complex<double> aux_10;
+        std::complex<Precision> aux_00;
+        std::complex<Precision> aux_01;
+        std::complex<Precision> aux_10;
         if (qubits[0] > qubits[1]) {
             for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
@@ -766,7 +779,7 @@ void cunqa_apply_2_gate(const Matrix& U, StateVector& statevector, const std::ve
     }
 }
 
-void cunqa_apply_cif1gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cif1gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -774,7 +787,7 @@ void cunqa_apply_cif1gate(const Matrix& U, StateVector& statevector, const std::
     }
 }
 
-void cunqa_apply_cif2gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads)
+void cunqa_apply_cif2gate(const Matrix& U, StateVector& statevector, const std::vector<int> qubits, const int& n_qubits, bool threads, const int n_threads_exponent)
 {
     int measurement = cunqa_apply_measure(statevector, {qubits[0]}, n_qubits, threads);
     if (measurement == 1) {
@@ -784,14 +797,16 @@ void cunqa_apply_cif2gate(const Matrix& U, StateVector& statevector, const std::
 
 
 // Threaded gates
-void apply_thread_measure(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, std::vector<double>& partials_prob_0, std::vector<double>& partials_prob_1, double& prob_0, double& prob_1, int& measurement, std::barrier<>& first_barrier, std::barrier<>& second_barrier) 
+void apply_thread_measure(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent, std::vector<Precision>& partials_prob_0, std::vector<Precision>& partials_prob_1, Precision& prob_0, Precision& prob_1, int& measurement) 
 {
-    uint64_t initial_position;
+    const int n_threads = (1 << n_threads_exponent);
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent));
-    double local_prob_0 = 0;
-    double local_prob_1 = 0;
-    initial_position = elements_per_thread * thread;
+    std::barrier<> first_barrier(n_threads);
+    std::barrier<> second_barrier(n_threads);
 
+    uint64_t initial_position = elements_per_thread * thread;
+    Precision local_prob_0 = 0;
+    Precision local_prob_1 = 0;
 
     for (uint64_t i = initial_position; i < initial_position + elements_per_thread; i++) {
         if (is_zero(i, qubits[0])) {
@@ -819,17 +834,17 @@ void apply_thread_measure(StateVector& statevector, const std::vector<int>& qubi
 
     for (uint64_t i = initial_position; i < initial_position + elements_per_thread; i++) {
         if (is_zero(i, qubits[0])) {
-            statevector[i] = (1 - measurement) * (1.0/std::sqrt(measurement + prob_0)) * statevector[i];
+            statevector[i] = (1 - measurement) * (ONE/std::sqrt(measurement + prob_0)) * statevector[i];
         } else {
-            statevector[i] = measurement * (1.0/std::sqrt(1 - measurement + prob_1)) * statevector[i];
+            statevector[i] = measurement * (ONE/std::sqrt(1 - measurement + prob_1)) * statevector[i];
         }
     }
 }
 
 
-void apply_thread_x(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread)
+void apply_thread_x(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent)
 {
-    std::complex<double> aux;
+    std::complex<Precision> aux;
     uint64_t initial_position;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
 
@@ -853,9 +868,9 @@ void apply_thread_x(StateVector& statevector, const std::vector<int>& qubits, co
 }
 
 
-void apply_thread_y(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_y(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 {
-    std::complex<double> aux;
+    std::complex<Precision> aux;
     uint64_t initial_position;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
 
@@ -879,7 +894,7 @@ void apply_thread_y(StateVector& statevector, const std::vector<int>& qubits, co
 }
 
 
-void apply_thread_z(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_z(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 {
     uint64_t n_positions = (1ULL << (n_qubits - n_threads_exponent));
     uint64_t initial_position = (1ULL << qubits[0]);
@@ -892,9 +907,9 @@ void apply_thread_z(StateVector& statevector, const std::vector<int>& qubits, co
 }
 
 
-void apply_thread_h(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_h(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 { 
-    std::complex<double> aux;
+    std::complex<Precision> aux;
     uint64_t initial_position;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     
@@ -918,10 +933,10 @@ void apply_thread_h(StateVector& statevector, const std::vector<int>& qubits, co
 }
 
 
-void apply_thread_sx(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_sx(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 {
-    std::complex<double> aux;
-    double a_half = (double)1.0/(double)2.0;
+    std::complex<Precision> aux;
+    Precision a_half = ONE/(Precision)2;
     uint64_t initial_position;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
 
@@ -930,24 +945,24 @@ void apply_thread_sx(StateVector& statevector, const std::vector<int>& qubits, c
         for (uint64_t j = initial_position + (1ULL << qubits[0]); j < initial_position + 2 * elements_per_thread; j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
                 aux = statevector[i];
-                statevector[i] = a_half * (1.0 + imag) * statevector[i] + a_half * (1.0 - imag) * statevector[flipbit(i, qubits[0])];
-                statevector[flipbit(i, qubits[0])] = a_half * (1.0 + imag) * aux + a_half * (1.0 - imag) * statevector[flipbit(i, qubits[0])];
+                statevector[i] = a_half * (ONE + imag) * statevector[i] + a_half * (ONE - imag) * statevector[flipbit(i, qubits[0])];
+                statevector[flipbit(i, qubits[0])] = a_half * (ONE + imag) * aux + a_half * (ONE - imag) * statevector[flipbit(i, qubits[0])];
             }
         }
     } else {
         initial_position = (1ULL << (n_qubits - n_threads_exponent - 1)) * (2 * thread - (thread % (1ULL << (qubits[0] - n_qubits + n_threads_exponent + 1))));
         for (uint64_t i = initial_position; i < initial_position + elements_per_thread; i++) {
             aux = statevector[i];
-            statevector[i] = a_half * (1.0 + imag) * statevector[i] + a_half * (1.0 - imag) * statevector[flipbit(i, qubits[0])];
-            statevector[flipbit(i, qubits[0])] = a_half * (1.0 + imag) * aux + a_half * (1.0 - imag) * statevector[flipbit(i, qubits[0])];
+            statevector[i] = a_half * (ONE + imag) * statevector[i] + a_half * (ONE - imag) * statevector[flipbit(i, qubits[0])];
+            statevector[flipbit(i, qubits[0])] = a_half * (ONE + imag) * aux + a_half * (ONE - imag) * statevector[flipbit(i, qubits[0])];
         }
     }
 }
 
 
-void apply_thread_swap(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread)
+void apply_thread_swap(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent)
 {
-    std::complex<double> aux;
+    std::complex<Precision> aux;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     uint64_t initial_position;
 
@@ -975,9 +990,9 @@ void apply_thread_swap(StateVector& statevector, const std::vector<int>& qubits,
 }
 
 
-void apply_thread_cx(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_cx(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 {
-    std::complex<double> aux;
+    std::complex<Precision> aux;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     uint64_t initial_position;
 
@@ -1005,9 +1020,9 @@ void apply_thread_cx(StateVector& statevector, const std::vector<int>& qubits, c
 }
 
 
-void apply_thread_cy(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_cy(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 {
-    std::complex<double> aux;
+    std::complex<Precision> aux;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     uint64_t initial_position;
 
@@ -1035,9 +1050,9 @@ void apply_thread_cy(StateVector& statevector, const std::vector<int>& qubits, c
 }
 
 
-void apply_thread_cz(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_cz(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 {
-    std::complex<double> aux;
+    std::complex<Precision> aux;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     uint64_t initial_position;
 
@@ -1061,11 +1076,11 @@ void apply_thread_cz(StateVector& statevector, const std::vector<int>& qubits, c
 }
 
 
-void apply_thread_ecr(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_ecr(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 {
-    std::complex<double> aux_00;
-    std::complex<double> aux_01;
-    std::complex<double> aux_10;
+    std::complex<Precision> aux_00;
+    std::complex<Precision> aux_01;
+    std::complex<Precision> aux_10;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     uint64_t initial_position;
 
@@ -1100,11 +1115,11 @@ void apply_thread_ecr(StateVector& statevector, const std::vector<int>& qubits, 
     }
 }
 
-void apply_thread_rx(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_rx(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 {
-    std::complex<double> aux;
-    double sin = std::sin(param[0]/2.0);
-    double cos = std::cos(param[0]/2.0);
+    std::complex<Precision> aux;
+    Precision sin = std::sin(param[0]/2.0);
+    Precision cos = std::cos(param[0]/2.0);
     uint64_t initial_position;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
 
@@ -1128,11 +1143,11 @@ void apply_thread_rx(StateVector& statevector, const std::vector<int>& qubits, c
 }
 
 
-void apply_thread_ry(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_ry(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 {
-    std::complex<double> aux;
-    double sin = std::sin(param[0]/2.0);
-    double cos = std::cos(param[0]/2.0);
+    std::complex<Precision> aux;
+    Precision sin = std::sin(param[0]/2.0);
+    Precision cos = std::cos(param[0]/2.0);
     uint64_t initial_position;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
 
@@ -1156,10 +1171,10 @@ void apply_thread_ry(StateVector& statevector, const std::vector<int>& qubits, c
 }
 
 
-void apply_thread_rz(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread) 
+void apply_thread_rz(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent) 
 {
-    double sin = std::sin(param[0]/2.0);
-    double cos = std::cos(param[0]/2.0);
+    Precision sin = std::sin(param[0]/2.0);
+    Precision cos = std::cos(param[0]/2.0);
     uint64_t initial_position;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
 
@@ -1180,11 +1195,11 @@ void apply_thread_rz(StateVector& statevector, const std::vector<int>& qubits, c
     }
 }
 
-void apply_thread_crx(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread)
+void apply_thread_crx(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent)
 {
-    std::complex<double> aux;
-    double sin = std::sin(param[0]/2.0);
-    double cos = std::cos(param[0]/2.0);
+    std::complex<Precision> aux;
+    Precision sin = std::sin(param[0]/2.0);
+    Precision cos = std::cos(param[0]/2.0);
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     uint64_t initial_position;
 
@@ -1212,11 +1227,11 @@ void apply_thread_crx(StateVector& statevector, const std::vector<int>& qubits, 
 }
 
 
-void apply_thread_cry(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread)
+void apply_thread_cry(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent)
 {
-    std::complex<double> aux;
-    double sin = std::sin(param[0]/2.0);
-    double cos = std::cos(param[0]/2.0);
+    std::complex<Precision> aux;
+    Precision sin = std::sin(param[0]/2.0);
+    Precision cos = std::cos(param[0]/2.0);
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     uint64_t initial_position;
 
@@ -1244,10 +1259,10 @@ void apply_thread_cry(StateVector& statevector, const std::vector<int>& qubits, 
 }
 
 
-void apply_thread_crz(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread)
+void apply_thread_crz(StateVector& statevector, const std::vector<int>& qubits, const Params& param, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent)
 {
-    double sin = std::sin(param[0]/2.0);
-    double cos = std::cos(param[0]/2.0);
+    Precision sin = std::sin(param[0]/2.0);
+    Precision cos = std::cos(param[0]/2.0);
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     uint64_t initial_position;
 
@@ -1272,9 +1287,9 @@ void apply_thread_crz(StateVector& statevector, const std::vector<int>& qubits, 
     }
 }
 
-void apply_thread_1_gate(const Matrix& U, StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread)
+void apply_thread_1_gate(const Matrix& U, StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent)
 {
-    std::complex<double> aux;
+    std::complex<Precision> aux;
     uint64_t initial_position;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     
@@ -1298,11 +1313,11 @@ void apply_thread_1_gate(const Matrix& U, StateVector& statevector, const std::v
 }
 
 
-void apply_thread_2_gate(const Matrix& U, StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread)
+void apply_thread_2_gate(const Matrix& U, StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent)
 {
-    std::complex<double> aux_00;
-    std::complex<double> aux_01;
-    std::complex<double> aux_10;
+    std::complex<Precision> aux_00;
+    std::complex<Precision> aux_01;
+    std::complex<Precision> aux_10;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     uint64_t initial_position;
 

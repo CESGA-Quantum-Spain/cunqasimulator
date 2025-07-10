@@ -13,7 +13,7 @@ int main() {
     // No threads part
     bool with_threads = false;
 
-    std::ofstream h_no_threads_file("H_No_Threads_Bench.txt");
+    /* std::ofstream h_no_threads_file("H_No_Threads_Bench.txt");
     std::ofstream cx_no_threads_file("CX_No_Threads_Bench.txt");
     std::ofstream measure_no_threads_file("Measure_No_Threads_Bench.txt");
 
@@ -41,14 +41,14 @@ int main() {
     }
     h_no_threads_file.close();
     cx_no_threads_file.close();
-    measure_no_threads_file.close();
+    measure_no_threads_file.close(); */
 
     // With threads Part
     with_threads = true;
 
-    std::ofstream h_threads_file("H_Threads_Bench.txt");
-    std::ofstream cx_threads_file("CX_Threads_Bench.txt");
-    std::ofstream measure_threads_file("Measure_Threads_Bench.txt");
+    std::ofstream h_threads_file("H_16_Threads_Bench.txt");
+    std::ofstream cx_threads_file("CX_16_Threads_Bench.txt");
+    std::ofstream measure_threads_file("Measure_16_Threads_Bench.txt");
 
     for (int i = initial_n_qubits; i < max_qubits + 1; i++) {
         Executor executor(i, with_threads); 

@@ -3,12 +3,20 @@
 #include <complex>
 #include <unordered_map>
 
-inline uint64_t ZERO = 0;
-inline uint64_t ONE = 1ULL;
+#include "types_cunqasim.hpp"
 
-inline std::complex<double> imag(0.0, 1.0);
+#if defined(USE_DOUBLE_PRECISION_MACRO)
+    inline double ONE = 1.0;
+    inline double ZERO = 0.0;
+#elif defined(USE_FLOAT_PRECISION_MACRO)
+    inline float ONE = 1.0f;
+    inline float ZERO = 0.0f;
+#endif
 
-inline double inverse_sqrt_2 = 1.0 / std::sqrt(2.0);
+
+inline std::complex<Precision> imag(0.0, 1.0);
+
+inline Precision inverse_sqrt_2 = 1.0 / std::sqrt(2.0);
 
 inline const std::vector<std::string> instructions = {"gate", "parametric_gate", "measure", "id", "x", "y", "z", "h", "sx", "rx", "ry", "rz", "swap", "cx", "cy", "cz", "crx", "cry", "crz", "ecr", "unitary", "c_if_x","c_if_y", "c_if_z", "c_if_h", "c_if_sx", "c_if_rx", "c_if_ry", "c_if_rz", "c_if_cx", "c_if_cy", "c_if_cz", "c_if_unitary"};
 

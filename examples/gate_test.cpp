@@ -22,8 +22,8 @@ void printvector (StateVector& sv)
 
 int main() {
 
-    int N_QUBITS = 34;
-    bool with_threads = false;
+    int N_QUBITS = 30;
+    bool with_threads = true;
     try {
         auto start_executor = std::chrono::high_resolution_clock::now();
         Executor executor(N_QUBITS, with_threads);
@@ -33,7 +33,7 @@ int main() {
         std::cout.flush();
 
         auto start_gate = std::chrono::high_resolution_clock::now();
-        executor.apply_gate("h", {10});
+        executor.apply_gate("h", {3});
         auto end_gate = std::chrono::high_resolution_clock::now();
         auto duration_gate = std::chrono::duration_cast<std::chrono::nanoseconds>(end_gate - start_gate);
         std::cout << "Time taken for Gate H with " << N_QUBITS << " qubits: " << duration_gate.count() << " nanos" << "\n";
@@ -43,12 +43,12 @@ int main() {
         auto duration_cx = std::chrono::duration_cast<std::chrono::nanoseconds>(end_cx - start_cx);
         std::cout << "Time taken for Gate CX with " << N_QUBITS << " qubits: " << duration_cx.count() << " nanos" << "\n";
         std::cout.flush(); */
-        auto start_measure = std::chrono::high_resolution_clock::now();
+        /* auto start_measure = std::chrono::high_resolution_clock::now();
         executor.apply_measure({5});
         auto end_measure = std::chrono::high_resolution_clock::now();
         auto duration_measure = std::chrono::duration_cast<std::chrono::nanoseconds>(end_measure - start_measure);
         std::cout << "Time taken for Measure with " << N_QUBITS << " qubits: " << duration_measure.count() << " nanos" << "\n";
-        std::cout.flush();
+        std::cout.flush(); */
         //printvector(executor.statevector);
         /* uint64_t non_zero_position = executor.get_nonzero_position();
         std::cout << "Nonzero position: " << non_zero_position << "\n"; */

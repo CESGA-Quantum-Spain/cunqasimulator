@@ -110,7 +110,7 @@ void MPIExecutor::apply_gate(const std::string& gate_name, const std::vector<int
 }
 
 
-void MPIExecutor::apply_parametric_gate(const std::string& gate_name, const std::vector<int>& qubits, std::vector<double>& param)
+void MPIExecutor::apply_parametric_gate(const std::string& gate_name, const std::vector<int>& qubits, Params& param)
 {
     switch (instructions_map[gate_name])
     {
@@ -180,7 +180,7 @@ uint64_t MPIExecutor::get_nonzero_position()
 {
     try {
         auto it = std::find_if(statevector.begin(), statevector.end(), [](const State& c) {
-            return c != std::complex<double>(0.0, 0.0);
+            return c != std::complex<Precision>(ZERO, ZERO);
         });
         if (it == statevector.end()) {
             return -1;

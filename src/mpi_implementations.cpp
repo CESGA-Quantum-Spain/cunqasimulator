@@ -45,8 +45,8 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
             MPI_Request recv_request;
             MPI_Status status;
 
-            std::complex<double>* send_chunk_ptr;
-            std::complex<double>* recv_chunk_ptr;
+            std::complex<Precision>* send_chunk_ptr;
+            std::complex<Precision>* recv_chunk_ptr;
             int comm;
             StateVector aux_statevector(chunk_elements);
 
@@ -57,8 +57,8 @@ void mpi_cunqa_apply_x(StateVector& statevector, const std::vector<int> qubits, 
                 send_chunk_ptr = statevector.data() + (i * chunk_elements);
                 recv_chunk_ptr = aux_statevector.data();
                 
-                MPI_Isend(send_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
-                MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
+                MPI_Isend(send_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
+                MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
 
                 MPI_Wait(&send_request, &status); 
                 MPI_Wait(&recv_request, &status);
@@ -82,8 +82,8 @@ void mpi_cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, 
         MPI_Request recv_request;
         MPI_Status status;
 
-        std::complex<double>* send_chunk_ptr;
-        std::complex<double>* recv_chunk_ptr;
+        std::complex<Precision>* send_chunk_ptr;
+        std::complex<Precision>* recv_chunk_ptr;
         int comm;
         StateVector aux_statevector(chunk_elements);
 
@@ -93,8 +93,8 @@ void mpi_cunqa_apply_y(StateVector& statevector, const std::vector<int> qubits, 
         for (uint64_t i = 0; i < num_chunks; ++i) {
             send_chunk_ptr = statevector.data() + (i * chunk_elements);
             recv_chunk_ptr = aux_statevector.data();
-            MPI_Isend(send_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
-            MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
+            MPI_Isend(send_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
+            MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
 
             MPI_Wait(&send_request, &status); 
             MPI_Wait(&recv_request, &status);
@@ -138,8 +138,8 @@ void mpi_cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits, 
         MPI_Request recv_request;
         MPI_Status status;
 
-        std::complex<double>* send_chunk_ptr;
-        std::complex<double>* recv_chunk_ptr;
+        std::complex<Precision>* send_chunk_ptr;
+        std::complex<Precision>* recv_chunk_ptr;
         int comm;
         StateVector aux_statevector(chunk_elements);
 
@@ -150,8 +150,8 @@ void mpi_cunqa_apply_h(StateVector& statevector, const std::vector<int> qubits, 
         for (uint64_t i = 0; i < num_chunks; ++i) {
             send_chunk_ptr = statevector.data() + (i * chunk_elements);
             recv_chunk_ptr = aux_statevector.data();
-            MPI_Isend(send_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
-            MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
+            MPI_Isend(send_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
+            MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
 
             MPI_Wait(&send_request, &status); 
             MPI_Wait(&recv_request, &status);
@@ -179,11 +179,11 @@ void mpi_cunqa_apply_sx(StateVector& statevector, const std::vector<int> qubits,
         MPI_Request recv_request;
         MPI_Status status;
 
-        std::complex<double>* send_chunk_ptr;
-        std::complex<double>* recv_chunk_ptr;
+        std::complex<Precision>* send_chunk_ptr;
+        std::complex<Precision>* recv_chunk_ptr;
         int comm;
         StateVector aux_statevector(chunk_elements);
-        double a_half = (double)1.0/(double)2.0;
+        Precision a_half = ONE/(Precision)2;
 
         //int L = n_qubits - max_qubits_per_node;
         int M = qubits[0] - max_qubits_per_node;
@@ -192,19 +192,19 @@ void mpi_cunqa_apply_sx(StateVector& statevector, const std::vector<int> qubits,
             for (uint64_t i = 0; i < num_chunks; ++i) {
                 send_chunk_ptr = statevector.data() + (i * chunk_elements);
                 recv_chunk_ptr = aux_statevector.data();
-                MPI_Isend(send_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
-                MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
+                MPI_Isend(send_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
+                MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
 
                 MPI_Wait(&send_request, &status); 
                 MPI_Wait(&recv_request, &status);
 
                 if (is_zero(mpi_rank, M - 1)) {
                     for (uint64_t j = 0; j < chunk_elements; j++) {
-                        statevector[j + (i * chunk_elements)] = a_half * (1.0 + imag) * statevector[j + (i * chunk_elements)] + a_half * (1.0 - imag) * recv_chunk_ptr[j];
+                        statevector[j + (i * chunk_elements)] = a_half * (ONE + imag) * statevector[j + (i * chunk_elements)] + a_half * (ONE - imag) * recv_chunk_ptr[j];
                     }
                 } else {
                     for (uint64_t j = 0; j < chunk_elements; j++) {
-                        statevector[j + (i * chunk_elements)] = a_half * (1.0 + imag) * recv_chunk_ptr[j] + a_half * (1.0 - imag) * statevector[j + (i * chunk_elements)];
+                        statevector[j + (i * chunk_elements)] = a_half * (ONE + imag) * recv_chunk_ptr[j] + a_half * (ONE - imag) * statevector[j + (i * chunk_elements)];
                     }
                 }
             }
@@ -222,12 +222,12 @@ void mpi_cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits,
         MPI_Request recv_request;
         MPI_Status status;
 
-        std::complex<double>* send_chunk_ptr;
-        std::complex<double>* recv_chunk_ptr;
+        std::complex<Precision>* send_chunk_ptr;
+        std::complex<Precision>* recv_chunk_ptr;
         int comm;
         StateVector aux_statevector(chunk_elements);
-        double sin = std::sin(param[0]/2.0);
-        double cos = std::cos(param[0]/2.0);
+        Precision sin = std::sin(param[0]/2.0);
+        Precision cos = std::cos(param[0]/2.0);
 
         //int L = n_qubits - max_qubits_per_node;
         int M = qubits[0] - max_qubits_per_node;
@@ -235,8 +235,8 @@ void mpi_cunqa_apply_rx(StateVector& statevector, const std::vector<int> qubits,
         for (uint64_t i = 0; i < num_chunks; ++i) {
             send_chunk_ptr = statevector.data() + (i * chunk_elements);
             recv_chunk_ptr = aux_statevector.data();
-            MPI_Isend(send_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
-            MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
+            MPI_Isend(send_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
+            MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
 
             MPI_Wait(&send_request, &status); 
             MPI_Wait(&recv_request, &status);
@@ -258,12 +258,12 @@ void mpi_cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits,
         MPI_Request recv_request;
         MPI_Status status;
 
-        std::complex<double>* send_chunk_ptr;
-        std::complex<double>* recv_chunk_ptr;
+        std::complex<Precision>* send_chunk_ptr;
+        std::complex<Precision>* recv_chunk_ptr;
         int comm;
         StateVector aux_statevector(chunk_elements);
-        double sin = std::sin(param[0]/2.0);
-        double cos = std::cos(param[0]/2.0);
+        Precision sin = std::sin(param[0]/2.0);
+        Precision cos = std::cos(param[0]/2.0);
 
         //int L = n_qubits - max_qubits_per_node;
         int M = qubits[0] - max_qubits_per_node;
@@ -272,8 +272,8 @@ void mpi_cunqa_apply_ry(StateVector& statevector, const std::vector<int> qubits,
             for (uint64_t i = 0; i < num_chunks; ++i) {
                 send_chunk_ptr = statevector.data() + (i * chunk_elements);
                 recv_chunk_ptr = aux_statevector.data();
-                MPI_Isend(send_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
-                MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
+                MPI_Isend(send_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
+                MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
 
                 MPI_Wait(&send_request, &status); 
                 MPI_Wait(&recv_request, &status);
@@ -299,8 +299,8 @@ void mpi_cunqa_apply_rz(StateVector& statevector, const std::vector<int> qubits,
         cunqa_apply_rz(statevector, qubits, param, n_qubits, false);
     } else {
         int M = qubits[0] - max_qubits_per_node;
-        double sin = std::sin(param[0]/2.0);
-        double cos = std::cos(param[0]/2.0);
+        Precision sin = std::sin(param[0]/2.0);
+        Precision cos = std::cos(param[0]/2.0);
         if (is_zero(mpi_rank, M - 1)) {
             for (uint64_t i = 0; i < statevector.size(); i++) {
                 statevector[i] = (cos - imag * sin) * statevector[i];
@@ -330,15 +330,15 @@ void mpi_cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits,
         MPI_Request recv_request;
         MPI_Status status;
 
-        std::complex<double>* send_chunk_ptr;
-        std::complex<double>* recv_chunk_ptr;
+        std::complex<Precision>* send_chunk_ptr;
+        std::complex<Precision>* recv_chunk_ptr;
         StateVector aux_statevector(chunk_elements);
 
         for (uint64_t i = 0; i < num_chunks; ++i) {
             send_chunk_ptr = statevector.data() + (i * chunk_elements);
             recv_chunk_ptr = aux_statevector.data();
-            MPI_Isend(send_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
-            MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
+            MPI_Isend(send_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
+            MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
 
             MPI_Wait(&send_request, &status); 
             MPI_Wait(&recv_request, &status);
@@ -350,9 +350,9 @@ void mpi_cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits,
         }
     } else if (qubits[0] > max_qubits_per_node && qubits[1] <= max_qubits_per_node) {
         if (!is_zero(mpi_rank, M - 1)) {
-            std::complex<double> aux;
-            for (uint64_t j = (1 << qubits[1]); j < statevector.size(); j = j + (1 << (qubits[1] + 1))) {
-                for (uint64_t i = j - (1 << qubits[1]); i < j; i++) {
+            std::complex<Precision> aux;
+            for (uint64_t j = (1ULL << qubits[1]); j < statevector.size(); j = j + (1ULL << (qubits[1] + 1))) {
+                for (uint64_t i = j - (1ULL << qubits[1]); i < j; i++) {
                     aux = statevector[i];
                     statevector[i] = statevector[flipbit(i, qubits[1])];
                     statevector[flipbit(i, qubits[1])] = aux;
@@ -366,16 +366,16 @@ void mpi_cunqa_apply_cx(StateVector& statevector, const std::vector<int> qubits,
         MPI_Request recv_request;
         MPI_Status status;
 
-        std::complex<double>* send_chunk_ptr;
-        std::complex<double>* recv_chunk_ptr;
+        std::complex<Precision>* send_chunk_ptr;
+        std::complex<Precision>* recv_chunk_ptr;
         StateVector aux_statevector(chunk_elements);
 
         if(!is_zero(mpi_rank, M - 1)) {
             for (uint64_t i = 0; i < num_chunks; ++i) { 
                 send_chunk_ptr = statevector.data() + (i * chunk_elements);
                 recv_chunk_ptr = aux_statevector.data();
-                MPI_Isend(send_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
-                MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_CXX_DOUBLE_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
+                MPI_Isend(send_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &send_request);
+                MPI_Irecv(recv_chunk_ptr, chunk_elements, MPI_COMPLEX, comm, 0, MPI_COMM_WORLD, &recv_request);
 
                 MPI_Wait(&send_request, &status); 
                 MPI_Wait(&recv_request, &status);

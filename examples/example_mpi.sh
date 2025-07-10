@@ -11,4 +11,4 @@
 
 module load qmio/hpc gcc/12.3.0 nlohmann_json/3.11.3 impi/2021.13.0 
 
-mpirun -n $SLURM_NTASKS ./../build_mpi/examples/mpi_example
+mpirun -n $SLURM_NTASKS ./../build/examples/mpi_example

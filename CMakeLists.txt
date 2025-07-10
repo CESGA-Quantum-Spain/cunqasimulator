@@ -6,6 +6,19 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
+# Precision
+option(USE_FLOAT_PRECISION "Use float precision for calculations (defaults to double)" OFF)
+
+# Add a message to indicate the chosen precision during CMake configuration
+if(USE_FLOAT_PRECISION)
+    message(STATUS "Configuring with FLOAT precision.")
+    add_compile_definitions(USE_FLOAT_PRECISION_MACRO)
+else()
+    message(STATUS "Configuring with DOUBLE precision (default).")
+    # Define a macro for float precision
+    add_compile_definitions(USE_DOUBLE_PRECISION_MACRO)
+endif()
+
 # Adding C++20 standard as required
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
