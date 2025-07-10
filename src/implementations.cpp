@@ -819,9 +819,9 @@ void apply_thread_measure(StateVector& statevector, const std::vector<int>& qubi
 
     for (uint64_t i = initial_position; i < initial_position + elements_per_thread; i++) {
         if (is_zero(i, qubits[0])) {
-            statevector[i] = (1 - measurement) * (1.0/std::sqrt((1 - measurement) * prob_0)) * statevector[i];
+            statevector[i] = (1 - measurement) * (1.0/std::sqrt(measurement + prob_0)) * statevector[i];
         } else {
-            statevector[i] = measurement * (1.0/std::sqrt((measurement) * prob_1)) * statevector[i];
+            statevector[i] = measurement * (1.0/std::sqrt(1 - measurement + prob_1)) * statevector[i];
         }
     }
 }
