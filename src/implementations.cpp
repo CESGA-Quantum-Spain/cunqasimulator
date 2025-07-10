@@ -62,8 +62,8 @@ int cunqa_apply_measure(StateVector& statevector, const std::vector<int> qubits,
 
         for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
             for (uint64_t i = j - (1ULL << qubits[0]); i < j; i++) {
-                statevector[i] = (1 - measurement) * (1.0/std::sqrt((1 - prob_1))) * statevector[i];
-                statevector[flipbit(i, qubits[0])] = measurement * (1.0/std::sqrt((1 - prob_0))) * statevector[flipbit(i, qubits[0])];
+                statevector[i] = (1 - measurement) * (1.0/std::sqrt((measurement + prob_0))) * statevector[i];
+                statevector[flipbit(i, qubits[0])] = measurement * (1.0/std::sqrt((1 - measurement + prob_1))) * statevector[flipbit(i, qubits[0])];
             }
         }
 
