@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <barrier>
 
 #include "utils/types_cunqasim.hpp"
 
@@ -46,7 +47,7 @@ void cunqa_apply_cif2gate(const Matrix& U, StateVector& statevector, const std::
 
 // Threaded gates
 
-void apply_thread_measure(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent, std::vector<Precision>& partials_prob_0, std::vector<Precision>& partials_prob_1, Precision& prob_0, Precision& prob_1, int& measurement);
+void apply_thread_measure(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent, std::vector<Precision>& partials_prob_0, std::vector<Precision>& partials_prob_1, Precision& prob_0, Precision& prob_1, int& measurement, std::barrier<>& first_barrier, std::barrier<>& second_barrier);
 void apply_thread_x(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent);
 void apply_thread_y(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent);
 void apply_thread_z(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent);

@@ -6,7 +6,6 @@
 #include <numeric>
 #include <random>
 #include <thread>
-#include <barrier>
 
 
 #include "utils/utils_cunqasim.hpp"
@@ -19,6 +18,8 @@ int cunqa_apply_measure(StateVector& statevector, const std::vector<int> qubits,
     if (threads) {
         const int n_threads = (1 << n_threads_exponent); 
         std::vector<std::thread> threads_vector;
+        std::barrier<> first_barrier(n_threads);
+        std::barrier<> second_barrier(n_threads);
         threads_vector.reserve(n_threads);
         std::vector<Precision> partials_prob_0(n_threads);
         std::vector<Precision> partials_prob_1(n_threads);
@@ -26,7 +27,7 @@ int cunqa_apply_measure(StateVector& statevector, const std::vector<int> qubits,
         Precision prob_1 = 0;
 
         for (uint16_t i = 0; i < n_threads; i++) {
-            threads_vector.emplace_back(apply_thread_measure, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent, std::ref(partials_prob_0), std::ref(partials_prob_1), std::ref(prob_0), std::ref(prob_1), std::ref(measurement)); 
+            threads_vector.emplace_back(apply_thread_measure, std::ref(statevector), qubits, n_qubits, i, n_threads_exponent, std::ref(partials_prob_0), std::ref(partials_prob_1), std::ref(prob_0), std::ref(prob_1), std::ref(measurement), std::ref(first_barrier), std::ref(second_barrier)); 
         }
         for (std::thread& t : threads_vector) {
             t.join();
@@ -797,12 +798,10 @@ void cunqa_apply_cif2gate(const Matrix& U, StateVector& statevector, const std::
 
 
 // Threaded gates
-void apply_thread_measure(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent, std::vector<Precision>& partials_prob_0, std::vector<Precision>& partials_prob_1, Precision& prob_0, Precision& prob_1, int& measurement) 
+void apply_thread_measure(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent, std::vector<Precision>& partials_prob_0, std::vector<Precision>& partials_prob_1, Precision& prob_0, Precision& prob_1, int& measurement, std::barrier<>& first_barrier, std::barrier<>& second_barrier) 
 {
     const int n_threads = (1 << n_threads_exponent);
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent));
-    std::barrier<> first_barrier(n_threads);
-    std::barrier<> second_barrier(n_threads);
 
     uint64_t initial_position = elements_per_thread * thread;
     Precision local_prob_0 = 0;
@@ -822,8 +821,8 @@ void apply_thread_measure(StateVector& statevector, const std::vector<int>& qubi
     first_barrier.arrive_and_wait();
 
     if (thread == 0) {
-        prob_0 = std::accumulate(partials_prob_0.begin(), partials_prob_0.end(), 0.0);
-        prob_1 = std::accumulate(partials_prob_1.begin(), partials_prob_1.end(), 0.0);
+        prob_0 = std::accumulate(partials_prob_0.begin(), partials_prob_0.end(), ZERO);
+        prob_1 = std::accumulate(partials_prob_1.begin(), partials_prob_1.end(), ZERO);
         std::random_device rd;  // Seed source
         std::mt19937 gen(rd() ^ std::chrono::steady_clock::now().time_since_epoch().count()); // Mersenne Twister RNG
         std::discrete_distribution<int> dist({prob_0, prob_1});
