@@ -212,25 +212,18 @@ void cunqa_apply_swap(StateVector& statevector, std::vector<int> qubits, const i
         }
         threads_vector.clear();
     } else {
-        std::complex<Precision> aux;
         if (qubits[0] > qubits[1]) {
-            for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
-                for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
-                    for (uint64_t k = i - j + (1ULL << qubits[0]) - (1ULL << qubits[1]); k < i; k++) {
-                        aux = statevector[flipbit(k, qubits[0])];
-                        statevector[flipbit(k, qubits[0])] = statevector[flipbit(k, qubits[1])];
-                        statevector[flipbit(k, qubits[1])] = aux;
-                    }
-                }
-            }
-        } else if (qubits[0] < qubits[1]) {
-            for (uint64_t j = (1ULL << qubits[1]); j < statevector.size(); j = j + (1ULL << (qubits[1] + 1))) {
-                for (uint64_t i = j - (1ULL << qubits[1]) + (1ULL << qubits[0]); i < j; i = i + ((1ULL << (qubits[0] + 1)))) {
-                    for (uint64_t k = i - (1ULL << qubits[0]); k < i; k++) {
-                        aux = statevector[flipbit(k, qubits[0])];
-                        statevector[flipbit(k, qubits[0])] = statevector[flipbit(k, qubits[1])];
-                        statevector[flipbit(k, qubits[1])] = aux;
-                    }
+            int aux_qubit_0 = qubits[0];
+            qubits[0] = qubits[1];
+            qubits[1] = aux_qubit_0;
+        }
+        std::complex<Precision> aux;
+        for (uint64_t j = (1ULL << qubits[1]); j < statevector.size(); j = j + (1ULL << (qubits[1] + 1))) {
+            for (uint64_t i = j - (1ULL << qubits[1]) + (1ULL << qubits[0]); i < j; i = i + ((1ULL << (qubits[0] + 1)))) {
+                for (uint64_t k = i - (1ULL << qubits[0]); k < i; k++) {
+                    aux = statevector[flipbit(k, qubits[0])];
+                    statevector[flipbit(k, qubits[0])] = statevector[flipbit(k, qubits[1])];
+                    statevector[flipbit(k, qubits[1])] = aux;
                 }
             }
         }
