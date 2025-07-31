@@ -954,6 +954,7 @@ void apply_thread_sx(StateVector& statevector, const std::vector<int>& qubits, c
 
 void apply_thread_swap(StateVector& statevector, const std::vector<int>& qubits, const int& n_qubits, const uint16_t& thread, const int n_threads_exponent)
 {
+    //TODO: Check if this is well implemented
     std::complex<Precision> aux;
     uint64_t elements_per_thread = (1ULL << (n_qubits - n_threads_exponent - 1));
     uint64_t initial_position;
