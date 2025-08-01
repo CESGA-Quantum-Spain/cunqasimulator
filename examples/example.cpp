@@ -38,17 +38,26 @@ int main(int argc, char** argv) {
             {"qubits", {0}}
         }, */
         {
+            {"name","swap"},
+            {"qubits", {2, 1}}
+        },
+        {
             {"name","measure"},
             {"qubits", {0}}
         },
         {
             {"name", "measure"},
             {"qubits", {1}}
-        }
+        },
+        {
+            {"name", "measure"},
+            {"qubits", {2}}
+        },
+
     };
 
 
-    Executor qpu(5);
+    Executor qpu(5, false);
     
     json result = qpu.run(qc, 100);
 
