@@ -50,28 +50,13 @@ int main(int argc, char** argv) {
 
     Executor qpu(5);
     
-    ResultCunqa result = qpu.run(qc, 100);
+    json result = qpu.run(qc, 100);
 
-    std::cout << "Total time: " << result.total_time << " [s] \n";
+    std::cout << "Total time: " << result.at("time_taken") << " [s] \n";
 
-    std::cout << "Print using unordered_map: " << "\n";
-    std::cout << "{ ";
-    for (const auto& [key, value] : result.counts) {
-        std::cout << key << ": " << value << "\n";
-    }
-    std::cout << "}" << "\n";
-
-    json counts = result.counts;
-    std::cout << "Print using json: " << "\n";
+    json counts = result.at("counts");
+    std::cout << "Counts: " << "\n";
     std::cout << counts.dump(4) << "\n";
-
-    json ordered_counts = result.get_ordered_counts();
-    std::cout << "Print using ordered counts json: " << "\n";
-    std::cout << ordered_counts.dump(4) << "\n";
-
-
-
-
     
     return 0;
 }

@@ -4,6 +4,7 @@
 #include <complex>
 #include <chrono>
 #include <string>
+#include <map>
 
 #include "implementations.hpp"
 #include "utils/utils_cunqasim.hpp"
@@ -197,21 +198,22 @@ uint64_t Executor::get_nonzero_position()
 }
 
 
-ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, const int shots)
+json Executor::run(QuantumCircuit& quantumcircuit, const int shots)
 {
-    ResultCunqa result;
+    std::map<int, bool> classic_values;
+    std::string resultString;
+    std::map<std::string, std::size_t> meas_counter;
     std::string instruction_name;
     std::vector<int> qubits;
     int measurement;
     Params param;
     Matrix matrix;
 
-    result.n_qubits = n_qubits;
-
     //SPDLOG_LOGGER_DEBUG(logger, "In Cunqa run: variables defined and n_qubits set.");
 
     auto start_time = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < shots; i++) {
+        resultString.assign(n_qubits, '0');
 
         for (auto& instruction : quantumcircuit) {
             instruction_name = instruction.at("name");
@@ -220,6 +222,7 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, const int shots)
             {
                 case measure:
                     measurement = apply_measure(qubits);
+                    classic_values[qubits[0]] = (measurement == 1);
                     break;
                 case gate:
                     apply_gate(instruction_name, qubits);
@@ -234,10 +237,15 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, const int shots)
                     break;
             }
         } // End one shot
+
+        for (const auto &[bitIndex, value] : classic_values) {
+            resultString[n_qubits - bitIndex - 1] = value ? '1' : '0';
+        }
+        meas_counter[resultString]++;
+        resultString.clear();
         
-        int position_result = get_nonzero_position();
-        //SPDLOG_LOGGER_DEBUG(logger, "position_result: {}", position_result);
-        result.counts[position_result]++;
+        /* int position_result = get_nonzero_position();
+        result.counts[position_result]++; */
         
         restart_statevector();
 
@@ -245,10 +253,11 @@ ResultCunqa Executor::run(QuantumCircuit& quantumcircuit, const int shots)
 
     auto stop_time = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<float> duration = stop_time - start_time;
-
     double total_time = duration.count();
 
-    result.total_time = total_time;
+    json result_json = {
+        {"counts", meas_counter},
+        {"time_taken", total_time}};
 
-    return result;
+    return result_json;
 }

@@ -23,7 +23,7 @@ public:
     void apply_unitary(const std::string& gate_name, const Matrix& matrix, const std::vector<int>& qubits);
     uint64_t get_nonzero_position();
     void restart_statevector();
-    ResultCunqa run(QuantumCircuit& quantumcircuit, int shots = 10);
+    json run(QuantumCircuit& quantumcircuit, int shots = 10);
     
 };
 

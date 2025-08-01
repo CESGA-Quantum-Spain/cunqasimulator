@@ -36,11 +36,11 @@ int main() {
 
     std::vector<json> circuit = json::parse(circuit_str);
 
-    ResultCunqa result = executor.run(circuit, 1);
-    json counts  = result.counts;
+    json result = executor.run(circuit, 100);
+    json counts  = result.at("counts");
 
     std::cout << "Result counts: " << counts.dump() << "\n";
-    std::cout << "Time taken: " << result.total_time << "\n"; 
+    std::cout << "Time taken: " << result.at("time_taken") << "\n"; 
 
 
 
