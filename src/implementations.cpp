@@ -614,7 +614,7 @@ void cunqa_apply_cry(StateVector& statevector, const std::vector<int> qubits, co
                     for (uint64_t k = i - j + (1ULL << qubits[0]) - (1ULL << qubits[1]); k < i; k++) {
                         aux = statevector[flipbit(k, qubits[0])];
                         statevector[flipbit(k, qubits[0])] = cos * statevector[flipbit(i, qubits[0])] + sin * statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
-                        statevector[flipbit(flipbit(k, qubits[0]), qubits[1])] = statevector[flipbit(i, qubits[0])] = cos * statevector[flipbit(i, qubits[0])] - sin * aux;
+                        statevector[flipbit(flipbit(k, qubits[0]), qubits[1])] =  cos * statevector[flipbit(i, qubits[0])] - sin * aux;
                     }
                 }
             }
@@ -624,7 +624,7 @@ void cunqa_apply_cry(StateVector& statevector, const std::vector<int> qubits, co
                     for (uint64_t k = i - (1ULL << qubits[0]); k < i; k++) {
                         aux = statevector[flipbit(k, qubits[0])];
                         statevector[flipbit(k, qubits[0])] = cos * statevector[flipbit(i, qubits[0])] + sin * statevector[flipbit(flipbit(i, qubits[0]), qubits[1])];
-                        statevector[flipbit(flipbit(k, qubits[0]), qubits[1])] = statevector[flipbit(i, qubits[0])] = cos * statevector[flipbit(i, qubits[0])] - sin * aux;
+                        statevector[flipbit(flipbit(k, qubits[0]), qubits[1])] = cos * statevector[flipbit(i, qubits[0])] - sin * aux;
                     }
                 }
             }
@@ -653,9 +653,8 @@ void cunqa_apply_crz(StateVector& statevector, const std::vector<int> qubits, co
             for (uint64_t j = (1ULL << qubits[0]); j < statevector.size(); j = j + (1ULL << (qubits[0] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[0]) + (1ULL << qubits[1]); i < j; i = i + ((1ULL << (qubits[1] + 1)))) {
                     for (uint64_t k = i - j + (1ULL << qubits[0]) - (1ULL << qubits[1]); k < i; k++) {
-                        aux = statevector[flipbit(k, qubits[0])];
-                        statevector[flipbit(k, qubits[0])] = (cos - imag * sin) * statevector[flipbit(i, qubits[0])];
-                        statevector[flipbit(flipbit(k, qubits[0]), qubits[1])] = (cos + imag * sin) * statevector[flipbit(i, qubits[0])];
+                        statevector[flipbit(k, qubits[0])] = (cos - imag * sin) * statevector[flipbit(k, qubits[0])];
+                        statevector[flipbit(flipbit(k, qubits[0]), qubits[1])] = (cos + imag * sin) * statevector[flipbit(flipbit(k, qubits[0]), qubits[1])];
                     }
                 }
             }
@@ -663,9 +662,8 @@ void cunqa_apply_crz(StateVector& statevector, const std::vector<int> qubits, co
             for (uint64_t j = (1ULL << qubits[1]); j < statevector.size(); j = j + (1ULL << (qubits[1] + 1))) {
                 for (uint64_t i = j - (1ULL << qubits[1]) + (1ULL << qubits[0]); i < j; i = i + ((1ULL << (qubits[0] + 1)))) {
                     for (uint64_t k = i - (1ULL << qubits[0]); k < i; k++) {
-                        aux = statevector[flipbit(k, qubits[0])];
-                        statevector[flipbit(k, qubits[0])] = (cos - imag * sin) * statevector[flipbit(i, qubits[0])];
-                        statevector[flipbit(flipbit(k, qubits[0]), qubits[1])] = (cos + imag * sin) * statevector[flipbit(i, qubits[0])];
+                        statevector[flipbit(k, qubits[0])] = (cos - imag * sin) * statevector[flipbit(k, qubits[0])];
+                        statevector[flipbit(flipbit(k, qubits[0]), qubits[1])] = (cos + imag * sin) * statevector[flipbit(flipbit(k, qubits[0]), qubits[1])];
                     }
                 }
             }
